@@ -37,6 +37,27 @@ public:
     bool isInsideMap(int x, int y, int maxX, int maxY);
 };
 
+class Alien
+{
+    private:
+        int x_, y_;
+        char heading_; // either '^', '>', '<' or 'v'
+        
+    public:
+        Alien();
+        void land(Board &board);
+        int getX() const;
+        int getY() const;
+        char getHeading() const;
+        void move(Board &board);
+        void left(Board &board);
+        void right(Board &board);
+};
+
+Alien::Alien()
+{
+}
+
 bool Board::isEmpty(int x, int y, char ch)
 {
     return x, y, (isblank(ch));
@@ -152,6 +173,98 @@ int Board::getDimY() const
     return boardY_;
 }
 
+void Alien::land(Board &board)
+{
+    char possibleHeading[] = {'^', '>', '<', 'v'};
+    x_ = rand() % board.getDimX() + 1;
+    y_ = rand() % board.getDimY() + 1;
+    heading_ = possibleHeading[rand() % 4];
+    board.setObject(x_, y_, heading_);
+}
+
+int Alien::getX() const
+{
+    return x_;
+}
+
+int Alien::getY() const
+{
+    return y_;
+}
+
+char Alien::getHeading() const
+{
+    return heading_;
+}
+
+void Alien::move(Board &board)
+{
+    board.setObject(x_, y_, ' ');
+
+    if (heading_ == '^')
+    {
+        y_++;
+    }
+    else if (heading_ == 'v')
+    {
+        y_--;
+    }
+    else if (heading_ == '>')
+    {
+        x_++;
+    }
+    else if (heading_ == '<')
+    {
+        x_--;
+    }
+    else
+    {
+    }
+    board.setObject(x_, y_, heading_);
+}
+
+void Alien::left(Board &board)
+{
+    if (heading_ == '>')
+    {
+        heading_ = '^';
+    }
+    else if (heading_ == '^')
+    {
+        heading_ = '<';
+    }
+    else if (heading_ == '<')
+    {
+        heading_ = 'v';
+    }
+    else if (heading_ == 'v')
+    {
+        heading_ = '>';
+    }
+    board.setObject(x_, y_, heading_);
+}
+
+void Alien::right(Board &board)
+{
+    if (heading_ == '>')
+    {
+        heading_ = 'v';
+    }
+    else if (heading_ == '^')
+    {
+        heading_ = '>';
+    }
+    else if (heading_ == '<')
+    {
+        heading_ = '^';
+    }
+    else if (heading_ == 'v')
+    {
+        heading_ = '<';
+    }
+    board.setObject(x_, y_, heading_);
+}
+
 void test1_3()
 {
     Board board;
@@ -262,10 +375,53 @@ void test1_6()
 
 }
 
+void test2_1()
+{
+    Board board;
+    Alien alien;
+    alien.land(board);
+    board.display();
+    cout << "Status of the alien:" << endl
+    << " Location: (" << alien.getX() << ", " << alien.getY() << ")"
+
+    << endl
+
+    << " Heading: " << alien.getHeading() << endl;
+}
+
+void test2_2()
+{
+    Board board;
+    Alien alien;
+
+    alien.land(board);
+    board.display();
+    cin.get(); //system("pause");
+
+    alien.left(board);
+    board.display();
+    cin.get(); //system("pause");
+
+    alien.move(board);
+    board.display();
+    cin.get(); //system("pause");
+
+    alien.move(board);
+    board.display();
+    cin.get(); //system("pause");
+
+    alien.right(board);
+    board.display();
+    cin.get(); //system("pause");
+
+    alien.move(board);
+    board.display();
+}
+
 int main(){
     srand(1); // use this for fixed board during testing
     // srand(time(NULL)); // this for random board
-    test1_6();
+    test2_2();
 }
 
 int gameSettings(){
