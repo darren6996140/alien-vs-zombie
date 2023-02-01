@@ -17,45 +17,137 @@
 #include <iomanip> // for setw()
 using namespace std;
 
-int zombies = 1;
+class Settings
+{
+    private:
+    int boardX_, boardY_, zombies_;
+
+    public:
+    Settings();
+    int settings(int boardX = 10, int boardY = 5, int zombies = 1);
+    int returnX (int boardX);
+    int returnY (int boardY);
+    int returnZ (int zombies);
+};
+
+Settings::Settings()
+{
+}
+
+int Settings::settings(int boardX, int boardY, int zombies)
+{
+    char selection;
+
+    while(true){
+        cout << "Default game settings: " << endl;
+        cout << "Board Rows: " <<  boardX << endl;
+        cout << "Board Columns:  " << boardY << endl;
+        cout << "Number of Zombies: "<< zombies << endl;
+        cout <<"Would You like to change the settings? (y/n)"<<endl;
+        cin >> selection;
+        cout <<endl;
+        
+        if (selection == 'Y' || selection == 'y'){
+
+            cout << "New Board Rows: " ;
+            cin >> boardX;
+            while (true){
+                if(cin.fail()){
+                    cin.clear();
+                    cin.ignore();
+                    cout<<"You have entered wrong input, enter again: "<<endl;
+                    cout << "New Board Rows: " ;
+                    cin>>boardX;
+                }
+                else{
+                    break;
+                }
+            }
+
+            cout << "New Board Columns:  " ;
+            cin >> boardY;
+            while (true){
+                if(cin.fail()){
+                    cin.clear();
+                    cin.ignore();
+                    cout<<"You have entered wrong input, enter again: "<<endl;
+                    cout << "New Board Columns:  " ;
+                    cin>>boardY;
+                }
+                else{
+                    break;
+                }
+            }
+
+            cout << "New Number of Zombies: ";
+            cin >> zombies;
+            while (true){
+                if(cin.fail()){
+                    cin.clear();
+                    cin.ignore();
+                    cout<<"You have entered wrong input, enter again: "<<endl;
+                    cout << "New Number of Zombies: ";
+                    cin>>zombies;
+                }
+                else{
+                    break;
+                }
+            }
+
+            cout << "New settings saved"<< endl;
+        }
+
+        else if (selection == 'N' || selection == 'n'){
+            //cout << "no";
+            break;
+        }
+
+        else{
+            cout << "Invalid Selection"<<endl<<endl;
+        }
+    }
+    
+    boardX_ = boardX;
+    boardY_ = boardY;
+    zombies_ =  zombies;
+}
+
+int Settings::returnX(int boardX)
+{
+    return boardX_;
+}
+
+int Settings::returnY(int boardY)
+{
+    return boardY_;
+}
+
+int Settings::returnZ(int zombies)
+{
+    return zombies_;
+}
 
 class Board
 {
-private:
-    vector<vector<char>> board_; // convention to put trailing underscore
-    int boardX_, boardY_;          // to indicate private data
-
-public:
-    Board(int boardX = 15, int boardY = 5);
-    void init(int boardX, int boardY);
-    void display() const;
-    int getDimX() const;
-    int getDimY() const;
-    char getObject(int x, int y) const;
-    void setObject(int x, int y, int ch);
-    bool isEmpty(int x, int y, char ch);
-    bool isInsideMap(int x, int y, int maxX, int maxY);
-};
-
-class Alien
-{
     private:
-        int x_, y_;
-        char heading_; // either '^', '>', '<' or 'v'
-        
+        vector<vector<char>> board_; // convention to put trailing underscore
+        int boardX_, boardY_;          // to indicate private data
+
     public:
-        Alien();
-        void land(Board &board);
-        int getX() const;
-        int getY() const;
-        char getHeading() const;
-        void move(Board &board);
-        void left(Board &board);
-        void right(Board &board);
+        Board(int boardX = 10, int boardY = 5);
+        void init(int boardX, int boardY);
+        void display() const;
+        int getBoardX() const;
+        int getBoardY() const;
+        char getObject(int x, int y) const;
+        void setObject(int x, int y, int ch);
+        bool isEmpty(int x, int y, char ch);
+        bool isInsideMap(int x, int y, int maxX, int maxY);
 };
 
-Alien::Alien()
+Board::Board(int boardX, int boardY)
 {
+    init(boardX, boardY);
 }
 
 bool Board::isEmpty(int x, int y, char ch)
@@ -78,12 +170,7 @@ void Board::setObject(int x, int y, int ch)
     board_[boardY_-y ][x-1 ] = ch;
 }
 
-Board::Board(int boardX, int boardY)
-{
-    init(boardX, boardY);
-}
-
-void Board::init(int boardX, int boardY)
+void Board::init(int boardX,int boardY)
 {
     boardX_ = boardX;
     boardY_ = boardY;
@@ -163,21 +250,42 @@ void Board::display() const
          << endl;
 }
 
-int Board::getDimX() const
+int Board::getBoardX() const
 {
     return boardX_;
 }
 
-int Board::getDimY() const
+int Board::getBoardY() const
 {
     return boardY_;
+}
+
+class Alien
+{
+    private:
+        int x_, y_;
+        char heading_; // either '^', '>', '<' or 'v'
+        
+    public:
+        Alien();
+        void land(Board &board);
+        int getX() const;
+        int getY() const;
+        char getHeading() const;
+        void move(Board &board);
+        void left(Board &board);
+        void right(Board &board);
+};
+
+Alien::Alien()
+{
 }
 
 void Alien::land(Board &board)
 {
     char possibleHeading[] = {'^', '>', '<', 'v'};
-    x_ = rand() % board.getDimX() + 1;
-    y_ = rand() % board.getDimY() + 1;
+    x_ = rand() % board.getBoardX() + 1;
+    y_ = rand() % board.getBoardY() + 1;
     heading_ = possibleHeading[rand() % 4];
     board.setObject(x_, y_, heading_);
 }
@@ -268,8 +376,8 @@ void Alien::right(Board &board)
 void test1_3()
 {
     Board board;
-cout << "Dim X = " << board.getDimX() << endl;
-cout << "Dim Y = " << board.getDimY() << endl;
+cout << "Dim X = " << board.getBoardX() << endl;
+cout << "Dim Y = " << board.getBoardY() << endl;
 }
 
 void test1_4()
@@ -346,8 +454,8 @@ void test1_5()
 void test1_6()
 {
     Board board;
-    int maxX = board.getDimX();
-    int maxY = board.getDimY();
+    int maxX = board.getBoardX();
+    int maxY = board.getBoardY();
 
     int x1 = 2, y1 = 4;
     char ch1 = 'Z';
@@ -418,86 +526,14 @@ void test2_2()
     board.display();
 }
 
+void test(){
+    Settings settings;
+    Board board;
+    cout<< settings.settings();
+}
+
 int main(){
     srand(1); // use this for fixed board during testing
     // srand(time(NULL)); // this for random board
-    test2_2();
-}
-
-int gameSettings(){
-    int boardX = 10;
-    int boardY = 5;
-    char selection;
-
-    while(true){
-        cout << "Default game settings: " << endl;
-        cout << "Board Rows: " <<  boardX << endl;
-        cout << "Board Columns:  " << boardY << endl;
-        cout << "Number of Zombies: "<< zombies << endl;
-        cout <<"Would You like to change the settings? (y/n)"<<endl;
-        cin >> selection;
-        cout <<endl;
-        
-        if (selection == 'Y' || selection == 'y'){
-
-            cout << "New Board Rows: " ;
-            cin >> boardX;
-            while (true){
-                if(cin.fail()){
-                    cin.clear();
-                    cin.ignore();
-                    cout<<"You have entered wrong input, enter again: "<<endl;
-                    cout << "New Board Rows: " ;
-                    cin>>boardX;
-                }
-                else{
-                    break;
-                }
-            }
-
-            cout << "New Board Columns:  " ;
-            cin >> boardY;
-            while (true){
-                if(cin.fail()){
-                    cin.clear();
-                    cin.ignore();
-                    cout<<"You have entered wrong input, enter again: "<<endl;
-                    cout << "New Board Columns:  " ;
-                    cin>>boardY;
-                }
-                else{
-                    break;
-                }
-            }
-
-            cout << "New Number of Zombies: ";
-            cin >> zombies;
-            while (true){
-                if(cin.fail()){
-                    cin.clear();
-                    cin.ignore();
-                    cout<<"You have entered wrong input, enter again: "<<endl;
-                    cout << "New Number of Zombies: ";
-                    cin>>zombies;
-                }
-                else{
-                    break;
-                }
-            }
-
-            cout << "New settings saved"<< endl;
-        }
-
-        else if (selection == 'N' || selection == 'n'){
-            cout << "no";
-            break;
-        }
-
-        else{
-            cout << "Invalid Selection"<<endl<<endl;
-        }
-    }
-
-    //int board[][];
-    //return board;
+    test();
 }
