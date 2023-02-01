@@ -17,25 +17,33 @@
 #include <iomanip> // for setw()
 using namespace std;
 
-class Settings
+class Board
 {
     private:
-    int boardX_, boardY_, zombies_;
+        vector<vector<char>> board_; // convention to put trailing underscore
+        int boardX_, boardY_, zombies_;// to indicate private data
 
     public:
-    Settings();
-    int settings(int boardX = 10, int boardY = 5, int zombies = 1);
-    int returnX (int boardX);
-    int returnY (int boardY);
-    int returnZ (int zombies);
+        Board(int boardX = 10, int boardY = 5, int zombies = 0);
+        void settings(int boardX, int boardY, int zombies);
+        void init(int boardX, int boardY, int zombies);
+        void display() const;
+        int getBoardX() const;
+        int getBoardY() const;
+        char getObject(int x, int y) const;
+        void setObject(int x, int y, int ch);
+        bool isEmpty(int x, int y, char ch);
+        bool isInsideMap(int x, int y, int maxX, int maxY);
 };
 
-Settings::Settings()
+Board::Board(int boardX, int boardY, int zombies)
 {
 }
 
-int Settings::settings(int boardX, int boardY, int zombies)
+void Board::settings(int boardX, int boardY, int zombies)
 {
+    Board board;
+
     char selection;
 
     while(true){
@@ -94,7 +102,7 @@ int Settings::settings(int boardX, int boardY, int zombies)
                 }
             }
 
-            cout << "New settings saved"<< endl;
+            cout << "New settings saved"<< endl <<endl;
         }
 
         else if (selection == 'N' || selection == 'n'){
@@ -106,48 +114,10 @@ int Settings::settings(int boardX, int boardY, int zombies)
             cout << "Invalid Selection"<<endl<<endl;
         }
     }
-    
+
     boardX_ = boardX;
     boardY_ = boardY;
     zombies_ =  zombies;
-}
-
-int Settings::returnX(int boardX)
-{
-    return boardX_;
-}
-
-int Settings::returnY(int boardY)
-{
-    return boardY_;
-}
-
-int Settings::returnZ(int zombies)
-{
-    return zombies_;
-}
-
-class Board
-{
-    private:
-        vector<vector<char>> board_; // convention to put trailing underscore
-        int boardX_, boardY_;          // to indicate private data
-
-    public:
-        Board(int boardX = 10, int boardY = 5);
-        void init(int boardX, int boardY);
-        void display() const;
-        int getBoardX() const;
-        int getBoardY() const;
-        char getObject(int x, int y) const;
-        void setObject(int x, int y, int ch);
-        bool isEmpty(int x, int y, char ch);
-        bool isInsideMap(int x, int y, int maxX, int maxY);
-};
-
-Board::Board(int boardX, int boardY)
-{
-    init(boardX, boardY);
 }
 
 bool Board::isEmpty(int x, int y, char ch)
@@ -170,10 +140,15 @@ void Board::setObject(int x, int y, int ch)
     board_[boardY_-y ][x-1 ] = ch;
 }
 
-void Board::init(int boardX,int boardY)
+void Board::init(int boardX,int boardY, int zombies)
 {
+    Board board;
+
     boardX_ = boardX;
     boardY_ = boardY;
+    zombies_ = zombies;
+
+    board.settings(boardX_,boardY_,zombies_);
 
     char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', 'X', '#', '@', '$'};
     int noOfObjects = 10; // number of objects in the objects array
@@ -195,6 +170,8 @@ void Board::init(int boardX,int boardY)
             board_[i][j] = objects[objNo];
         }
     }
+
+    board.display();
 }
 
 void Board::display() const
@@ -212,14 +189,12 @@ void Board::display() const
         // display row number
         cout << setw(2) << (boardY_ - i);
         // display cell content and border of each column
-
         for (int j = 0; j < boardX_; ++j)
         {
             cout << "|" << board_[i][j];
         }
         cout << "|" << endl;
     }
-
     // display lower border of the last row
     cout << " ";
     for (int j = 0; j < boardX_; ++j)
@@ -229,7 +204,6 @@ void Board::display() const
     cout << "+" << endl;
     // display column number
     cout << " ";
-
     for (int j = 0; j < boardX_; ++j)
     {
         int digit = (j + 1) / 10;
@@ -239,10 +213,9 @@ void Board::display() const
         else
             cout << digit;
     }
-
     cout << endl;
     cout << " ";
-    for (int j = 0; j < boardX_; ++j)
+    for (int j = 0; j < boardX_; ++j) // j== 0..14
     {
         cout << " " << (j + 1) % 10;
     }
@@ -527,9 +500,8 @@ void test2_2()
 }
 
 void test(){
-    Settings settings;
     Board board;
-    cout<< settings.settings();
+    board.init(10,5,1);
 }
 
 int main(){
