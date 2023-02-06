@@ -140,7 +140,7 @@ void Board::init(int boardX,int boardY)
 {
     boardX_ = boardX;
     boardY_ = boardY;
-    
+   
     char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', 'h', 'p', 'r', ' '};
     int noOfObjects = 10; // number of objects in the objects array
     // create dynamic 2D array using vector
