@@ -17,55 +17,31 @@
 #include <iomanip> // for setw()
 using namespace std;
 
-class Board
+int X = 10, Y = 5, Z = 1;
+
+void settings()
 {
-    private:
-        vector<vector<char>> board_; // convention to put trailing underscore
-        int boardX_, boardY_, zombies_;// to indicate private data
-
-    public:
-        Board(int boardX = 10, int boardY = 5, int zombies = 0);
-        void settings(int boardX, int boardY, int zombies);
-        void init(int boardX, int boardY, int zombies);
-        void display() const;
-        int getBoardX() const;
-        int getBoardY() const;
-        char getObject(int x, int y) const;
-        void setObject(int x, int y, int ch);
-        bool isEmpty(int x, int y, char ch);
-        bool isInsideMap(int x, int y, int maxX, int maxY);
-};
-
-Board::Board(int boardX, int boardY, int zombies)
-{
-}
-
-void Board::settings(int boardX, int boardY, int zombies)
-{
-    Board board;
-
     char selection;
 
     while(true){
         cout << "Default game settings: " << endl;
-        cout << "Board Rows: " <<  boardX << endl;
-        cout << "Board Columns:  " << boardY << endl;
-        cout << "Number of Zombies: "<< zombies << endl;
+        cout << "Board Rows: " <<  X <<" (Minimum of 1 row and maximum of 50 rows.)"<<endl;
+        cout << "Board Columns:  " << Y <<" (Minimum of 1 columns and maximum of 50 columns.)" <<endl;
+        cout << "Number of Zombies: "<< Z <<" (Minimum of 1 zombies and maximum of 9 zombies.)"<< endl;
         cout <<"Would You like to change the settings? (y/n)"<<endl;
         cin >> selection;
         cout <<endl;
         
         if (selection == 'Y' || selection == 'y'){
-
             cout << "New Board Rows: " ;
-            cin >> boardX;
+            cin >> X;
             while (true){
-                if(cin.fail()){
+                if(cin.fail() || X > 50 || X <1){
                     cin.clear();
                     cin.ignore();
                     cout<<"You have entered wrong input, enter again: "<<endl;
                     cout << "New Board Rows: " ;
-                    cin>>boardX;
+                    cin>>X;
                 }
                 else{
                     break;
@@ -73,14 +49,14 @@ void Board::settings(int boardX, int boardY, int zombies)
             }
 
             cout << "New Board Columns:  " ;
-            cin >> boardY;
+            cin >> Y;
             while (true){
-                if(cin.fail()){
+                if(cin.fail() || Y >50 || Y <1){
                     cin.clear();
                     cin.ignore();
                     cout<<"You have entered wrong input, enter again: "<<endl;
                     cout << "New Board Columns:  " ;
-                    cin>>boardY;
+                    cin>>Y;
                 }
                 else{
                     break;
@@ -88,14 +64,14 @@ void Board::settings(int boardX, int boardY, int zombies)
             }
 
             cout << "New Number of Zombies: ";
-            cin >> zombies;
+            cin >> Z;
             while (true){
-                if(cin.fail()){
+                if(cin.fail() || Z>9 || Z<1){
                     cin.clear();
                     cin.ignore();
                     cout<<"You have entered wrong input, enter again: "<<endl;
                     cout << "New Number of Zombies: ";
-                    cin>>zombies;
+                    cin>>Z;
                 }
                 else{
                     break;
@@ -106,7 +82,6 @@ void Board::settings(int boardX, int boardY, int zombies)
         }
 
         else if (selection == 'N' || selection == 'n'){
-            //cout << "no";
             break;
         }
 
@@ -114,10 +89,30 @@ void Board::settings(int boardX, int boardY, int zombies)
             cout << "Invalid Selection"<<endl<<endl;
         }
     }
+}
 
-    boardX_ = boardX;
-    boardY_ = boardY;
-    zombies_ =  zombies;
+class Board
+{
+    private:
+        vector<vector<char>> board_; // convention to put trailing underscore
+        int boardX_, boardY_, zombies_;// to indicate private data
+
+    public:
+        Board(int boardX = X, int boardY = Y);
+        void settings(int boardX, int boardY, int zombies);
+        void init(int boardX, int boardY);
+        void display() const;
+        int getBoardX() const;
+        int getBoardY() const;
+        char getObject(int x, int y) const;
+        void setObject(int x, int y, int ch);
+        bool isEmpty(int x, int y, char ch);
+        bool isInsideMap(int x, int y, int maxX, int maxY);
+};
+
+Board::Board(int boardX, int boardY)
+{
+    init(boardX, boardY);
 }
 
 bool Board::isEmpty(int x, int y, char ch)
@@ -140,15 +135,10 @@ void Board::setObject(int x, int y, int ch)
     board_[boardY_-y ][x-1 ] = ch;
 }
 
-void Board::init(int boardX,int boardY, int zombies)
+void Board::init(int boardX,int boardY)
 {
-    Board board;
-
     boardX_ = boardX;
     boardY_ = boardY;
-    zombies_ = zombies;
-
-    board.settings(boardX_,boardY_,zombies_);
 
     char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', 'X', '#', '@', '$'};
     int noOfObjects = 10; // number of objects in the objects array
@@ -170,8 +160,6 @@ void Board::init(int boardX,int boardY, int zombies)
             board_[i][j] = objects[objNo];
         }
     }
-
-    board.display();
 }
 
 void Board::display() const
@@ -499,13 +487,9 @@ void test2_2()
     board.display();
 }
 
-void test(){
-    Board board;
-    board.init(10,5,1);
-}
-
 int main(){
     srand(1); // use this for fixed board during testing
     // srand(time(NULL)); // this for random board
-    test();
+    settings();
+    test2_2();
 }
