@@ -15,10 +15,12 @@
 #include <cstdlib> // for system()
 #include <ctime>   // for time() in srand( time(NULL) );
 #include <iomanip> // for setw()
+#include <algorithm>
 using namespace std;
 
 int X = 10, Y = 5, Z = 1;
 
+void settings()
 void settings()
 {
     char selection;
@@ -139,8 +141,8 @@ void Board::init(int boardX,int boardY)
 {
     boardX_ = boardX;
     boardY_ = boardY;
-
-    char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', 'X', '#', '@', '$'};
+    
+    char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', 'h', 'p', 'r', ' '};
     int noOfObjects = 10; // number of objects in the objects array
     // create dynamic 2D array using vector
 
@@ -209,6 +211,16 @@ void Board::display() const
     }
     cout << endl
          << endl;
+
+    int numZombies;
+    numZombies = Z;
+
+    while (numZombies > 0)
+    {
+        cout<< "Zombie " <<numZombies<<" : "<<endl<<endl;
+        numZombies--;
+    }
+
 }
 
 int Board::getBoardX() const
@@ -225,7 +237,7 @@ class Alien
 {
     private:
         int x_, y_;
-        char heading_; // either '^', '>', '<' or 'v'
+        char heading_,alien_; // either '^', '>', '<' or 'v'
         
     public:
         Alien();
@@ -234,6 +246,7 @@ class Alien
         int getY() const;
         char getHeading() const;
         void move(Board &board);
+        void reverse(Board &board);
         void left(Board &board);
         void right(Board &board);
 };
@@ -244,11 +257,11 @@ Alien::Alien()
 
 void Alien::land(Board &board)
 {
-    char possibleHeading[] = {'^', '>', '<', 'v'};
-    x_ = rand() % board.getBoardX() + 1;
-    y_ = rand() % board.getBoardY() + 1;
-    heading_ = possibleHeading[rand() % 4];
-    board.setObject(x_, y_, heading_);
+    x_ = board.getBoardX() / 2 + 1;
+    y_ = board.getBoardY() / 2 + 1;
+    heading_ = '^';
+    alien_ = 'A';
+    board.setObject(x_, y_, alien_);
 }
 
 int Alien::getX() const
@@ -269,69 +282,29 @@ char Alien::getHeading() const
 void Alien::move(Board &board)
 {
     board.setObject(x_, y_, ' ');
-
-    if (heading_ == '^')
-    {
         y_++;
-    }
-    else if (heading_ == 'v')
-    {
+    board.setObject(x_, y_, alien_);
+}
+
+void Alien::reverse(Board &board)
+{
+    board.setObject(x_, y_, ' ');
         y_--;
-    }
-    else if (heading_ == '>')
-    {
-        x_++;
-    }
-    else if (heading_ == '<')
-    {
-        x_--;
-    }
-    else
-    {
-    }
-    board.setObject(x_, y_, heading_);
+    board.setObject(x_, y_, alien_);
 }
 
 void Alien::left(Board &board)
 {
-    if (heading_ == '>')
-    {
-        heading_ = '^';
-    }
-    else if (heading_ == '^')
-    {
-        heading_ = '<';
-    }
-    else if (heading_ == '<')
-    {
-        heading_ = 'v';
-    }
-    else if (heading_ == 'v')
-    {
-        heading_ = '>';
-    }
-    board.setObject(x_, y_, heading_);
+    board.setObject(x_, y_, ' ');
+        x_--;
+    board.setObject(x_, y_, alien_);
 }
 
 void Alien::right(Board &board)
 {
-    if (heading_ == '>')
-    {
-        heading_ = 'v';
-    }
-    else if (heading_ == '^')
-    {
-        heading_ = '>';
-    }
-    else if (heading_ == '<')
-    {
-        heading_ = '^';
-    }
-    else if (heading_ == 'v')
-    {
-        heading_ = '<';
-    }
-    board.setObject(x_, y_, heading_);
+    board.setObject(x_, y_, ' ');
+        x_++;
+    board.setObject(x_, y_, alien_);
 }
 
 void test1_3()
@@ -487,9 +460,79 @@ void test2_2()
     board.display();
 }
 
+void test2_3()
+{
+    Board board;
+    Alien alien;
+    string dir;
+
+    alien.land(board);
+    board.display();
+    while(true){
+        cout<<"Please enter a command(up/down/left/right): ";
+        cin >>dir;
+        transform(dir.begin(), dir.end(), dir.begin(), ::tolower);
+        if (dir == "up" || dir == "down" || dir == "left" || dir == "right"){
+            break;
+        }
+        else
+        {
+            cout << "Entered wrong input, please try again." << endl<<endl;
+        }
+    }
+
+    while (true)
+    {
+
+        if (dir == "left")
+        {
+            alien.left(board);
+            board.display();
+
+            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y){
+                cout<< "Alien has reached the edge, it will stop moving now.";
+                break;
+            }
+        }
+
+        else if (dir == "right")
+        {
+            alien.right(board);
+            board.display();           
+
+            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y){
+                cout<< "Alien has reached the edge, it will stop moving now.";
+                break;
+            }
+        }
+
+        else if (dir == "up")
+        {
+            alien.move(board);
+            board.display(); 
+
+            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y){
+                cout<< "Alien has reached the edge, it will stop moving now.";
+                break;
+            }
+        }
+
+        else
+        {
+            alien.reverse(board);
+            board.display();
+
+            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y){
+                cout<< "Alien has reached the edge, it will stop moving now.";
+                break;
+            }
+        }
+    }
+}
+
 int main(){
     srand(1); // use this for fixed board during testing
     // srand(time(NULL)); // this for random board
-    settings();
-    test2_2();
+    //settings();
+    test2_3();
 }
