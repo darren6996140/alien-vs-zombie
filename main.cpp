@@ -21,7 +21,6 @@ using namespace std;
 int X = 10, Y = 5, Z = 1;
 
 void settings()
-void settings()
 {
     char selection;
 
