@@ -225,17 +225,14 @@ void Board::display() const
     cout << endl
          << endl;
 
-    cout<<"Alien : "<<endl;
+    // int numZombies;
+    // numZombies = Z;
 
-    int numZombies;
-    numZombies = Z;
-
-    while (numZombies > 0)
-    {
-        cout<< "Zombie " <<numZombies<<" : "<<endl<<endl;
-        numZombies--;
-    }
-
+    // while (numZombies > 0)
+    // {
+    //     cout<< "Zombie " <<numZombies<<" : "<<endl<<endl;
+    //     numZombies--;
+    // }
 }
 
 int Board::getBoardX() const
@@ -264,13 +261,15 @@ class Alien
         void land(Board &board);
         int getX() const;
         int getY() const;
-        //char getHeading() const;
+        void status();
+        char getHeading();
         void up(Board &board);
         void down(Board &board);
         void left(Board &board);
         void right(Board &board);
         char getItem(Board &board);
         bool checkItem(char item);
+        void test2_3();
 };
 
 Alien::Alien()
@@ -296,35 +295,47 @@ int Alien::getY() const
     return y_;
 }
 
+char Alien::getHeading()
+{
+    return heading_;
+}
+
+void Alien::status()
+{
+    hp_ = 100;
+    dmg_ = 0;
+    cout<<"Alien : Health - "<<hp_<<", Damage - "<<dmg_<<endl<<endl;
+}
+
 void Alien::up(Board &board)
 {
-    heading_ = '^';
     board.setObject(x_, y_, '.');
         y_++;
+    heading_ = '^';
     board.setObject(x_, y_, alien_);
 }
 
 void Alien::down(Board &board)
 {
-    heading_ = 'v';
     board.setObject(x_, y_, '.');
         y_--;
+    heading_ = 'v';
     board.setObject(x_, y_, alien_);
 }
 
 void Alien::left(Board &board)
 {
-    heading_ = '<';
     board.setObject(x_, y_, '.');
         x_--;
+    heading_ = '<';
     board.setObject(x_, y_, alien_);
 }
 
 void Alien::right(Board &board)
 {
-    heading_ = '>';
     board.setObject(x_, y_, '.');
         x_++;
+    heading_ = '>';
     board.setObject(x_, y_, alien_);
 }
 
@@ -493,6 +504,7 @@ class Zombie
         void land(Board &board);
         int getX() const;
         int getY() const;
+        void status();
         //char getHeading() const;
         void up(Board &board);
         void down(Board &board);
@@ -520,6 +532,13 @@ int Zombie::getX() const
 int Zombie::getY() const
 {
     return y_;
+}
+
+void Zombie::status()
+{
+    // hp_ = 100;
+    // dmg_ = 0;
+    // cout<<"Alien : Health - "<<hp_<<", Damage - "<<dmg_<<endl;
 }
 
 void Zombie::up(Board &board)
@@ -707,14 +726,16 @@ void test2_2()
     board.display();
 }
 
-void test2_3()
+void Alien::test2_3()
 {
     Board board;
     Alien alien;
     string dir;
+    char heading;
 
     alien.land(board);
     board.display();
+    alien.status();
 
     while(true)
     {
@@ -724,6 +745,26 @@ void test2_3()
 
         if (dir == "up" || dir == "down" || dir == "left" || dir == "right")
         {
+            if (dir == "up")
+            {
+                heading_ = '^';
+            }
+
+            else if(dir == "down")
+            {
+                heading_ = 'v';
+            }
+
+            else if(dir == "left")
+            {
+                heading_ = '<';
+            }
+
+            else if(dir == "right")
+            {
+                heading_= '>';
+            }
+            cout<<alien.getHeading()<<endl<<heading_<<endl<<endl;
             break;
         }
         else
@@ -734,10 +775,52 @@ void test2_3()
 
     while (true)
     {
-        if (dir == "left")
+        if (heading_ == '^')
+        {
+            alien.up(board);
+            board.display();
+            alien.status();
+            alien.checkItem(alien.getItem(board));
+
+            cout<<alien.getHeading()<<endl<<heading_<<endl<<endl;
+            
+            if (alien.checkItem(alien.getItem(board)) == true)
+            {
+                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
+                break;
+            }
+
+            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+            {
+                cout<< "Alien has reached the edge, it's turn will stop now.";
+                break;
+            }
+        }
+
+        else if (heading_ == 'v')
+        {
+            alien.down(board);
+            board.display();
+            alien.status();
+            
+            if (alien.checkItem(alien.getItem(board)) == true)
+            {
+                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
+                break;
+            }
+
+            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+            {
+                cout<< "Alien has reached the edge, it's turn will stop now.";
+                break;
+            }
+        }
+
+        else if (heading_ == '<')
         {
             alien.left(board);
             board.display();
+            alien.status();
             
             if (alien.checkItem(alien.getItem(board)) == true)
             {
@@ -752,46 +835,11 @@ void test2_3()
             }
         }
 
-        else if (dir == "right")
+        else if (heading_ == '>')
         {
             alien.right(board);
             board.display();
-            
-            if (alien.checkItem(alien.getItem(board)) == true)
-            {
-                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
-                break;
-            }     
-
-            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
-            {
-                cout<< "Alien has reached the edge, it's turn will stop now.";
-                break;
-            }
-        }
-
-        else if (dir == "up")
-        {
-            alien.up(board);
-            board.display();
-            
-            if (alien.checkItem(alien.getItem(board)) == true)
-            {
-                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
-                break;
-            }
-
-            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
-            {
-                cout<< "Alien has reached the edge, it's turn will stop now.";
-                break;
-            }
-        }
-
-        else
-        {
-            alien.down(board);
-            board.display();
+            alien.status();
             
             if (alien.checkItem(alien.getItem(board)) == true)
             {
@@ -810,8 +858,9 @@ void test2_3()
 
 int main()
 {
+    Alien alien;
     srand(2); // use this for fixed board during testing
     // srand(time(NULL)); // this for random board
     //settings();
-    test2_3();
+    alien.test2_3();
 }
