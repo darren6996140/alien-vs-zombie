@@ -774,9 +774,6 @@ void test2_3()
         {
             alien.up(board);
             board.display();
-            //cout<<alien.getX()<<endl<<alien.getY()<<endl;
-            //cout<<board.getObject(2,2)<<endl;
-            cout<<alien.getItem(board)<<endl;
             
             if (alien.checkItem(alien.getItem(board)) == true)
             {
