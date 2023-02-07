@@ -299,7 +299,7 @@ int Alien::getY() const
 void Alien::up(Board &board)
 {
     heading_ = '^';
-    board.setObject(x_, y_, ' ');
+    board.setObject(x_, y_, '.');
         y_++;
     board.setObject(x_, y_, alien_);
 }
@@ -307,7 +307,7 @@ void Alien::up(Board &board)
 void Alien::down(Board &board)
 {
     heading_ = 'v';
-    board.setObject(x_, y_, ' ');
+    board.setObject(x_, y_, '.');
         y_--;
     board.setObject(x_, y_, alien_);
 }
@@ -315,7 +315,7 @@ void Alien::down(Board &board)
 void Alien::left(Board &board)
 {
     heading_ = '<';
-    board.setObject(x_, y_, ' ');
+    board.setObject(x_, y_, '.');
         x_--;
     board.setObject(x_, y_, alien_);
 }
@@ -323,7 +323,7 @@ void Alien::left(Board &board)
 void Alien::right(Board &board)
 {
     heading_ = '>';
-    board.setObject(x_, y_, ' ');
+    board.setObject(x_, y_, '.');
         x_++;
     board.setObject(x_, y_, alien_);
 }
@@ -333,7 +333,7 @@ char Alien::getItem(Board &board)
     Alien alien;
     char item;
 
-    if(alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+    if(x_ == 1 || y_ == 1 || x_ == X || y_ == Y)
     {
         return item;
     }
@@ -341,22 +341,22 @@ char Alien::getItem(Board &board)
     {
         if(heading_ == '<')
         {
-            item  = board.getObject(alien.getX() - 1, alien.getY());
+            item  = board.getObject(x_ - 1, y_);
         }
 
         else if(heading_ == '>')
         {
-            item  = board.getObject(alien.getX() + 1, alien.getY());
+            item  = board.getObject(x_ + 1, y_);
         }
 
         else if(heading_ == '^')
         {
-            item  = board.getObject(alien.getX(), alien.getY() + 1);
+            item  = board.getObject(x_, y_ + 1);
         }
 
         else
         {
-            item  = board.getObject(alien.getX(), alien.getY() - 1);
+            item  = board.getObject(x_, y_ - 1);
         }
     }
     return item;
@@ -441,7 +441,7 @@ bool Alien::checkItem(char item)
 
     else if (item == '>')
     {
-        cout<< "Alien finds a right arrow, alien will move to the right."<<endl<<"Alien's damage will increase by 20.";
+        cout<< "Alien finds a right arrow, alien will move to the right."<<endl<<"Alien's damage will increase by 20."<<endl;
         dmg_ = dmg_ + 20;
         heading_ = '>';
         return false;
@@ -449,7 +449,7 @@ bool Alien::checkItem(char item)
 
     else if (item == '<')
     {
-        cout<< "Alien finds a left arrow, alien will move to the left."<<endl<<"Alien's damage will increase by 20.";
+        cout<< "Alien finds a left arrow, alien will move to the left."<<endl<<"Alien's damage will increase by 20."<<endl;
         dmg_ = dmg_ + 20;
         heading_ = '<';
         return false;
@@ -457,7 +457,7 @@ bool Alien::checkItem(char item)
 
     else if (item == '^')
     {
-        cout<< "Alien finds a up arrow, alien will move up."<<endl<<"Alien's damage will increase by 20.";
+        cout<< "Alien finds a up arrow, alien will move up."<<endl<<"Alien's damage will increase by 20."<<endl;
         dmg_ = dmg_ + 20;
         heading_ = '^';
         return false;
@@ -465,7 +465,7 @@ bool Alien::checkItem(char item)
 
     else if (item == 'v')
     {
-        cout<< "Alien finds a down arrow, alien will move down."<<endl<<"Alien's damage will increase by 20.";
+        cout<< "Alien finds a down arrow, alien will move down."<<endl<<"Alien's damage will increase by 20."<<endl;
         dmg_ = dmg_ + 20;
         heading_ = 'v';
         return false;
@@ -734,7 +734,6 @@ void test2_3()
 
     while (true)
     {
-
         if (dir == "left")
         {
             alien.left(board);
@@ -775,9 +774,9 @@ void test2_3()
         {
             alien.up(board);
             board.display();
-            //cout<<alien.getItem(board)<<endl;
-            cout<<alien.getX()<<endl<<alien.getY()<<endl;
-            cout<<board.getObject(4,3)<<endl;
+            //cout<<alien.getX()<<endl<<alien.getY()<<endl;
+            //cout<<board.getObject(2,2)<<endl;
+            cout<<alien.getItem(board)<<endl;
             
             if (alien.checkItem(alien.getItem(board)) == true)
             {
@@ -790,7 +789,6 @@ void test2_3()
                 cout<< "Alien has reached the edge, it's turn will stop now.";
                 break;
             }
-            break;//temp
         }
 
         else
