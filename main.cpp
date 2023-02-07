@@ -24,7 +24,8 @@ void settings()
 {
     char selection;
 
-    while(true){
+    while(true)
+    {
         cout << "Default game settings: " << endl;
         cout << "Board Rows: " <<  X <<" (Minimum of 1 row and maximum of 50 rows.)"<<endl;
         cout << "Board Columns:  " << Y <<" (Minimum of 1 columns and maximum of 50 columns.)" <<endl;
@@ -33,48 +34,58 @@ void settings()
         cin >> selection;
         cout <<endl;
         
-        if (selection == 'Y' || selection == 'y'){
+        if (selection == 'Y' || selection == 'y')
+        {
             cout << "New Board Rows: " ;
             cin >> X;
-            while (true){
-                if(cin.fail() || X > 50 || X <1){
+            while (true)
+            {
+                if(cin.fail() || X > 50 || X <1)
+                {
                     cin.clear();
                     cin.ignore();
                     cout<<"You have entered wrong input, enter again: "<<endl;
                     cout << "New Board Rows: " ;
                     cin>>X;
                 }
-                else{
+                else
+                {
                     break;
                 }
             }
 
             cout << "New Board Columns:  " ;
             cin >> Y;
-            while (true){
-                if(cin.fail() || Y >50 || Y <1){
+            while (true)
+            {
+                if(cin.fail() || Y >50 || Y <1)
+                {
                     cin.clear();
                     cin.ignore();
                     cout<<"You have entered wrong input, enter again: "<<endl;
                     cout << "New Board Columns:  " ;
                     cin>>Y;
                 }
-                else{
+                else
+                {
                     break;
                 }
             }
 
             cout << "New Number of Zombies: ";
             cin >> Z;
-            while (true){
-                if(cin.fail() || Z>9 || Z<1){
+            while (true)
+            {
+                if(cin.fail() || Z>9 || Z<1)
+                {
                     cin.clear();
                     cin.ignore();
                     cout<<"You have entered wrong input, enter again: "<<endl;
                     cout << "New Number of Zombies: ";
                     cin>>Z;
                 }
-                else{
+                else
+                {
                     break;
                 }
             }
@@ -82,11 +93,13 @@ void settings()
             cout << "New settings saved"<< endl <<endl;
         }
 
-        else if (selection == 'N' || selection == 'n'){
+        else if (selection == 'N' || selection == 'n')
+        {
             break;
         }
 
-        else{
+        else
+        {
             cout << "Invalid Selection"<<endl<<endl;
         }
     }
@@ -109,6 +122,7 @@ class Board
         void setObject(int x, int y, int ch);
         bool isEmpty(int x, int y, char ch);
         bool isInsideMap(int x, int y, int maxX, int maxY);
+        void arrow();
 };
 
 Board::Board(int boardX, int boardY)
@@ -140,8 +154,8 @@ void Board::init(int boardX,int boardY)
 {
     boardX_ = boardX;
     boardY_ = boardY;
-   
-    char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', 'h', 'p', 'r', ' '};
+
+    char objects[] = {' ', ' ', 'v', '^', '<', '>', 'h', 'p', 'r', ' '};
     int noOfObjects = 10; // number of objects in the objects array
     // create dynamic 2D array using vector
 
@@ -211,6 +225,8 @@ void Board::display() const
     cout << endl
          << endl;
 
+    cout<<"Alien : "<<endl;
+
     int numZombies;
     numZombies = Z;
 
@@ -232,10 +248,15 @@ int Board::getBoardY() const
     return boardY_;
 }
 
+void Board::arrow()
+{
+
+}
+
 class Alien
 {
     private:
-        int x_, y_;
+        int x_, y_, hp_, dmg_;
         char heading_,alien_; // either '^', '>', '<' or 'v'
         
     public:
@@ -243,11 +264,13 @@ class Alien
         void land(Board &board);
         int getX() const;
         int getY() const;
-        char getHeading() const;
-        void move(Board &board);
-        void reverse(Board &board);
+        //char getHeading() const;
+        void up(Board &board);
+        void down(Board &board);
         void left(Board &board);
         void right(Board &board);
+        char getItem(Board &board);
+        bool checkItem(char item);
 };
 
 Alien::Alien()
@@ -256,7 +279,7 @@ Alien::Alien()
 
 void Alien::land(Board &board)
 {
-    x_ = board.getBoardX() / 2 + 1;
+    x_ = board.getBoardX() / 2;
     y_ = board.getBoardY() / 2 + 1;
     heading_ = '^';
     alien_ = 'A';
@@ -273,20 +296,17 @@ int Alien::getY() const
     return y_;
 }
 
-char Alien::getHeading() const
+void Alien::up(Board &board)
 {
-    return heading_;
-}
-
-void Alien::move(Board &board)
-{
+    heading_ = '^';
     board.setObject(x_, y_, ' ');
         y_++;
     board.setObject(x_, y_, alien_);
 }
 
-void Alien::reverse(Board &board)
+void Alien::down(Board &board)
 {
+    heading_ = 'v';
     board.setObject(x_, y_, ' ');
         y_--;
     board.setObject(x_, y_, alien_);
@@ -294,6 +314,7 @@ void Alien::reverse(Board &board)
 
 void Alien::left(Board &board)
 {
+    heading_ = '<';
     board.setObject(x_, y_, ' ');
         x_--;
     board.setObject(x_, y_, alien_);
@@ -301,9 +322,236 @@ void Alien::left(Board &board)
 
 void Alien::right(Board &board)
 {
+    heading_ = '>';
     board.setObject(x_, y_, ' ');
         x_++;
     board.setObject(x_, y_, alien_);
+}
+
+char Alien::getItem(Board &board)
+{
+    Alien alien;
+    char item;
+
+    if(alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+    {
+        return item;
+    }
+    else
+    {
+        if(heading_ == '<')
+        {
+            item  = board.getObject(alien.getX() - 1, alien.getY());
+        }
+
+        else if(heading_ == '>')
+        {
+            item  = board.getObject(alien.getX() + 1, alien.getY());
+        }
+
+        else if(heading_ == '^')
+        {
+            item  = board.getObject(alien.getX(), alien.getY() + 1);
+        }
+
+        else
+        {
+            item  = board.getObject(alien.getX(), alien.getY() - 1);
+        }
+    }
+    return item;
+}
+
+bool Alien::checkItem(char item)
+{
+    Alien alien;
+    Board board;
+
+    if (item == 'r')
+    {
+        int num;
+        cout<<"A rock is blocking the alien's way."<<endl;
+        num = rand() % 2;
+
+        if (num == true)
+        {
+            cout<<"The alien finds a pod beneath the rock."<<endl<<endl;
+
+            if (heading_ == '<')
+            {
+                board.setObject(alien.getX() - 1, alien.getY(), 'p');
+            }
+
+            else if (heading_ == '>')
+            {
+                board.setObject(alien.getX() + 1, alien.getY(), 'p');
+            }
+
+            else if (heading_ == '^')
+            {
+                board.setObject(alien.getX(), alien.getY() + 1, 'p');
+            }
+
+            else
+            {
+                board.setObject(alien.getX(), alien.getY() - 1, 'p');
+            }
+            return true;
+        }
+
+        else
+        {
+            cout<<"The alien finds health beneath the rock."<<endl<<endl;
+
+            if (heading_ == '<')
+            {
+                board.setObject(alien.getX() - 1, alien.getY(), 'h');
+            }
+
+            else if (heading_ == '>')
+            {
+                board.setObject(alien.getX() + 1, alien.getY(), 'h');
+            }
+
+            else if (heading_ == '^')
+            {
+                board.setObject(alien.getX(), alien.getY() + 1, 'h');
+            }
+
+            else
+            {
+                board.setObject(alien.getX(), alien.getY() - 1, 'h');
+            }
+            return true;
+        }
+    }
+
+    else if (item == 'h')
+    {
+        cout<<"Alien finds health, Alien's health is increased by 10."<<endl;
+        hp_ = hp_ + 20;
+        return false;
+    }
+
+    else if (item == 'p')
+    {
+        cout<<"Alien finds a pod"<<endl;
+        return false;
+    }
+
+    else if (item == '>')
+    {
+        cout<< "Alien finds a right arrow, alien will move to the right."<<endl<<"Alien's damage will increase by 20.";
+        dmg_ = dmg_ + 20;
+        heading_ = '>';
+        return false;
+    }
+
+    else if (item == '<')
+    {
+        cout<< "Alien finds a left arrow, alien will move to the left."<<endl<<"Alien's damage will increase by 20.";
+        dmg_ = dmg_ + 20;
+        heading_ = '<';
+        return false;
+    }
+
+    else if (item == '^')
+    {
+        cout<< "Alien finds a up arrow, alien will move up."<<endl<<"Alien's damage will increase by 20.";
+        dmg_ = dmg_ + 20;
+        heading_ = '^';
+        return false;
+    }
+
+    else if (item == 'v')
+    {
+        cout<< "Alien finds a down arrow, alien will move down."<<endl<<"Alien's damage will increase by 20.";
+        dmg_ = dmg_ + 20;
+        heading_ = 'v';
+        return false;
+    }
+
+    else if(item == ' '){
+        //zombie
+    }
+
+    else
+    {
+        return false;
+    }
+    return false;
+}
+
+class Zombie
+{
+    private:
+        int x_, y_, hp_, dmg_;
+        char heading_;
+        
+    public:
+        Zombie();
+        void land(Board &board);
+        int getX() const;
+        int getY() const;
+        //char getHeading() const;
+        void up(Board &board);
+        void down(Board &board);
+        void left(Board &board);
+        void right(Board &board);
+};
+
+Zombie::Zombie()
+{
+}
+
+void Zombie::land(Board &board)
+{
+    x_ = board.getBoardX() / 2 + 1;
+    y_ = board.getBoardY() / 2 + 1;
+    heading_ = '^';
+    //board.setObject(x_, y_, alien_);
+}
+
+int Zombie::getX() const
+{
+    return x_;
+}
+
+int Zombie::getY() const
+{
+    return y_;
+}
+
+void Zombie::up(Board &board)
+{
+    heading_ = '^';
+    board.setObject(x_, y_, ' ');
+        y_++;
+    //board.setObject(x_, y_, alien_);
+}
+
+void Zombie::down(Board &board)
+{
+    heading_ = 'v';
+    board.setObject(x_, y_, ' ');
+        y_--;
+    //board.setObject(x_, y_, alien_);
+}
+
+void Zombie::left(Board &board)
+{
+    heading_ = '<';
+    board.setObject(x_, y_, ' ');
+        x_--;
+    //board.setObject(x_, y_, alien_);
+}
+
+void Zombie::right(Board &board)
+{
+    heading_ = '>';
+    board.setObject(x_, y_, ' ');
+        x_++;
+    //board.setObject(x_, y_, alien_);
 }
 
 void test1_3()
@@ -425,9 +673,9 @@ void test2_1()
     cout << "Status of the alien:" << endl
     << " Location: (" << alien.getX() << ", " << alien.getY() << ")"
 
-    << endl
+    << endl;
 
-    << " Heading: " << alien.getHeading() << endl;
+    //<< " Heading: " << alien.getHeading() << endl;
 }
 
 void test2_2()
@@ -443,11 +691,11 @@ void test2_2()
     board.display();
     cin.get(); //system("pause");
 
-    alien.move(board);
+    alien.up(board);
     board.display();
     cin.get(); //system("pause");
 
-    alien.move(board);
+    alien.up(board);
     board.display();
     cin.get(); //system("pause");
 
@@ -455,7 +703,7 @@ void test2_2()
     board.display();
     cin.get(); //system("pause");
 
-    alien.move(board);
+    alien.up(board);
     board.display();
 }
 
@@ -467,11 +715,15 @@ void test2_3()
 
     alien.land(board);
     board.display();
-    while(true){
+
+    while(true)
+    {
         cout<<"Please enter a command(up/down/left/right): ";
         cin >>dir;
         transform(dir.begin(), dir.end(), dir.begin(), ::tolower);
-        if (dir == "up" || dir == "down" || dir == "left" || dir == "right"){
+
+        if (dir == "up" || dir == "down" || dir == "left" || dir == "right")
+        {
             break;
         }
         else
@@ -487,9 +739,16 @@ void test2_3()
         {
             alien.left(board);
             board.display();
+            
+            if (alien.checkItem(alien.getItem(board)) == true)
+            {
+                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
+                break;
+            }
 
-            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y){
-                cout<< "Alien has reached the edge, it will stop moving now.";
+            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+            {
+                cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted.";
                 break;
             }
         }
@@ -497,40 +756,66 @@ void test2_3()
         else if (dir == "right")
         {
             alien.right(board);
-            board.display();           
+            board.display();
+            
+            if (alien.checkItem(alien.getItem(board)) == true)
+            {
+                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
+                break;
+            }     
 
-            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y){
-                cout<< "Alien has reached the edge, it will stop moving now.";
+            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+            {
+                cout<< "Alien has reached the edge, it's turn will stop now.";
                 break;
             }
         }
 
         else if (dir == "up")
         {
-            alien.move(board);
-            board.display(); 
-
-            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y){
-                cout<< "Alien has reached the edge, it will stop moving now.";
+            alien.up(board);
+            board.display();
+            //cout<<alien.getItem(board)<<endl;
+            cout<<alien.getX()<<endl<<alien.getY()<<endl;
+            cout<<board.getObject(4,3)<<endl;
+            
+            if (alien.checkItem(alien.getItem(board)) == true)
+            {
+                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
                 break;
             }
+
+            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+            {
+                cout<< "Alien has reached the edge, it's turn will stop now.";
+                break;
+            }
+            break;//temp
         }
 
         else
         {
-            alien.reverse(board);
+            alien.down(board);
             board.display();
+            
+            if (alien.checkItem(alien.getItem(board)) == true)
+            {
+                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
+                break;
+            }
 
-            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y){
-                cout<< "Alien has reached the edge, it will stop moving now.";
+            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+            {
+                cout<< "Alien has reached the edge, it's turn will stop now.";
                 break;
             }
         }
     }
 }
 
-int main(){
-    srand(1); // use this for fixed board during testing
+int main()
+{
+    srand(2); // use this for fixed board during testing
     // srand(time(NULL)); // this for random board
     //settings();
     test2_3();
