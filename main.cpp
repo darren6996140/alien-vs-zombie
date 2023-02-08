@@ -268,12 +268,14 @@ class Alien
         void left(Board &board);
         void right(Board &board);
         char getItem(Board &board);
-        bool checkItem(char item);
+        char checkItem(char item);
         void test2_3();
 };
 
 Alien::Alien()
 {
+    hp_ = 100;
+    dmg_ = 0;
 }
 
 void Alien::land(Board &board)
@@ -302,8 +304,6 @@ char Alien::getHeading()
 
 void Alien::status()
 {
-    hp_ = 100;
-    dmg_ = 0;
     cout<<"Alien : Health - "<<hp_<<", Damage - "<<dmg_<<endl<<endl;
 }
 
@@ -373,7 +373,7 @@ char Alien::getItem(Board &board)
     return item;
 }
 
-bool Alien::checkItem(char item)
+char Alien::checkItem(char item)
 {
     Alien alien;
     Board board;
@@ -441,29 +441,11 @@ bool Alien::checkItem(char item)
     {
         cout<<"Alien finds health, Alien's health is increased by 10."<<endl;
         hp_ = hp_ + 20;
-        return false;
     }
 
     else if (item == 'p')
     {
         cout<<"Alien finds a pod"<<endl;
-        return false;
-    }
-
-    else if (item == '>')
-    {
-        cout<< "Alien finds a right arrow, alien will move to the right."<<endl<<"Alien's damage will increase by 20."<<endl;
-        dmg_ = dmg_ + 20;
-        heading_ = '>';
-        return false;
-    }
-
-    else if (item == '<')
-    {
-        cout<< "Alien finds a left arrow, alien will move to the left."<<endl<<"Alien's damage will increase by 20."<<endl;
-        dmg_ = dmg_ + 20;
-        heading_ = '<';
-        return false;
     }
 
     else if (item == '^')
@@ -471,7 +453,6 @@ bool Alien::checkItem(char item)
         cout<< "Alien finds a up arrow, alien will move up."<<endl<<"Alien's damage will increase by 20."<<endl;
         dmg_ = dmg_ + 20;
         heading_ = '^';
-        return false;
     }
 
     else if (item == 'v')
@@ -479,7 +460,20 @@ bool Alien::checkItem(char item)
         cout<< "Alien finds a down arrow, alien will move down."<<endl<<"Alien's damage will increase by 20."<<endl;
         dmg_ = dmg_ + 20;
         heading_ = 'v';
-        return false;
+    }
+
+    else if (item == '>')
+    {
+        cout<< "Alien finds a right arrow, alien will move to the right."<<endl<<"Alien's damage will increase by 20."<<endl;
+        dmg_ = dmg_ + 20;
+        heading_ = '>';
+    }
+
+    else if (item == '<')
+    {
+        cout<< "Alien finds a left arrow, alien will move to the left."<<endl<<"Alien's damage will increase by 20."<<endl;
+        dmg_ = dmg_ + 20;
+        heading_ = '<';
     }
 
     else if(item == ' '){
@@ -488,9 +482,8 @@ bool Alien::checkItem(char item)
 
     else
     {
-        return false;
     }
-    return false;
+    return item;
 }
 
 class Zombie
@@ -764,7 +757,6 @@ void Alien::test2_3()
             {
                 heading_= '>';
             }
-            cout<<alien.getHeading()<<endl<<heading_<<endl<<endl;
             break;
         }
         else
@@ -781,18 +773,19 @@ void Alien::test2_3()
             board.display();
             alien.status();
             alien.checkItem(alien.getItem(board));
-
-            cout<<alien.getHeading()<<endl<<heading_<<endl<<endl;
+            heading_ = alien.getHeading();
             
-            if (alien.checkItem(alien.getItem(board)) == true)
+            if (alien.checkItem(alien.getItem(board)) == 'r')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
+                dmg_ = 0;
                 break;
             }
 
             if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
             {
-                cout<< "Alien has reached the edge, it's turn will stop now.";
+                cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted.";
+                dmg_ = 0;
                 break;
             }
         }
@@ -802,16 +795,20 @@ void Alien::test2_3()
             alien.down(board);
             board.display();
             alien.status();
+            alien.checkItem(alien.getItem(board));
+            heading_ = alien.getHeading();
             
-            if (alien.checkItem(alien.getItem(board)) == true)
+            if (alien.checkItem(alien.getItem(board)) == 'r')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
+                dmg_ = 0;
                 break;
             }
 
             if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
             {
-                cout<< "Alien has reached the edge, it's turn will stop now.";
+                cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted.";
+                dmg_ = 0;
                 break;
             }
         }
@@ -821,16 +818,20 @@ void Alien::test2_3()
             alien.left(board);
             board.display();
             alien.status();
+            alien.checkItem(alien.getItem(board));
+            heading_ = alien.getHeading();
             
-            if (alien.checkItem(alien.getItem(board)) == true)
+            if (alien.checkItem(alien.getItem(board)) == 'r')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
+                dmg_ = 0;
                 break;
             }
 
             if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
             {
                 cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted.";
+                dmg_ = 0;
                 break;
             }
         }
@@ -840,16 +841,20 @@ void Alien::test2_3()
             alien.right(board);
             board.display();
             alien.status();
+            alien.checkItem(alien.getItem(board));
+            heading_ = alien.getHeading();
             
-            if (alien.checkItem(alien.getItem(board)) == true)
+            if (alien.checkItem(alien.getItem(board)) == 'r')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
+                dmg_ = 0;
                 break;
             }
 
             if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
             {
-                cout<< "Alien has reached the edge, it's turn will stop now.";
+                cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted.";
+                dmg_ = 0;
                 break;
             }
         }
