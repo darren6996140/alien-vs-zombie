@@ -16,6 +16,7 @@
 #include <ctime>   // for time() in srand( time(NULL) );
 #include <iomanip> // for setw()
 #include <algorithm>
+#include <unistd.h>
 using namespace std;
 
 int X = 10, Y = 5, Z = 1;
@@ -36,11 +37,11 @@ void settings()
         
         if (selection == 'Y' || selection == 'y')
         {
-            cout << "New Board Rows: " ;
+            cout << "New Board Rows (Odd Numbers Only): " ;
             cin >> X;
             while (true)
             {
-                if(cin.fail() || X > 50 || X <1)
+                if(cin.fail() || X > 50 || X <1 || X % 2 == 0)
                 {
                     cin.clear();
                     cin.ignore();
@@ -54,11 +55,11 @@ void settings()
                 }
             }
 
-            cout << "New Board Columns:  " ;
+            cout << "New Board Columns (Odd Numbers Only): " ;
             cin >> Y;
             while (true)
             {
-                if(cin.fail() || Y >50 || Y <1)
+                if(cin.fail() || Y >50 || Y <1 || Y % 2 == 0)
                 {
                     cin.clear();
                     cin.ignore();
@@ -147,7 +148,7 @@ char Board::getObject(int x, int y) const
 
 void Board::setObject(int x, int y, int ch)
 {
-    board_[boardY_-y ][x-1 ] = ch;
+    board_[boardY_-y][x-1] = ch;
 }
 
 void Board::init(int boardX,int boardY)
@@ -245,16 +246,11 @@ int Board::getBoardY() const
     return boardY_;
 }
 
-void Board::arrow()
-{
-
-}
-
 class Alien
 {
     private:
         int x_, y_, hp_, dmg_;
-        char heading_,alien_; // either '^', '>', '<' or 'v'
+        char heading_,alien_;
         
     public:
         Alien();
@@ -464,14 +460,14 @@ char Alien::checkItem(char item)
 
     else if (item == '>')
     {
-        cout<< "Alien finds a right arrow, alien will move to the right."<<endl<<"Alien's damage will increase by 20."<<endl;
+        cout<< "Alien finds a right arrow, alien will move right."<<endl<<"Alien's damage will increase by 20."<<endl;
         dmg_ = dmg_ + 20;
         heading_ = '>';
     }
 
     else if (item == '<')
     {
-        cout<< "Alien finds a left arrow, alien will move to the left."<<endl<<"Alien's damage will increase by 20."<<endl;
+        cout<< "Alien finds a left arrow, alien will move left."<<endl<<"Alien's damage will increase by 20."<<endl;
         dmg_ = dmg_ + 20;
         heading_ = '<';
     }
@@ -774,6 +770,7 @@ void Alien::test2_3()
             alien.status();
             alien.checkItem(alien.getItem(board));
             heading_ = alien.getHeading();
+            //usleep(1000000);
             
             if (alien.checkItem(alien.getItem(board)) == 'r')
             {
@@ -797,6 +794,7 @@ void Alien::test2_3()
             alien.status();
             alien.checkItem(alien.getItem(board));
             heading_ = alien.getHeading();
+            //usleep(1000000);
             
             if (alien.checkItem(alien.getItem(board)) == 'r')
             {
@@ -820,6 +818,7 @@ void Alien::test2_3()
             alien.status();
             alien.checkItem(alien.getItem(board));
             heading_ = alien.getHeading();
+            //usleep(1000000);
             
             if (alien.checkItem(alien.getItem(board)) == 'r')
             {
@@ -843,6 +842,7 @@ void Alien::test2_3()
             alien.status();
             alien.checkItem(alien.getItem(board));
             heading_ = alien.getHeading();
+            //usleep(1000000);
             
             if (alien.checkItem(alien.getItem(board)) == 'r')
             {
