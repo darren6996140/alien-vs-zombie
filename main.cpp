@@ -19,7 +19,7 @@
 #include <unistd.h>
 using namespace std;
 
-int X = 10, Y = 5, Z = 1;
+int X = 15, Y = 5, Z = 1;
 
 void settings()
 {
@@ -106,6 +106,13 @@ void settings()
     }
 }
 
+void confirm()
+    {
+        cout << "Press enter to continue . . . " << endl;
+        cin.get();
+        cin.ignore();
+    }
+
 class Board
 {
     private:
@@ -114,7 +121,6 @@ class Board
 
     public:
         Board(int boardX = X, int boardY = Y);
-        void settings(int boardX, int boardY, int zombies);
         void init(int boardX, int boardY);
         void display() const;
         int getBoardX() const;
@@ -123,7 +129,7 @@ class Board
         void setObject(int x, int y, int ch);
         bool isEmpty(int x, int y, char ch);
         bool isInsideMap(int x, int y, int maxX, int maxY);
-        void arrow();
+        void help();
 };
 
 Board::Board(int boardX, int boardY)
@@ -244,6 +250,21 @@ int Board::getBoardX() const
 int Board::getBoardY() const
 {
     return boardY_;
+}
+
+void Board::help()
+{
+    cout << endl;
+    cout << "Commands" << endl;
+    cout << "1. up       - Move up" << endl;
+    cout << "2. down     - Move down" << endl;
+    cout << "3. left     - Move left" << endl;
+    cout << "4. right    - Move right" << endl;
+    cout << "5. arrow    - Change the direction of an arrow" << endl;
+    cout << "6. help     - Display these user commands" << endl;
+    cout << "7. save     - Save the game" << endl;
+    cout << "8. load     - Load a game" << endl;
+    cout << "9. quit     - Quit this game" << endl<<endl;
 }
 
 class Alien
@@ -386,50 +407,50 @@ char Alien::checkItem(char item)
 
             if (heading_ == '<')
             {
-                board.setObject(alien.getX() - 1, alien.getY(), 'p');
+                board.setObject(x_ - 1, y_, 'p');
             }
 
             else if (heading_ == '>')
             {
-                board.setObject(alien.getX() + 1, alien.getY(), 'p');
+                board.setObject(x_ + 1, y_, 'p');
             }
 
             else if (heading_ == '^')
             {
-                board.setObject(alien.getX(), alien.getY() + 1, 'p');
+                board.setObject(x_, y_ + 1, 'p');
             }
 
             else
             {
-                board.setObject(alien.getX(), alien.getY() - 1, 'p');
+                board.setObject(x_, y_ - 1, 'p');
             }
-            return true;
         }
 
         else
         {
-            cout<<"The alien finds health beneath the rock."<<endl<<endl;
+            cout<<"The alien finds health beneath the rock."<<endl;
+            cout<<"The alien gains 20 health,"<<endl<<endl;
+            hp_ = hp_ + 20;
 
             if (heading_ == '<')
             {
-                board.setObject(alien.getX() - 1, alien.getY(), 'h');
+                board.setObject(x_ - 1, y_, 'h');
             }
 
             else if (heading_ == '>')
             {
-                board.setObject(alien.getX() + 1, alien.getY(), 'h');
+                board.setObject(x_ + 1, y_, 'h');
             }
 
             else if (heading_ == '^')
             {
-                board.setObject(alien.getX(), alien.getY() + 1, 'h');
+                board.setObject(x_, y_ + 1, 'h');
             }
 
             else
             {
-                board.setObject(alien.getX(), alien.getY() - 1, 'h');
+                board.setObject(x_, y_ - 1, 'h');
             }
-            return true;
         }
     }
 
@@ -720,7 +741,7 @@ void Alien::test2_3()
     Board board;
     Alien alien;
     string dir;
-    char heading;
+    char item;
 
     alien.land(board);
     board.display();
@@ -761,6 +782,10 @@ void Alien::test2_3()
         }
     }
 
+    board.display();
+    alien.status();
+    confirm();
+
     while (true)
     {
         if (heading_ == '^')
@@ -768,11 +793,11 @@ void Alien::test2_3()
             alien.up(board);
             board.display();
             alien.status();
-            alien.checkItem(alien.getItem(board));
+            item = alien.checkItem(alien.getItem(board));
             heading_ = alien.getHeading();
-            //usleep(1000000);
+            confirm();
             
-            if (alien.checkItem(alien.getItem(board)) == 'r')
+            if (item == 'r')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
                 dmg_ = 0;
@@ -792,11 +817,11 @@ void Alien::test2_3()
             alien.down(board);
             board.display();
             alien.status();
-            alien.checkItem(alien.getItem(board));
+            item = alien.checkItem(alien.getItem(board));
             heading_ = alien.getHeading();
-            //usleep(1000000);
+            confirm();
             
-            if (alien.checkItem(alien.getItem(board)) == 'r')
+            if (item == 'r')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
                 dmg_ = 0;
@@ -816,11 +841,11 @@ void Alien::test2_3()
             alien.left(board);
             board.display();
             alien.status();
-            alien.checkItem(alien.getItem(board));
+            item = alien.checkItem(alien.getItem(board));
             heading_ = alien.getHeading();
-            //usleep(1000000);
+            confirm();
             
-            if (alien.checkItem(alien.getItem(board)) == 'r')
+            if (item == 'r')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
                 dmg_ = 0;
@@ -840,11 +865,11 @@ void Alien::test2_3()
             alien.right(board);
             board.display();
             alien.status();
-            alien.checkItem(alien.getItem(board));
+            item = alien.checkItem(alien.getItem(board));
             heading_ = alien.getHeading();
-            //usleep(1000000);
+            confirm();
             
-            if (alien.checkItem(alien.getItem(board)) == 'r')
+            if (item == 'r')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
                 dmg_ = 0;
@@ -863,9 +888,60 @@ void Alien::test2_3()
 
 int main()
 {
+    Board board;
     Alien alien;
+    string command;
     srand(2); // use this for fixed board during testing
     // srand(time(NULL)); // this for random board
     //settings();
-    alien.test2_3();
+    while (true)
+    {
+        cout<<"command >> ";
+        cin>>command;
+        
+        if(command == "up")
+        {
+
+        }
+
+        else if (command == "down")
+        {
+
+        }
+
+        else if (command == "left")
+        {
+
+        }
+
+        else if (command == "right")
+        {
+
+        }
+
+        else if (command == "arrow")
+        {
+
+        }
+
+        else if (command == "help")
+        {
+            board.help();
+        }
+
+        else if (command == "save")
+        {
+        }
+
+        else if (command == "load")
+        {
+        }
+
+        else if (command == "quit")
+        {
+            cout<<endl<<"Thanks for playing!"<<endl;
+            break;
+        }
+    }
+    //alien.test2_3();
 }
