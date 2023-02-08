@@ -137,26 +137,6 @@ Board::Board(int boardX, int boardY)
     init(boardX, boardY);
 }
 
-bool Board::isEmpty(int x, int y, char ch)
-{
-    return x, y, (isblank(ch));
-}
-
-bool Board::isInsideMap(int x, int y, int maxX, int maxY)
-{
-    return (1<=x &&1<=y) && (x<=maxX && y<=maxY);
-}
-
-char Board::getObject(int x, int y) const
-{
-    return board_[boardY_-y][x-1];
-}
-
-void Board::setObject(int x, int y, int ch)
-{
-    board_[boardY_-y][x-1] = ch;
-}
-
 void Board::init(int boardX,int boardY)
 {
     boardX_ = boardX;
@@ -252,6 +232,26 @@ int Board::getBoardY() const
     return boardY_;
 }
 
+char Board::getObject(int x, int y) const
+{
+    return board_[boardY_-y][x-1];
+}
+
+void Board::setObject(int x, int y, int ch)
+{
+    board_[boardY_-y][x-1] = ch;
+}
+
+bool Board::isEmpty(int x, int y, char ch)
+{
+    return x, y, (isblank(ch));
+}
+
+bool Board::isInsideMap(int x, int y, int maxX, int maxY)
+{
+    return (1<=x &&1<=y) && (x<=maxX && y<=maxY);
+}
+
 void Board::help()
 {
     cout << endl;
@@ -278,8 +278,8 @@ class Alien
         void land(Board &board);
         int getX() const;
         int getY() const;
-        void status();
         char getHeading();
+        void status();
         void up(Board &board);
         void down(Board &board);
         void left(Board &board);
