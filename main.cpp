@@ -130,6 +130,7 @@ class Board
         bool isEmpty(int x, int y, char ch);
         bool isInsideMap(int x, int y, int maxX, int maxY);
         void help();
+        void arrow();
 };
 
 Board::Board(int boardX, int boardY)
@@ -265,6 +266,62 @@ void Board::help()
     cout << "7. save     - Save the game" << endl;
     cout << "8. load     - Load a game" << endl;
     cout << "9. quit     - Quit this game" << endl<<endl;
+}
+
+void Board::arrow()
+{
+    Board board;
+    int x,y;
+    string direction;
+
+    while (true)
+    {
+        cout<<"Enter row: "<<endl;
+        cin>>x;
+        cout<<endl<<"Enter column: "<<endl;
+        cin>>y;
+
+        if (board.getObject(x,y) != '^' || board.getObject(x,y) != 'v' || board.getObject(x,y) != '<' || board.getObject(x,y) != '>')
+        {
+            cout<< "The item selected is not found, please try again.";
+        }
+        else
+        {
+            continue;
+        }
+        
+        cout<<endl<<"Enter direction (up/down/left/right): "<<endl;
+        cin>>direction;
+
+        if (direction != "up" || direction != "down" || direction != "left" || direction != "right")
+        {
+            cout<< "Wrong input, please try again.";
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    if (direction == "up")
+    {
+        board.setObject(x,y,'^');
+    }
+
+    else if (direction == "down")
+    {
+        board.setObject(x,y,'v');
+    }
+
+    else if (direction == "left")
+    {
+        board.setObject(x,y,'<');
+    }
+
+    else
+    {
+        board.setObject(x,y,'>');
+    }
 }
 
 class Alien
@@ -921,7 +978,7 @@ int main()
 
         else if (command == "arrow")
         {
-
+            board.arrow();
         }
 
         else if (command == "help")
@@ -941,6 +998,11 @@ int main()
         {
             cout<<endl<<"Thanks for playing!"<<endl;
             break;
+        }
+        
+        else
+        {
+            cout<<"Entered wrong command, please try again."<<endl<<endl;
         }
     }
     //alien.test2_3();
