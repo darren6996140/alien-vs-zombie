@@ -131,6 +131,7 @@ class Board
         bool isInsideMap(int x, int y, int maxX, int maxY);
         void help();
         void arrow();
+        char command();
 };
 
 Board::Board(int boardX, int boardY)
@@ -272,28 +273,34 @@ void Board::arrow()
 {
     Board board;
     int x,y;
+    char obj;
     string direction;
 
     while (true)
     {
-        cout<<"Enter row: "<<endl;
-        cin>>x;
         cout<<endl<<"Enter column: "<<endl;
+        cin>>x;
+        cout<<"Enter row: "<<endl;
         cin>>y;
 
-        if (board.getObject(x,y) != '^' || board.getObject(x,y) != 'v' || board.getObject(x,y) != '<' || board.getObject(x,y) != '>')
+        if (board.getObject(x, y) != '^' && board.getObject(x, y) != 'v' && board.getObject(x, y) != '<' && board.getObject(x, y) != '>')
         {
             cout<< "The item selected is not found, please try again.";
         }
         else
-        {
-            continue;
+        {    
+            obj = board.getObject(x, y);
+            break;
         }
-        
+    }
+
+    cout<<obj;
+    while (true)
+    {   
         cout<<endl<<"Enter direction (up/down/left/right): "<<endl;
         cin>>direction;
 
-        if (direction != "up" || direction != "down" || direction != "left" || direction != "right")
+        if (direction != "up" && direction != "down" && direction != "left" && direction != "right")
         {
             cout<< "Wrong input, please try again.";
         }
@@ -563,20 +570,28 @@ char Alien::checkItem(char item)
 class Zombie
 {
     private:
-        int x_, y_, hp_, dmg_;
-        char heading_;
-        
+        int num_ = Z;
+        int x1_, y1_, hp1_, dmg1_, range1_ = rand() % 5;
+        int x2_, y2_, hp2_, dmg2_, range2_ = rand() % 5;
+        int x3_, y3_, hp3_, dmg3_, range3_ = rand() % 5;
+        int x4_, y4_, hp4_, dmg4_, range4_ = rand() % 5;
+        int x5_, y5_, hp5_, dmg5_, range5_ = rand() % 5;
+        int x6_, y6_, hp6_, dmg6_, range6_ = rand() % 5;
+        int x7_, y7_, hp7_, dmg7_, range7_ = rand() % 5;
+        int x8_, y8_, hp8_, dmg8_, range8_ = rand() % 5;
+        int x9_, y9_, hp9_, dmg9_, range9_ = rand() % 5;
+
     public:
         Zombie();
         void land(Board &board);
-        int getX() const;
-        int getY() const;
+        int getX(int num);
+        int getY(int num);
         void status();
-        //char getHeading() const;
-        void up(Board &board);
-        void down(Board &board);
-        void left(Board &board);
-        void right(Board &board);
+        void up(int zombie);
+        void down(int zombie);
+        void left(int zombie);
+        void right(int zombie);
+        void status();
 };
 
 Zombie::Zombie()
@@ -585,59 +600,518 @@ Zombie::Zombie()
 
 void Zombie::land(Board &board)
 {
-    x_ = board.getBoardX() / 2 + 1;
-    y_ = board.getBoardY() / 2 + 1;
-    heading_ = '^';
-    //board.setObject(x_, y_, alien_);
+    int num;
+    num = num_;
+    for (int i = 0; i <= num; --i)
+    {
+        board.setObject(rand() % X, rand() % Y, num);
+    }
 }
 
-int Zombie::getX() const
+int Zombie::getX(int num)
 {
-    return x_;
+    if (num == 1)
+    {
+        return x1_;
+    }
+
+    else if (num == 2)
+    {
+        return x2_;
+    }
+
+    else if (num == 3)
+    {
+        return x3_;
+    }
+
+    else if (num == 4)
+    {
+        return x4_;
+    }
+
+    else if (num == 5)
+    {
+        return x5_;
+    }
+
+    else if (num == 6)
+    {
+        return x6_;
+    }
+
+    else if (num == 7)
+    {
+        return x7_;
+    }
+    
+    else if (num == 8)
+    {
+        return x8_;
+    }
+
+    else if (num == 9)
+    {
+        return x9_;
+    }
 }
 
-int Zombie::getY() const
+int Zombie::getY(int num)
 {
-    return y_;
+    if (num == 1)
+    {
+        return y1_;
+    }
+
+    else if (num == 2)
+    {
+        return y2_;
+    }
+
+    else if (num == 3)
+    {
+        return y3_;
+    }
+
+    else if (num == 4)
+    {
+        return y4_;
+    }
+
+    else if (num == 5)
+    {
+        return y5_;
+    }
+
+    else if (num == 6)
+    {
+        return y6_;
+    }
+
+    else if (num == 7)
+    {
+        return y7_;
+    }
+    
+    else if (num == 8)
+    {
+        return y8_;
+    }
+
+    else if (num == 9)
+    {
+        return y9_;
+    }
 }
 
 void Zombie::status()
 {
-    // hp_ = 100;
-    // dmg_ = 0;
-    // cout<<"Alien : Health - "<<hp_<<", Damage - "<<dmg_<<endl;
+    if (Z == 1)
+    {
+        cout<<"Alien : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
+    }
+
+    else if (Z == 2)
+    {
+        cout<<"Alien : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp2_<<", Damage - "<<dmg2_<<", Range - "<<range2_<<endl<<endl;
+    }
+
+    else if (Z == 3)
+    {
+        cout<<"Alien : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp2_<<", Damage - "<<dmg2_<<", Range - "<<range2_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp3_<<", Damage - "<<dmg3_<<", Range - "<<range3_<<endl<<endl;
+    }
+
+    else if (Z == 4)
+    {
+        cout<<"Alien : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp2_<<", Damage - "<<dmg2_<<", Range - "<<range2_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp3_<<", Damage - "<<dmg3_<<", Range - "<<range3_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp4_<<", Damage - "<<dmg4_<<", Range - "<<range4_<<endl<<endl;
+    }
+
+    else if (Z == 5)
+    {
+        cout<<"Alien : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp2_<<", Damage - "<<dmg2_<<", Range - "<<range2_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp3_<<", Damage - "<<dmg3_<<", Range - "<<range3_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp4_<<", Damage - "<<dmg4_<<", Range - "<<range4_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp5_<<", Damage - "<<dmg5_<<", Range - "<<range5_<<endl<<endl;
+    }
+
+    else if (Z == 6)
+    {
+        cout<<"Alien : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp2_<<", Damage - "<<dmg2_<<", Range - "<<range2_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp3_<<", Damage - "<<dmg3_<<", Range - "<<range3_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp4_<<", Damage - "<<dmg4_<<", Range - "<<range4_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp5_<<", Damage - "<<dmg5_<<", Range - "<<range5_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp6_<<", Damage - "<<dmg6_<<", Range - "<<range6_<<endl<<endl;
+    }
+
+    else if (Z == 7)
+    {
+        cout<<"Alien : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp2_<<", Damage - "<<dmg2_<<", Range - "<<range2_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp3_<<", Damage - "<<dmg3_<<", Range - "<<range3_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp4_<<", Damage - "<<dmg4_<<", Range - "<<range4_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp5_<<", Damage - "<<dmg5_<<", Range - "<<range5_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp6_<<", Damage - "<<dmg6_<<", Range - "<<range6_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp7_<<", Damage - "<<dmg7_<<", Range - "<<range7_<<endl<<endl;
+    }
+    
+    else if (Z == 8)
+    {
+        cout<<"Alien : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp2_<<", Damage - "<<dmg2_<<", Range - "<<range2_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp3_<<", Damage - "<<dmg3_<<", Range - "<<range3_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp4_<<", Damage - "<<dmg4_<<", Range - "<<range4_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp5_<<", Damage - "<<dmg5_<<", Range - "<<range5_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp6_<<", Damage - "<<dmg6_<<", Range - "<<range6_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp7_<<", Damage - "<<dmg7_<<", Range - "<<range7_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp8_<<", Damage - "<<dmg8_<<", Range - "<<range8_<<endl<<endl;
+    }
+
+    else if (Z == 9)
+    {
+        cout<<"Alien : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp2_<<", Damage - "<<dmg2_<<", Range - "<<range2_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp3_<<", Damage - "<<dmg3_<<", Range - "<<range3_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp4_<<", Damage - "<<dmg4_<<", Range - "<<range4_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp5_<<", Damage - "<<dmg5_<<", Range - "<<range5_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp6_<<", Damage - "<<dmg6_<<", Range - "<<range6_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp7_<<", Damage - "<<dmg7_<<", Range - "<<range7_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp8_<<", Damage - "<<dmg8_<<", Range - "<<range8_<<endl<<endl;
+        cout<<"Alien : Health - "<<hp9_<<", Damage - "<<dmg9_<<", Range - "<<range9_<<endl<<endl;
+    }
 }
 
-void Zombie::up(Board &board)
+void Zombie::up(int zombie)
 {
-    heading_ = '^';
-    board.setObject(x_, y_, ' ');
-        y_++;
-    //board.setObject(x_, y_, alien_);
+    Board board;
+    if (zombie == 1)
+    {
+        board.setObject(x1_, y1_, ' ');
+        y1_++;
+    }
+
+    else if (zombie == 2)
+    {
+        board.setObject(x2_, y2_, ' ');
+        y2_++;
+    }
+
+    else if (zombie == 3)
+    {
+        board.setObject(x3_, y3_, ' ');
+        y3_++;
+    }
+
+    else if (zombie == 4)
+    {
+        board.setObject(x4_, y4_, ' ');
+        y4_++;
+    }
+
+    else if (zombie == 5)
+    {
+        board.setObject(x5_, y5_, ' ');
+        y5_++;
+    }
+
+    else if (zombie == 6)
+    {
+        board.setObject(x6_, y6_, ' ');
+        y6_++;
+    }
+
+    else if (zombie == 7)
+    {
+        board.setObject(x7_, y7_, ' ');
+        y7_++;
+    }
+    
+    else if (zombie == 8)
+    {
+        board.setObject(x8_, y8_, ' ');
+        y8_++;
+    }
+
+    else if (zombie == 9)
+    {
+        board.setObject(x9_, y9_, ' ');
+        y9_++;
+    }
 }
 
-void Zombie::down(Board &board)
+void Zombie::down(int zombie)
 {
-    heading_ = 'v';
-    board.setObject(x_, y_, ' ');
-        y_--;
-    //board.setObject(x_, y_, alien_);
+    Board board;
+    if (zombie == 1)
+    {
+        board.setObject(x1_, y1_, ' ');
+        y1_--;
+    }
+
+    else if (zombie == 2)
+    {
+        board.setObject(x2_, y2_, ' ');
+        y2_--;
+    }
+
+    else if (zombie == 3)
+    {
+        board.setObject(x3_, y3_, ' ');
+        y3_--;
+    }
+
+    else if (zombie == 4)
+    {
+        board.setObject(x4_, y4_, ' ');
+        y4_--;
+    }
+
+    else if (zombie == 5)
+    {
+        board.setObject(x5_, y5_, ' ');
+        y5_--;
+    }
+
+    else if (zombie == 6)
+    {
+        board.setObject(x6_, y6_, ' ');
+        y6_--;
+    }
+
+    else if (zombie == 7)
+    {
+        board.setObject(x7_, y7_, ' ');
+        y7_--;
+    }
+    
+    else if (zombie == 8)
+    {
+        board.setObject(x8_, y8_, ' ');
+        y8_--;
+    }
+
+    else if (zombie == 9)
+    {
+        board.setObject(x9_, y9_, ' ');
+        y9_--;
+    }
 }
 
-void Zombie::left(Board &board)
+void Zombie::left(int zombie)
 {
-    heading_ = '<';
-    board.setObject(x_, y_, ' ');
-        x_--;
-    //board.setObject(x_, y_, alien_);
+    Board board;
+    if (zombie == 1)
+    {
+        board.setObject(x1_, y1_, ' ');
+        x1_--;
+    }
+
+    else if (zombie == 2)
+    {
+        board.setObject(x2_, y2_, ' ');
+        x2_--;
+    }
+
+    else if (zombie == 3)
+    {
+        board.setObject(x3_, y3_, ' ');
+        x3_--;
+    }
+
+    else if (zombie == 4)
+    {
+        board.setObject(x4_, y4_, ' ');
+        x4_--;
+    }
+
+    else if (zombie == 5)
+    {
+        board.setObject(x5_, y5_, ' ');
+        x5_--;
+    }
+
+    else if (zombie == 6)
+    {
+        board.setObject(x6_, y6_, ' ');
+        x6_--;
+    }
+
+    else if (zombie == 7)
+    {
+        board.setObject(x7_, y7_, ' ');
+        x7_--;
+    }
+    
+    else if (zombie == 8)
+    {
+        board.setObject(x8_, y8_, ' ');
+        x8_--;
+    }
+
+    else if (zombie == 9)
+    {
+        board.setObject(x9_, y9_, ' ');
+        x9_--;
+    }
 }
 
-void Zombie::right(Board &board)
+void Zombie::right(int zombie)
 {
-    heading_ = '>';
-    board.setObject(x_, y_, ' ');
-        x_++;
-    //board.setObject(x_, y_, alien_);
+    Board board;
+    if (zombie == 1)
+    {
+        board.setObject(x1_, y1_, ' ');
+        x1_++;
+    }
+
+    else if (zombie == 2)
+    {
+        board.setObject(x2_, y2_, ' ');
+        x2_++;
+    }
+
+    else if (zombie == 3)
+    {
+        board.setObject(x3_, y3_, ' ');
+        x3_++;
+    }
+
+    else if (zombie == 4)
+    {
+        board.setObject(x4_, y4_, ' ');
+        x4_++;
+    }
+
+    else if (zombie == 5)
+    {
+        board.setObject(x5_, y5_, ' ');
+        x5_++;
+    }
+
+    else if (zombie == 6)
+    {
+        board.setObject(x6_, y6_, ' ');
+        x6_++;
+    }
+
+    else if (zombie == 7)
+    {
+        board.setObject(x7_, y7_, ' ');
+        x7_++;
+    }
+    
+    else if (zombie == 8)
+    {
+        board.setObject(x8_, y8_, ' ');
+        x8_++;
+    }
+
+    else if (zombie == 9)
+    {
+        board.setObject(x9_, y9_, ' ');
+        x9_++;
+    }
+}
+
+char Board::command()
+{
+    Board board;
+    Alien alien;
+    string command;
+
+    while (true)
+    {
+        cout<<"command >> ";
+        cin>>command;
+        transform(command.begin(), command.end(), command.begin(), ::tolower);
+        
+        if(command == "up")
+        {
+            return 'u';
+            break;
+        }
+
+        else if (command == "down")
+        {
+            return 'd';
+            break;
+        }
+
+        else if (command == "left")
+        {
+            return 'l';
+            break;
+        }
+
+        else if (command == "right")
+        {
+            return 'r';
+            break;
+        }
+
+        else if (command == "arrow")
+        {
+            return 'a';
+            break;
+        }
+
+        else if (command == "help")
+        {
+            return 'h';
+            break;
+        }
+
+        else if (command == "save")
+        {
+            return 's';
+            break;
+        }
+
+        else if (command == "load")
+        {
+            return 'o';
+            break;
+        }
+
+        else if (command == "quit")
+        {
+            while (true)
+            {
+                cout<<"Do you want to quit the game? (y/n)"<<endl;
+                char select;
+                cin>>select;
+                if (select == 'y' || select == 'Y')
+                {
+                    cout<<endl<<"Thanks for playing!"<<endl;
+                    usleep(2000000);
+                    return 'q';
+                    break;
+                }
+                else if (select == 'n' || select == 'N')
+                {
+                    cout<<endl;
+                    break;
+                }
+                else
+                {
+                    cout<<"Entered wrong command, please try again."<<endl<<endl;
+                }
+            }
+        }
+
+        else
+        {
+            cout<<"Entered wrong command, please try again."<<endl<<endl;
+        }
+    }
+    return 'z';
 }
 
 void test1_3()
@@ -797,51 +1271,66 @@ void Alien::test2_3()
 {
     Board board;
     Alien alien;
-    string dir;
+    Zombie zombie;
+    char command;
     char item;
 
     alien.land(board);
+    zombie.land(board);
     board.display();
     alien.status();
 
+    command = board.command();
+
     while(true)
     {
-        cout<<"Please enter a command(up/down/left/right): ";
-        cin >>dir;
-        transform(dir.begin(), dir.end(), dir.begin(), ::tolower);
-
-        if (dir == "up" || dir == "down" || dir == "left" || dir == "right")
+        if (command == 'u' || command == 'd' || command == 'l' || command == 'r')
         {
-            if (dir == "up")
+            if (command == 'u')
             {
                 heading_ = '^';
             }
 
-            else if(dir == "down")
+            else if(command == 'd')
             {
                 heading_ = 'v';
             }
 
-            else if(dir == "left")
+            else if(command == 'l')
             {
                 heading_ = '<';
             }
 
-            else if(dir == "right")
+            else if(command == 'r')
             {
                 heading_= '>';
             }
             break;
         }
-        else
+
+        if (command == 'a')
         {
-            cout << "Entered wrong input, please try again." << endl<<endl;
+            board.arrow();
+        }
+
+        if (command == 'h')
+        {
+            //system("cls"); //undo before launch
+            board.help();
+            alien.test2_3();
+        }
+
+        if (command == 'q')
+        {
+            abort();
         }
     }
 
+    //system("cls"); //undo before launch
     board.display();
     alien.status();
     confirm();
+    //system("cls"); //undo before launch
 
     while (true)
     {
@@ -853,7 +1342,8 @@ void Alien::test2_3()
             item = alien.checkItem(alien.getItem(board));
             heading_ = alien.getHeading();
             confirm();
-            
+            //system("cls"); //undo before launch
+
             if (item == 'r')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
@@ -877,7 +1367,8 @@ void Alien::test2_3()
             item = alien.checkItem(alien.getItem(board));
             heading_ = alien.getHeading();
             confirm();
-            
+            //system("cls"); //undo before launch
+
             if (item == 'r')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
@@ -901,7 +1392,8 @@ void Alien::test2_3()
             item = alien.checkItem(alien.getItem(board));
             heading_ = alien.getHeading();
             confirm();
-            
+            //system("cls"); //undo before launch
+
             if (item == 'r')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
@@ -925,7 +1417,8 @@ void Alien::test2_3()
             item = alien.checkItem(alien.getItem(board));
             heading_ = alien.getHeading();
             confirm();
-            
+            //system("cls"); //undo before launch
+
             if (item == 'r')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
@@ -951,59 +1444,19 @@ int main()
     srand(2); // use this for fixed board during testing
     // srand(time(NULL)); // this for random board
     //settings();
-    while (true)
-    {
-        cout<<"command >> ";
-        cin>>command;
-        
-        if(command == "up")
-        {
-
-        }
-
-        else if (command == "down")
-        {
-
-        }
-
-        else if (command == "left")
-        {
-
-        }
-
-        else if (command == "right")
-        {
-
-        }
-
-        else if (command == "arrow")
-        {
-            board.arrow();
-        }
-
-        else if (command == "help")
-        {
-            board.help();
-        }
-
-        else if (command == "save")
-        {
-        }
-
-        else if (command == "load")
-        {
-        }
-
-        else if (command == "quit")
-        {
-            cout<<endl<<"Thanks for playing!"<<endl;
-            break;
-        }
-        
-        else
-        {
-            cout<<"Entered wrong command, please try again."<<endl<<endl;
-        }
-    }
-    //alien.test2_3();
+    alien.test2_3();
 }
+
+//!DONE
+// 5. User positioning
+// 9. Quitting game
+// 10. Help option
+
+//TODO
+// 1. User health system
+// 2. User attack system
+// 3. Damage system
+// 4. Zombie positioning
+// 6. Zombie attack system
+// 7. Game saving
+// 8. Game load
