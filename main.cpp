@@ -288,7 +288,7 @@ void Board::arrow()
             cout<< "The item selected is not found, please try again.";
         }
         else
-        {    
+        {
             obj = board.getObject(x, y);
             break;
         }
@@ -591,7 +591,6 @@ class Zombie
         void down(int zombie);
         void left(int zombie);
         void right(int zombie);
-        void status();
 };
 
 Zombie::Zombie()
@@ -654,6 +653,7 @@ int Zombie::getX(int num)
     {
         return x9_;
     }
+    return 0;
 }
 
 int Zombie::getY(int num)
@@ -702,6 +702,7 @@ int Zombie::getY(int num)
     {
         return y9_;
     }
+    return 0;
 }
 
 void Zombie::status()
