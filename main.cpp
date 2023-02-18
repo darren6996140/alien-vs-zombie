@@ -351,6 +351,7 @@ class Alien
         char getItem(Board &board);
         char checkItem(char item);
         void damage(int hp);
+        void reset();
         void main();
 };
 
@@ -459,6 +460,7 @@ char Alien::checkItem(char item)
 {
     Alien alien;
     Board board;
+    Zombie zombie;
 
     if (item == 'r')
     {
@@ -527,7 +529,7 @@ char Alien::checkItem(char item)
 
     else if (item == 'p')
     {
-        cout<<"Alien finds a pod"<<endl;
+        cout<<"Alien finds a pod."<<endl;
     }
 
     else if (item == '^')
@@ -558,10 +560,54 @@ char Alien::checkItem(char item)
         heading_ = '<';
     }
 
-    else if(item == ' '){
-        //
+    else if(item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
+    {
+        if (item == '1')
+        {
+            cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
+            zombie.damage(1);
+        }
+        else if (item == '2')
+        {
+            cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
+            zombie.damage(2);
+        }
+        else if (item == '3')
+        {
+            cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
+            zombie.damage(3);
+        }
+        else if (item == '4')
+        {
+            cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
+            zombie.damage(4);
+        }
+        else if (item == '5')
+        {
+            cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
+            zombie.damage(5);
+        }
+        else if (item == '6')
+        {
+            cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
+            zombie.damage(6);
+        }
+        else if (item == '7')
+        {
+            cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
+            zombie.damage(7);
+        }
+        else if (item == '8')
+        {
+            cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
+            zombie.damage(8);
+        }
+        else if (item == '9')
+        {
+            cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
+            zombie.damage(9);
+        }
     }
-
     else
     {
     }
@@ -571,6 +617,57 @@ char Alien::checkItem(char item)
 void Alien::damage(int hp)
 {
     hp_ = hp_ - hp;
+}
+
+void Alien::reset()
+{
+    Board board;
+    char trail;
+    int seed;
+
+    for (int i = 1; i <= X; ++i)
+    {
+        for (int j = 1; j <= Y; ++j)
+        {
+            trail = board.getObject(i,j);
+            if (trail == '.')
+            {
+                seed = rand() % 9 + 1;
+                if (seed == 1)
+                {
+                    board.setObject(i,j,'^');
+                }
+                else if (seed == 2)
+                {
+                    board.setObject(i,j,'v');
+                }
+                else if (seed == 3)
+                {
+                    board.setObject(i,j,'<');
+                }
+                else if (seed == 4)
+                {
+                    board.setObject(i,j,'>');
+                }
+                else if (seed == 5)
+                {
+                    board.setObject(i,j,'h');
+                }
+                else if (seed == 6)
+                {
+                    board.setObject(i,j,'p');
+                }
+                else if (seed == 7)
+                {
+                    board.setObject(i,j,'r');
+                }
+                else
+                {
+                    board.setObject(i,j,' ');
+                }
+            }
+        }
+    }
 }
 
 class Zombie
@@ -598,6 +695,7 @@ class Zombie
         void left(int zombie);
         void right(int zombie);
         char search(int zombie);
+        void damage(int zombie);
         void main();
 };
 
@@ -1641,6 +1739,55 @@ char Zombie::search(int zombie)
             }
         }
     }
+    return 0;
+}
+
+void Zombie::damage(int zombie)
+{
+    if (zombie == 1)
+    {
+        hp1_ = hp1_ - 10;
+    }
+
+    else if (zombie == 2)
+    {
+        hp2_ = hp2_ - 10;
+    }
+
+    else if (zombie == 3)
+    {
+        hp3_ = hp3_ - 10;
+    }
+
+    else if (zombie == 4)
+    {
+        hp4_ = hp4_ - 10;
+    }
+
+    else if (zombie == 5)
+    {
+        hp5_ = hp5_ - 10;
+    }
+
+    else if (zombie == 6)
+    {
+        hp6_ = hp6_ - 10;
+    }
+
+    else if (zombie == 7)
+    {
+        hp7_ = hp7_ - 10;
+    }
+
+    else if (zombie == 8)
+    {
+        hp8_ = hp8_ - 10;
+    }
+
+    else if (zombie == 9)
+    {
+        hp9_ = hp9_ - 10;
+    }
 }
 
 void test1_3()
@@ -1970,10 +2117,11 @@ void Alien::main()
             confirm();
             //system("cls"); //undo before launch
 
-            if (item == 'r')
+            if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
                 dmg_ = 0;
+                alien.reset();
                 break;
             }
 
@@ -1981,6 +2129,7 @@ void Alien::main()
             {
                 cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted.";
                 dmg_ = 0;
+                alien.reset();
                 break;
             }
         }
@@ -1996,10 +2145,11 @@ void Alien::main()
             confirm();
             //system("cls"); //undo before launch
 
-            if (item == 'r')
+            if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
                 dmg_ = 0;
+                alien.reset();
                 break;
             }
 
@@ -2007,6 +2157,7 @@ void Alien::main()
             {
                 cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted.";
                 dmg_ = 0;
+                alien.reset();
                 break;
             }
         }
@@ -2022,10 +2173,11 @@ void Alien::main()
             confirm();
             //system("cls"); //undo before launch
 
-            if (item == 'r')
+            if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
                 dmg_ = 0;
+                alien.reset();
                 break;
             }
 
@@ -2033,6 +2185,7 @@ void Alien::main()
             {
                 cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted.";
                 dmg_ = 0;
+                alien.reset();
                 break;
             }
         }
@@ -2048,10 +2201,11 @@ void Alien::main()
             confirm();
             //system("cls"); //undo before launch
 
-            if (item == 'r')
+            if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
                 dmg_ = 0;
+                alien.reset();
                 break;
             }
 
@@ -2059,6 +2213,7 @@ void Alien::main()
             {
                 cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted.";
                 dmg_ = 0;
+                alien.reset();
                 break;
             }
         }
@@ -3198,6 +3353,8 @@ int main()
 
 //!DONE
 // 1. User health system
+// 2. User attack system
+//2.2 close range
 // 3. Damage system (untested)
 // 4. Zombie positioning
 // 5. User positioning
@@ -3207,7 +3364,6 @@ int main()
 
 //TODO
 // 2. User attack system
-//pod
-//close range
+//2.1 pod
 // 7. Game saving
 // 8. Game load
