@@ -530,6 +530,34 @@ char Alien::checkItem(char item)
     else if (item == 'p')
     {
         cout<<"Alien finds a pod."<<endl;
+        while (true)
+        {
+            int zomX [9] = {zombie.getX(1), zombie.getX(2), zombie.getX(3), zombie.getX(4), zombie.getX(5), zombie.getX(6), zombie.getX(7), zombie.getX(8), zombie.getX(9)};
+            int zomY[9] = {zombie.getY(1), zombie.getY(2), zombie.getY(3), zombie.getY(4), zombie.getY(5), zombie.getY(6), zombie.getY(7), zombie.getY(8), zombie.getY(9)};
+            int distance[9];
+            int closest[2] = {100, 0};
+
+            for (int i = 0; i < Z; ++i)
+            {
+                distance[i] = zomX[i] + zomY[i];
+            }       
+
+            for (int j = 0; j <= sizeof(distance); ++j)
+            {
+                if (distance[j] > 0 && distance[j] < X+Y)
+                {
+                    if (distance[j] < closest[0])
+                    {
+                        closest[0] = distance[j];
+                        closest[1] = j;
+                    }
+                }
+            }
+
+            cout<<"Zombie "<<closest[1]<<" is the closest to the alien."<<endl;
+            cout<<"Zombie "<<closest[1]<<" recieves 10 damage."<<endl;
+            zombie.damage(closest[1], 10);
+        }
     }
 
     else if (item == '^')
@@ -565,47 +593,47 @@ char Alien::checkItem(char item)
         if (item == '1')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(1);
+            zombie.damage(1, dmg_);
         }
         else if (item == '2')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(2);
+            zombie.damage(2, dmg_);
         }
         else if (item == '3')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(3);
+            zombie.damage(3, dmg_);
         }
         else if (item == '4')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(4);
+            zombie.damage(4, dmg_);
         }
         else if (item == '5')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(5);
+            zombie.damage(5, dmg_);
         }
         else if (item == '6')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(6);
+            zombie.damage(6, dmg_);
         }
         else if (item == '7')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(7);
+            zombie.damage(7, dmg_);
         }
         else if (item == '8')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(8);
+            zombie.damage(8, dmg_);
         }
         else if (item == '9')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(9);
+            zombie.damage(9, dmg_);
         }
     }
     else
@@ -695,7 +723,7 @@ class Zombie
         void left(int zombie);
         void right(int zombie);
         char search(int zombie);
-        void damage(int zombie);
+        void damage(int zombie, int damage);
         void main();
 };
 
@@ -705,28 +733,25 @@ Zombie::Zombie()
 
 void Zombie::land(Board &board)
 {
-    int num;
-    num = num_;
-
-    if (num == 1)
+    if (num_ == 1)
     {
         board.setObject(rand() % X + 1 +1, rand() % Y + 1 +1, '1');
     }
 
-    else if (num == 2)
+    else if (num_ == 2)
     {
         board.setObject(rand() % X + 1, rand() % Y + 1, '1');
         board.setObject(rand() % X + 1, rand() % Y + 1, '2');
     }
 
-    else if (num == 3)
+    else if (num_ == 3)
     {
         board.setObject(rand() % X + 1, rand() % Y + 1, '1');
         board.setObject(rand() % X + 1, rand() % Y + 1, '2');
         board.setObject(rand() % X + 1, rand() % Y + 1, '3');
     }
 
-    else if (num == 4)
+    else if (num_ == 4)
     {
         board.setObject(rand() % X + 1, rand() % Y + 1, '1');
         board.setObject(rand() % X + 1, rand() % Y + 1, '2');
@@ -734,7 +759,7 @@ void Zombie::land(Board &board)
         board.setObject(rand() % X + 1, rand() % Y + 1, '4');
     }
 
-    else if (num == 5)
+    else if (num_ == 5)
     {
         board.setObject(rand() % X + 1, rand() % Y + 1, '1');
         board.setObject(rand() % X + 1, rand() % Y + 1, '2');
@@ -743,7 +768,7 @@ void Zombie::land(Board &board)
         board.setObject(rand() % X + 1, rand() % Y + 1, '5');
     }
 
-    else if (num == 6)
+    else if (num_ == 6)
     {
         board.setObject(rand() % X + 1, rand() % Y + 1, '1');
         board.setObject(rand() % X + 1, rand() % Y + 1, '2');
@@ -753,7 +778,7 @@ void Zombie::land(Board &board)
         board.setObject(rand() % X + 1, rand() % Y + 1, '6');
     }
 
-    else if (num == 7)
+    else if (num_ == 7)
     {
         board.setObject(rand() % X + 1, rand() % Y + 1, '1');
         board.setObject(rand() % X + 1, rand() % Y + 1, '2');
@@ -764,7 +789,7 @@ void Zombie::land(Board &board)
         board.setObject(rand() % X + 1, rand() % Y + 1, '7');
     }
     
-    else if (num == 8)
+    else if (num_ == 8)
     {
         board.setObject(rand() % X + 1, rand() % Y + 1, '1');
         board.setObject(rand() % X + 1, rand() % Y + 1, '2');
@@ -776,7 +801,7 @@ void Zombie::land(Board &board)
         board.setObject(rand() % X + 1, rand() % Y + 1, '8');
     }
 
-    else if (num == 9)
+    else if (num_ == 9)
     {
         board.setObject(rand() % X + 1, rand() % Y + 1, '1');
         board.setObject(rand() % X + 1, rand() % Y + 1, '2');
@@ -1742,51 +1767,51 @@ char Zombie::search(int zombie)
     return 0;
 }
 
-void Zombie::damage(int zombie)
+void Zombie::damage(int zombie, int damage)
 {
     if (zombie == 1)
     {
-        hp1_ = hp1_ - 10;
+        hp1_ = hp1_ - damage;
     }
 
     else if (zombie == 2)
     {
-        hp2_ = hp2_ - 10;
+        hp2_ = hp2_ - damage;
     }
 
     else if (zombie == 3)
     {
-        hp3_ = hp3_ - 10;
+        hp3_ = hp3_ - damage;
     }
 
     else if (zombie == 4)
     {
-        hp4_ = hp4_ - 10;
+        hp4_ = hp4_ - damage;
     }
 
     else if (zombie == 5)
     {
-        hp5_ = hp5_ - 10;
+        hp5_ = hp5_ - damage;
     }
 
     else if (zombie == 6)
     {
-        hp6_ = hp6_ - 10;
+        hp6_ = hp6_ - damage;
     }
 
     else if (zombie == 7)
     {
-        hp7_ = hp7_ - 10;
+        hp7_ = hp7_ - damage;
     }
 
     else if (zombie == 8)
     {
-        hp8_ = hp8_ - 10;
+        hp8_ = hp8_ - damage;
     }
 
     else if (zombie == 9)
     {
-        hp9_ = hp9_ - 10;
+        hp9_ = hp9_ - damage;
     }
 }
 
@@ -3354,16 +3379,15 @@ int main()
 //!DONE
 // 1. User health system
 // 2. User attack system
-//2.2 close range
-// 3. Damage system (untested)
+//!2.1 pod (untested)
+//!2.2 close range (untested)
+// !3. Damage system (untested)
 // 4. Zombie positioning
 // 5. User positioning
-// 6. Zombie attack system (untested)
+// !6. Zombie attack system (untested)
 // 9. Quitting game
 // 10. Help option
 
 //TODO
-// 2. User attack system
-//2.1 pod
 // 7. Game saving
 // 8. Game load
