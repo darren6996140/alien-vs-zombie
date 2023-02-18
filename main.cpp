@@ -134,6 +134,59 @@ class Board
         char command();
 };
 
+class Zombie
+{
+    private:
+        int num_ = Z;
+        int x1_, y1_, hp1_ = (rand() % 3 + 1) * 100, dmg1_ = (rand() % 3 + 1) * 5, range1_ = rand() % 4 + 1;
+        int x2_, y2_, hp2_ = (rand() % 3 + 1) * 100, dmg2_ = (rand() % 3 + 1) * 5, range2_ = rand() % 4 + 1;
+        int x3_, y3_, hp3_ = (rand() % 3 + 1) * 100, dmg3_ = (rand() % 3 + 1) * 5, range3_ = rand() % 4 + 1;
+        int x4_, y4_, hp4_ = (rand() % 3 + 1) * 100, dmg4_ = (rand() % 3 + 1) * 5, range4_ = rand() % 4 + 1;
+        int x5_, y5_, hp5_ = (rand() % 3 + 1) * 100, dmg5_ = (rand() % 3 + 1) * 5, range5_ = rand() % 4 + 1;
+        int x6_, y6_, hp6_ = (rand() % 3 + 1) * 100, dmg6_ = (rand() % 3 + 1) * 5, range6_ = rand() % 4 + 1;
+        int x7_, y7_, hp7_ = (rand() % 3 + 1) * 100, dmg7_ = (rand() % 3 + 1) * 5, range7_ = rand() % 4 + 1;
+        int x8_, y8_, hp8_ = (rand() % 3 + 1) * 100, dmg8_ = (rand() % 3 + 1) * 5, range8_ = rand() % 4 + 1;
+        int x9_, y9_, hp9_ = (rand() % 3 + 1) * 100, dmg9_ = (rand() % 3 + 1) * 5, range9_ = rand() % 4 + 1;
+
+    public:
+        Zombie();
+        void land(Board &board);
+        int getX(int num);
+        int getY(int num);
+        void status();
+        void up(int zombie);
+        void down(int zombie);
+        void left(int zombie);
+        void right(int zombie);
+        char search(int zombie);
+        void damage(int zombie, int damage);
+        void main();
+};
+
+class Alien
+{
+    private:
+        int x_, y_, hp_, dmg_;
+        char heading_,alien_;
+        
+    public:
+        Alien();
+        void land(Board &board);
+        int getX() const;
+        int getY() const;
+        char getHeading();
+        void status();
+        void up(Board &board);
+        void down(Board &board);
+        void left(Board &board);
+        void right(Board &board);
+        char getItem(Board &board);
+        char checkItem(char item);
+        void damage(int hp);
+        void reset();
+        void main();
+};
+
 Board::Board(int boardX, int boardY)
 {
     init(boardX, boardY);
@@ -330,30 +383,6 @@ void Board::arrow()
         board.setObject(x,y,'>');
     }
 }
-
-class Alien
-{
-    private:
-        int x_, y_, hp_, dmg_;
-        char heading_,alien_;
-        
-    public:
-        Alien();
-        void land(Board &board);
-        int getX() const;
-        int getY() const;
-        char getHeading();
-        void status();
-        void up(Board &board);
-        void down(Board &board);
-        void left(Board &board);
-        void right(Board &board);
-        char getItem(Board &board);
-        char checkItem(char item);
-        void damage(int hp);
-        void reset();
-        void main();
-};
 
 Alien::Alien()
 {
@@ -697,35 +726,6 @@ void Alien::reset()
         }
     }
 }
-
-class Zombie
-{
-    private:
-        int num_ = Z;
-        int x1_, y1_, hp1_ = (rand() % 3 + 1) * 100, dmg1_ = (rand() % 3 + 1) * 5, range1_ = rand() % 4 + 1;
-        int x2_, y2_, hp2_ = (rand() % 3 + 1) * 100, dmg2_ = (rand() % 3 + 1) * 5, range2_ = rand() % 4 + 1;
-        int x3_, y3_, hp3_ = (rand() % 3 + 1) * 100, dmg3_ = (rand() % 3 + 1) * 5, range3_ = rand() % 4 + 1;
-        int x4_, y4_, hp4_ = (rand() % 3 + 1) * 100, dmg4_ = (rand() % 3 + 1) * 5, range4_ = rand() % 4 + 1;
-        int x5_, y5_, hp5_ = (rand() % 3 + 1) * 100, dmg5_ = (rand() % 3 + 1) * 5, range5_ = rand() % 4 + 1;
-        int x6_, y6_, hp6_ = (rand() % 3 + 1) * 100, dmg6_ = (rand() % 3 + 1) * 5, range6_ = rand() % 4 + 1;
-        int x7_, y7_, hp7_ = (rand() % 3 + 1) * 100, dmg7_ = (rand() % 3 + 1) * 5, range7_ = rand() % 4 + 1;
-        int x8_, y8_, hp8_ = (rand() % 3 + 1) * 100, dmg8_ = (rand() % 3 + 1) * 5, range8_ = rand() % 4 + 1;
-        int x9_, y9_, hp9_ = (rand() % 3 + 1) * 100, dmg9_ = (rand() % 3 + 1) * 5, range9_ = rand() % 4 + 1;
-
-    public:
-        Zombie();
-        void land(Board &board);
-        int getX(int num);
-        int getY(int num);
-        void status();
-        void up(int zombie);
-        void down(int zombie);
-        void left(int zombie);
-        void right(int zombie);
-        char search(int zombie);
-        void damage(int zombie, int damage);
-        void main();
-};
 
 Zombie::Zombie()
 {
