@@ -4,7 +4,7 @@ This is a board game between Alien and Zombie.User will be playing as Alien whil
 
 You may add one signature screenshot of your program here or above the title. Check out [this tutorial](https://www.digitalocean.com/community/tutorials/markdown-markdown-images) to learn how to do it.
 
-Please provide the YouTube link to your [Video Demo](https://youtube.com).
+Please provide the YouTube link to your [Video Demo 1](https://youtu.be/_p5bqbCtQMc) [Video Demo 2](https://youtu.be/UNjhXJ942gM) [Video Demo 3](https://youtu.be/51j-G1UWJdI).
 
 ## Compilation Instructions
 
