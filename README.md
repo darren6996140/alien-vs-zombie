@@ -6,7 +6,7 @@ Please provide the YouTube link to your [Video Demo 1](https://youtu.be/_p5bqbCt
 
 ## Compilation Instructions
 
-
+Double click the main.exe to play our game.
 
 ## User Manual
 
