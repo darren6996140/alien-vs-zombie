@@ -608,10 +608,10 @@ char Alien::checkItem(char item)
         cout<<"Alien finds a pod."<<endl;
         while (true)
         {
-            int zomX [9] = {zombie.getX(1), zombie.getX(2), zombie.getX(3), zombie.getX(4), zombie.getX(5), zombie.getX(6), zombie.getX(7), zombie.getX(8), zombie.getX(9)};
+            int zomX [9] = {X1, X2, X3, X4, X5, X6, X7, X8, X9};
 
-            int zomY[9] = {zombie.getY(1), zombie.getY(2), zombie.getY(3), zombie.getY(4), zombie.getY(5), zombie.getY(6), zombie.getY(7), zombie.getY(8), zombie.getY(9)};
-            
+            int zomY[9] = {Y1, Y2, Y3, Y4, Y5, Y6, Y7, X8, Y9};
+
             int distance[9];
             int closest[2] = {100, 0};
 
