@@ -20,7 +20,16 @@
 using namespace std;
 
 int X = 15, Y = 5, Z = 1, init = 0;
-int aX, aY;
+int Xa, Ya, HP, DMG;
+int X1, Y1, HP1, DMG1, RNG1;
+int X2, Y2, HP2, DMG2, RNG2;
+int X3, Y3, HP3, DMG3, RNG3;
+int X4, Y4, HP4, DMG4, RNG4;
+int X5, Y5, HP5, DMG5, RNG5;
+int X6, Y6, HP6, DMG6, RNG6;
+int X7, Y7, HP7, DMG7, RNG7;
+int X8, Y8, HP8, DMG8, RNG8;
+int X9, Y9, HP9, DMG9, RNG9;
 
 void settings()
 {
@@ -138,13 +147,13 @@ class Board
 class Alien
 {
     private:
-        int x_, y_, hp_, dmg_;
+        int x_, y_;
         char heading_,alien_;
         
     public:
         Alien();
         void landinit(Board &board);
-        void land(Board &board, int x, int y);
+        void land(Board &board);
         int getX() const;
         int getY() const;
         char getHeading();
@@ -163,30 +172,19 @@ class Alien
 class Zombie
 {
     private:
-        int num_ = Z;
-        int x1_, y1_, hp1_, dmg1_, range1_;
-        int x2_, y2_, hp2_, dmg2_, range2_;
-        int x3_, y3_, hp3_, dmg3_, range3_;
-        int x4_, y4_, hp4_, dmg4_, range4_;
-        int x5_, y5_, hp5_, dmg5_, range5_;
-        int x6_, y6_, hp6_, dmg6_, range6_;
-        int x7_, y7_, hp7_, dmg7_, range7_;
-        int x8_, y8_, hp8_, dmg8_, range8_;
-        int x9_, y9_, hp9_, dmg9_, range9_;
 
     public:
         Zombie();
         void landinit(Board &board);
-        void land(Board &board);
-        int getX(int num);
-        int getY(int num);
+        void land(Board &board, int zombie);
+        int getX(int zombie);
+        int getY(int zombie);
         void status();
         void up(int zombie);
         void down(int zombie);
         void left(int zombie);
         void right(int zombie);
-        char search(int zombie);
-        void damage(int zombie, int damage);
+        void damage(int zombie, int hp);
         void main();
 };
 
@@ -389,23 +387,24 @@ void Board::arrow()
 
 Alien::Alien()
 {
-    hp_ = 100;
-    dmg_ = 0;
+    HP = 100;
+    DMG = 0;
 }
 
 void Alien::landinit(Board &board)
 {
-    x_ = board.getBoardX() / 2;
+    x_ = board.getBoardX() / 2; //todo + 1
     y_ = board.getBoardY() / 2 + 1;
     heading_ = '^';
     alien_ = 'A';
     board.setObject(x_, y_, alien_);
 }
 
-void Alien::land(Board &board , int x, int y)
+void Alien::land(Board &board)
 {
     Alien alien;
-    board.setObject(aX, aY, alien_);
+    alien_ = 'A';
+    board.setObject(Xa, Ya, alien_);
 }
 
 int Alien::getX() const
@@ -425,7 +424,7 @@ char Alien::getHeading()
 
 void Alien::status()
 {
-    cout<<"Alien : Health - "<<hp_<<", Damage - "<<dmg_<<endl<<endl;
+    cout<<"Alien : Health - "<<HP<<", Damage - "<<DMG<<endl<<endl;
 }
 
 void Alien::up(Board &board)
@@ -535,7 +534,7 @@ char Alien::checkItem(char item)
         {
             cout<<"The alien finds health beneath the rock."<<endl;
             cout<<"The alien gains 20 health,"<<endl<<endl;
-            hp_ = hp_ + 20;
+            HP = HP + 20;
 
             if (heading_ == '<')
             {
@@ -562,7 +561,7 @@ char Alien::checkItem(char item)
     else if (item == 'h')
     {
         cout<<"Alien finds health, Alien's health is increased by 20."<<endl;
-        hp_ = hp_ + 20;
+        HP = HP + 20;
     }
 
     else if (item == 'p')
@@ -570,14 +569,14 @@ char Alien::checkItem(char item)
         cout<<"Alien finds a pod."<<endl;
         while (true)
         {
-            int zomX [9] = {zombie.getX(1), zombie.getX(2), zombie.getX(3), zombie.getX(4), zombie.getX(5), zombie.getX(6), zombie.getX(7), zombie.getX(8), zombie.getX(9)};
-            int zomY[9] = {zombie.getY(1), zombie.getY(2), zombie.getY(3), zombie.getY(4), zombie.getY(5), zombie.getY(6), zombie.getY(7), zombie.getY(8), zombie.getY(9)};
+            //todo int zomX [9] = {zombie.getX(1), zombie.getX(2), zombie.getX(3), zombie.getX(4), zombie.getX(5), zombie.getX(6), zombie.getX(7), zombie.getX(8), zombie.getX(9)};
+            //todo int zomY[9] = {zombie.getY(1), zombie.getY(2), zombie.getY(3), zombie.getY(4), zombie.getY(5), zombie.getY(6), zombie.getY(7), zombie.getY(8), zombie.getY(9)};
             int distance[9];
             int closest[2] = {100, 0};
 
             for (int i = 0; i < Z; ++i)
             {
-                distance[i] = zomX[i] + zomY[i];
+                //distance[i] = zomX[i] + zomY[i];
             }       
 
             for (int j = 0; j <= sizeof(distance); ++j)
@@ -601,28 +600,28 @@ char Alien::checkItem(char item)
     else if (item == '^')
     {
         cout<< "Alien finds a up arrow, alien will move up."<<endl<<"Alien's damage will increase by 20."<<endl;
-        dmg_ = dmg_ + 20;
+        DMG = DMG + 20;
         heading_ = '^';
     }
 
     else if (item == 'v')
     {
         cout<< "Alien finds a down arrow, alien will move down."<<endl<<"Alien's damage will increase by 20."<<endl;
-        dmg_ = dmg_ + 20;
+        DMG = DMG + 20;
         heading_ = 'v';
     }
 
     else if (item == '>')
     {
         cout<< "Alien finds a right arrow, alien will move right."<<endl<<"Alien's damage will increase by 20."<<endl;
-        dmg_ = dmg_ + 20;
+        DMG = DMG + 20;
         heading_ = '>';
     }
 
     else if (item == '<')
     {
         cout<< "Alien finds a left arrow, alien will move left."<<endl<<"Alien's damage will increase by 20."<<endl;
-        dmg_ = dmg_ + 20;
+        DMG = DMG + 20;
         heading_ = '<';
     }
 
@@ -631,47 +630,47 @@ char Alien::checkItem(char item)
         if (item == '1')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(1, dmg_);
+            zombie.damage(1, DMG);
         }
         else if (item == '2')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(2, dmg_);
+            zombie.damage(2, DMG);
         }
         else if (item == '3')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(3, dmg_);
+            zombie.damage(3, DMG);
         }
         else if (item == '4')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(4, dmg_);
+            zombie.damage(4, DMG);
         }
         else if (item == '5')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(5, dmg_);
+            zombie.damage(5, DMG);
         }
         else if (item == '6')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(6, dmg_);
+            zombie.damage(6, DMG);
         }
         else if (item == '7')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(7, dmg_);
+            zombie.damage(7, DMG);
         }
         else if (item == '8')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(8, dmg_);
+            zombie.damage(8, DMG);
         }
         else if (item == '9')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
-            zombie.damage(9, dmg_);
+            zombie.damage(9, DMG);
         }
     }
     else
@@ -682,7 +681,7 @@ char Alien::checkItem(char item)
 
 void Alien::damage(int hp)
 {
-    hp_ = hp_ - hp;
+    HP = HP - hp;
 }
 
 void Alien::reset()
@@ -739,375 +738,374 @@ void Alien::reset()
 
 Zombie::Zombie()
 {
-    hp1_ = (rand() % 3 + 1) * 100, dmg1_ = (rand() % 5 + 1) * 5, range1_ = rand() % 4 + 1;
-    hp2_ = (rand() % 3 + 1) * 100, dmg2_ = (rand() % 5 + 1) * 5, range2_ = rand() % 4 + 1;
-    hp3_ = (rand() % 3 + 1) * 100, dmg3_ = (rand() % 5 + 1) * 5, range3_ = rand() % 4 + 1;
-    hp4_ = (rand() % 3 + 1) * 100, dmg4_ = (rand() % 5 + 1) * 5, range4_ = rand() % 4 + 1;
-    hp5_ = (rand() % 3 + 1) * 100, dmg5_ = (rand() % 5 + 1) * 5, range5_ = rand() % 4 + 1;
-    hp6_ = (rand() % 3 + 1) * 100, dmg6_ = (rand() % 5 + 1) * 5, range6_ = rand() % 4 + 1;
-    hp7_ = (rand() % 3 + 1) * 100, dmg7_ = (rand() % 5 + 1) * 5, range7_ = rand() % 4 + 1;
-    hp8_ = (rand() % 3 + 1) * 100, dmg8_ = (rand() % 5 + 1) * 5, range8_ = rand() % 4 + 1;
-    hp9_ = (rand() % 3 + 1) * 100, dmg9_ = (rand() % 5 + 1) * 5, range9_ = rand() % 4 + 1;
+    HP1 = (rand() % 3 + 1) * 100, DMG1 = (rand() % 5 + 1) * 5, RNG1 = rand() % 4 + 1;
+    HP2 = (rand() % 3 + 1) * 100, DMG2 = (rand() % 5 + 1) * 5, RNG2 = rand() % 4 + 1;
+    HP3 = (rand() % 3 + 1) * 100, DMG3 = (rand() % 5 + 1) * 5, RNG3 = rand() % 4 + 1;
+    HP4 = (rand() % 3 + 1) * 100, DMG4 = (rand() % 5 + 1) * 5, RNG4 = rand() % 4 + 1;
+    HP5 = (rand() % 3 + 1) * 100, DMG5 = (rand() % 5 + 1) * 5, RNG5 = rand() % 4 + 1;
+    HP6 = (rand() % 3 + 1) * 100, DMG6 = (rand() % 5 + 1) * 5, RNG6 = rand() % 4 + 1;
+    HP7 = (rand() % 3 + 1) * 100, DMG7 = (rand() % 5 + 1) * 5, RNG7 = rand() % 4 + 1;
+    HP8 = (rand() % 3 + 1) * 100, DMG8 = (rand() % 5 + 1) * 5, RNG8 = rand() % 4 + 1;
+    HP9 = (rand() % 3 + 1) * 100, DMG9 = (rand() % 5 + 1) * 5, RNG9 = rand() % 4 + 1;
 }
 
 void Zombie::landinit(Board &board)
 {
-    x1_ = rand() % X + 1; y1_ = rand() % Y + 1;
-    x2_ = rand() % X + 1; y2_ = rand() % Y + 1;
-    x3_ = rand() % X + 1; y3_ = rand() % Y + 1;
-    x4_ = rand() % X + 1; y4_ = rand() % Y + 1;
-    x5_ = rand() % X + 1; y5_ = rand() % Y + 1;
-    x6_ = rand() % X + 1; y6_ = rand() % Y + 1;
-    x7_ = rand() % X + 1; y7_ = rand() % Y + 1;
-    x8_ = rand() % X + 1; y8_ = rand() % Y + 1;
-    x9_ = rand() % X + 1; y9_ = rand() % Y + 1;
+    X1 = rand() % X + 1; Y1 = rand() % Y + 1;
+    X2 = rand() % X + 1; Y2 = rand() % Y + 1;
+    X3 = rand() % X + 1; Y3 = rand() % Y + 1;
+    X4 = rand() % X + 1; Y4 = rand() % Y + 1;
+    X5 = rand() % X + 1; Y5 = rand() % Y + 1;
+    X6 = rand() % X + 1; Y6 = rand() % Y + 1;
+    X7 = rand() % X + 1; Y7 = rand() % Y + 1;
+    X8 = rand() % X + 1; Y8 = rand() % Y + 1;
+    X9 = rand() % X + 1; Y9 = rand() % Y + 1;
 
-    if (num_ == 1)
+    if (Z == 1)
     {
-        board.setObject(x1_, y1_, '1');
+        board.setObject(X1, Y1, '1');
     }
 
-    else if (num_ == 2)
+    else if (Z == 2)
     {
-        board.setObject(x1_, y1_, '1');
-        board.setObject(x2_, y2_, '2');
+        board.setObject(X1, Y1, '1');
+        board.setObject(X2, Y2, '2');
     }
 
-    else if (num_ == 3)
+    else if (Z == 3)
     {
-        board.setObject(x1_, y1_, '1');
-        board.setObject(x2_, y2_, '2');
-        board.setObject(x3_, y3_, '3');
+        board.setObject(X1, Y1, '1');
+        board.setObject(X2, Y2, '2');
+        board.setObject(X3, Y3, '3');
     }
 
-    else if (num_ == 4)
+    else if (Z == 4)
     {
-        board.setObject(x1_, y1_, '1');
-        board.setObject(x2_, y2_, '2');
-        board.setObject(x3_, y3_, '3');
-        board.setObject(x4_, y4_, '4');
+        board.setObject(X1, Y1, '1');
+        board.setObject(X2, Y2, '2');
+        board.setObject(X3, Y3, '3');
+        board.setObject(X4, Y4, '4');
     }
 
-    else if (num_ == 5)
+    else if (Z == 5)
     {
-        board.setObject(x1_, y1_, '1');
-        board.setObject(x2_, y2_, '2');
-        board.setObject(x3_, y3_, '3');
-        board.setObject(x4_, y4_, '4');
-        board.setObject(x5_, y5_, '5');
+        board.setObject(X1, Y1, '1');
+        board.setObject(X2, Y2, '2');
+        board.setObject(X3, Y3, '3');
+        board.setObject(X4, Y4, '4');
+        board.setObject(X5, Y5, '5');
     }
 
-    else if (num_ == 6)
+    else if (Z == 6)
     {
-        board.setObject(x1_, y1_, '1');
-        board.setObject(x2_, y2_, '2');
-        board.setObject(x3_, y3_, '3');
-        board.setObject(x4_, y4_, '4');
-        board.setObject(x5_, y5_, '5');
-        board.setObject(x6_, y6_, '6');
+        board.setObject(X1, Y1, '1');
+        board.setObject(X2, Y2, '2');
+        board.setObject(X3, Y3, '3');
+        board.setObject(X4, Y4, '4');
+        board.setObject(X5, Y5, '5');
+        board.setObject(X6, Y6, '6');
     }
 
-    else if (num_ == 7)
+    else if (Z == 7)
     {
-        board.setObject(x1_, y1_, '1');
-        board.setObject(x2_, y2_, '2');
-        board.setObject(x3_, y3_, '3');
-        board.setObject(x4_, y4_, '4');
-        board.setObject(x5_, y5_, '5');
-        board.setObject(x6_, y6_, '6');
-        board.setObject(x7_, y7_, '7');
+        board.setObject(X1, Y1, '1');
+        board.setObject(X2, Y2, '2');
+        board.setObject(X3, Y3, '3');
+        board.setObject(X4, Y4, '4');
+        board.setObject(X5, Y5, '5');
+        board.setObject(X6, Y6, '6');
+        board.setObject(X7, Y7, '7');
     }
     
-    else if (num_ == 8)
+    else if (Z == 8)
     {
-        board.setObject(x1_, y1_, '1');
-        board.setObject(x2_, y2_, '2');
-        board.setObject(x3_, y3_, '3');
-        board.setObject(x4_, y4_, '4');
-        board.setObject(x5_, y5_, '5');
-        board.setObject(x6_, y6_, '6');
-        board.setObject(x7_, y7_, '7');
-        board.setObject(x8_, y8_, '8');
+        board.setObject(X1, Y1, '1');
+        board.setObject(X2, Y2, '2');
+        board.setObject(X3, Y3, '3');
+        board.setObject(X4, Y4, '4');
+        board.setObject(X5, Y5, '5');
+        board.setObject(X6, Y6, '6');
+        board.setObject(X7, Y7, '7');
+        board.setObject(X8, Y8, '8');
     }
 
-    else if (num_ == 9)
+    else if (Z == 9)
     {
-        board.setObject(x1_, y1_, '1');
-        board.setObject(x2_, y2_, '2');
-        board.setObject(x3_, y3_, '3');
-        board.setObject(x4_, y4_, '4');
-        board.setObject(x5_, y5_, '5');
-        board.setObject(x6_, y6_, '6');
-        board.setObject(x7_, y7_, '7');
-        board.setObject(x8_, y8_, '8');
-        board.setObject(x9_, y9_, '9');
+        board.setObject(X1, Y1, '1');
+        board.setObject(X2, Y2, '2');
+        board.setObject(X3, Y3, '3');
+        board.setObject(X4, Y4, '4');
+        board.setObject(X5, Y5, '5');
+        board.setObject(X6, Y6, '6');
+        board.setObject(X7, Y7, '7');
+        board.setObject(X8, Y8, '8');
+        board.setObject(X9, Y9, '9');
     }
 }
 
-void Zombie::land(Board &board)
+void Zombie::land(Board &board, int zombie)
 {
-    cout<<x1_<<"  "<<y1_<<endl<<endl;
-    if (num_ == 1)
+    if (zombie == 1)
     {
-        board.setObject(x1_, y1_, '1');
+        board.setObject(X1, Y1, '1');
     }
 
-    else if (num_ == 2)
+    else if (zombie == 2)
     {
-        board.setObject(x1_, y1_, '1');
-        board.setObject(x2_, y2_, '2');
+        board.setObject(X1, Y1, '1');
+        board.setObject(X2, Y2, '2');
     }
 
-    else if (num_ == 3)
+    else if (zombie == 3)
     {
-        board.setObject(x1_, y1_, '1');
-        board.setObject(x2_, y2_, '2');
-        board.setObject(x3_, y3_, '3');
+        board.setObject(X1, Y1, '1');
+        board.setObject(X2, Y2, '2');
+        board.setObject(X3, Y3, '3');
     }
 
-    else if (num_ == 4)
+    else if (zombie == 4)
     {
-        board.setObject(x1_, y1_, '1');
-        board.setObject(x2_, y2_, '2');
-        board.setObject(x3_, y3_, '3');
-        board.setObject(x4_, y4_, '4');
+        board.setObject(X1, Y1, '1');
+        board.setObject(X2, Y2, '2');
+        board.setObject(X3, Y3, '3');
+        board.setObject(X4, Y4, '4');
     }
 
-    else if (num_ == 5)
+    else if (zombie == 5)
     {
-        board.setObject(x1_, y1_, '1');
-        board.setObject(x2_, y2_, '2');
-        board.setObject(x3_, y3_, '3');
-        board.setObject(x4_, y4_, '4');
-        board.setObject(x5_, y5_, '5');
+        board.setObject(X1, Y1, '1');
+        board.setObject(X2, Y2, '2');
+        board.setObject(X3, Y3, '3');
+        board.setObject(X4, Y4, '4');
+        board.setObject(X5, Y5, '5');
     }
 
-    else if (num_ == 6)
+    else if (zombie == 6)
     {
-        board.setObject(x1_, y1_, '1');
-        board.setObject(x2_, y2_, '2');
-        board.setObject(x3_, y3_, '3');
-        board.setObject(x4_, y4_, '4');
-        board.setObject(x5_, y5_, '5');
-        board.setObject(x6_, y6_, '6');
+        board.setObject(X1, Y1, '1');
+        board.setObject(X2, Y2, '2');
+        board.setObject(X3, Y3, '3');
+        board.setObject(X4, Y4, '4');
+        board.setObject(X5, Y5, '5');
+        board.setObject(X6, Y6, '6');
     }
 
-    else if (num_ == 7)
+    else if (zombie == 7)
     {
-        board.setObject(x1_, y1_, '1');
-        board.setObject(x2_, y2_, '2');
-        board.setObject(x3_, y3_, '3');
-        board.setObject(x4_, y4_, '4');
-        board.setObject(x5_, y5_, '5');
-        board.setObject(x6_, y6_, '6');
-        board.setObject(x7_, y7_, '7');
+        board.setObject(X1, Y1, '1');
+        board.setObject(X2, Y2, '2');
+        board.setObject(X3, Y3, '3');
+        board.setObject(X4, Y4, '4');
+        board.setObject(X5, Y5, '5');
+        board.setObject(X6, Y6, '6');
+        board.setObject(X7, Y7, '7');
     }
     
-    else if (num_ == 8)
+    else if (zombie == 8)
     {
-        board.setObject(x1_, y1_, '1');
-        board.setObject(x2_, y2_, '2');
-        board.setObject(x3_, y3_, '3');
-        board.setObject(x4_, y4_, '4');
-        board.setObject(x5_, y5_, '5');
-        board.setObject(x6_, y6_, '6');
-        board.setObject(x7_, y7_, '7');
-        board.setObject(x8_, y8_, '8');
+        board.setObject(X1, Y1, '1');
+        board.setObject(X2, Y2, '2');
+        board.setObject(X3, Y3, '3');
+        board.setObject(X4, Y4, '4');
+        board.setObject(X5, Y5, '5');
+        board.setObject(X6, Y6, '6');
+        board.setObject(X7, Y7, '7');
+        board.setObject(X8, Y8, '8');
     }
 
-    else if (num_ == 9)
+    else if (zombie == 9)
     {
-        board.setObject(x1_, y1_, '1');
-        board.setObject(x2_, y2_, '2');
-        board.setObject(x3_, y3_, '3');
-        board.setObject(x4_, y4_, '4');
-        board.setObject(x5_, y5_, '5');
-        board.setObject(x6_, y6_, '6');
-        board.setObject(x7_, y7_, '7');
-        board.setObject(x8_, y8_, '8');
-        board.setObject(x9_, y9_, '9');
+        board.setObject(X1, Y1, '1');
+        board.setObject(X2, Y2, '2');
+        board.setObject(X3, Y3, '3');
+        board.setObject(X4, Y4, '4');
+        board.setObject(X5, Y5, '5');
+        board.setObject(X6, Y6, '6');
+        board.setObject(X7, Y7, '7');
+        board.setObject(X8, Y8, '8');
+        board.setObject(X9, Y9, '9');
     }
 }
 
-int Zombie::getX(int num)
-{
-    if (num == 1)
-    {
-        return x1_;
-    }
+// int Zombie::getX(int zombie)
+// {
+//     if (zombie == 1)
+//     {
+//         return x1_;
+//     }
 
-    else if (num == 2)
-    {
-        return x2_;
-    }
+//     else if (zombie == 2)
+//     {
+//         return x2_;
+//     }
 
-    else if (num == 3)
-    {
-        return x3_;
-    }
+//     else if (zombie == 3)
+//     {
+//         return x3_;
+//     }
 
-    else if (num == 4)
-    {
-        return x4_;
-    }
+//     else if (zombie == 4)
+//     {
+//         return x4_;
+//     }
 
-    else if (num == 5)
-    {
-        return x5_;
-    }
+//     else if (zombie == 5)
+//     {
+//         return x5_;
+//     }
 
-    else if (num == 6)
-    {
-        return x6_;
-    }
+//     else if (zombie == 6)
+//     {
+//         return x6_;
+//     }
 
-    else if (num == 7)
-    {
-        return x7_;
-    }
+//     else if (zombie == 7)
+//     {
+//         return x7_;
+//     }
     
-    else if (num == 8)
-    {
-        return x8_;
-    }
+//     else if (zombie == 8)
+//     {
+//         return x8_;
+//     }
 
-    else if (num == 9)
-    {
-        return x9_;
-    }
-    return 0;
-}
+//     else if (zombie == 9)
+//     {
+//         return x9_;
+//     }
+//     return 0;
+// }
 
-int Zombie::getY(int num)
-{
-    if (num == 1)
-    {
-        return y1_;
-    }
+// int Zombie::getY(int zombie)
+// {
+//     if (zombie == 1)
+//     {
+//         return y1_;
+//     }
 
-    else if (num == 2)
-    {
-        return y2_;
-    }
+//     else if (zombie == 2)
+//     {
+//         return y2_;
+//     }
 
-    else if (num == 3)
-    {
-        return y3_;
-    }
+//     else if (zombie == 3)
+//     {
+//         return y3_;
+//     }
 
-    else if (num == 4)
-    {
-        return y4_;
-    }
+//     else if (zombie == 4)
+//     {
+//         return y4_;
+//     }
 
-    else if (num == 5)
-    {
-        return y5_;
-    }
+//     else if (zombie == 5)
+//     {
+//         return y5_;
+//     }
 
-    else if (num == 6)
-    {
-        return y6_;
-    }
+//     else if (zombie == 6)
+//     {
+//         return y6_;
+//     }
 
-    else if (num == 7)
-    {
-        return y7_;
-    }
+//     else if (zombie == 7)
+//     {
+//         return y7_;
+//     }
     
-    else if (num == 8)
-    {
-        return y8_;
-    }
+//     else if (zombie == 8)
+//     {
+//         return y8_;
+//     }
 
-    else if (num == 9)
-    {
-        return y9_;
-    }
-    return 0;
-}
+//     else if (zombie == 9)
+//     {
+//         return y9_;
+//     }
+//     return 0;
+// }
 
 void Zombie::status()
 {
-    if (num_ == 1)
+    if (Z == 1)
     {
-        cout<<"Zombie 1 : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
+        cout<<"Zombie 1 : Health - "<<HP1<<", Damage - "<<DMG1<<", Range - "<<RNG1<<endl<<endl;
     }
 
-    else if (num_ == 2)
+    else if (Z == 2)
     {
-        cout<<"Zombie 1 : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
-        cout<<"Zombie 2 : Health - "<<hp2_<<", Damage - "<<dmg2_<<", Range - "<<range2_<<endl<<endl;
+        cout<<"Zombie 1 : Health - "<<HP1<<", Damage - "<<DMG1<<", Range - "<<RNG1<<endl<<endl;
+        cout<<"Zombie 2 : Health - "<<HP2<<", Damage - "<<DMG2<<", Range - "<<RNG2<<endl<<endl;
     }
 
-    else if (num_ == 3)
+    else if (Z == 3)
     {
-        cout<<"Zombie 1 : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
-        cout<<"Zombie 2 : Health - "<<hp2_<<", Damage - "<<dmg2_<<", Range - "<<range2_<<endl<<endl;
-        cout<<"Zombie 3 : Health - "<<hp3_<<", Damage - "<<dmg3_<<", Range - "<<range3_<<endl<<endl;
+        cout<<"Zombie 1 : Health - "<<HP1<<", Damage - "<<DMG1<<", Range - "<<RNG1<<endl<<endl;
+        cout<<"Zombie 2 : Health - "<<HP2<<", Damage - "<<DMG2<<", Range - "<<RNG2<<endl<<endl;
+        cout<<"Zombie 3 : Health - "<<HP3<<", Damage - "<<DMG3<<", Range - "<<RNG3<<endl<<endl;
     }
 
-    else if (num_ == 4)
+    else if (Z == 4)
     {
-        cout<<"Zombie 1 : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
-        cout<<"Zombie 2 : Health - "<<hp2_<<", Damage - "<<dmg2_<<", Range - "<<range2_<<endl<<endl;
-        cout<<"Zombie 3 : Health - "<<hp3_<<", Damage - "<<dmg3_<<", Range - "<<range3_<<endl<<endl;
-        cout<<"Zombie 4 : Health - "<<hp4_<<", Damage - "<<dmg4_<<", Range - "<<range4_<<endl<<endl;
+        cout<<"Zombie 1 : Health - "<<HP1<<", Damage - "<<DMG1<<", Range - "<<RNG1<<endl<<endl;
+        cout<<"Zombie 2 : Health - "<<HP2<<", Damage - "<<DMG2<<", Range - "<<RNG2<<endl<<endl;
+        cout<<"Zombie 3 : Health - "<<HP3<<", Damage - "<<DMG3<<", Range - "<<RNG3<<endl<<endl;
+        cout<<"Zombie 4 : Health - "<<HP4<<", Damage - "<<DMG4<<", Range - "<<RNG4<<endl<<endl;
     }
 
-    else if (num_ == 5)
+    else if (Z == 5)
     {
-        cout<<"Zombie 1 : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
-        cout<<"Zombie 2 : Health - "<<hp2_<<", Damage - "<<dmg2_<<", Range - "<<range2_<<endl<<endl;
-        cout<<"Zombie 3 : Health - "<<hp3_<<", Damage - "<<dmg3_<<", Range - "<<range3_<<endl<<endl;
-        cout<<"Zombie 4 : Health - "<<hp4_<<", Damage - "<<dmg4_<<", Range - "<<range4_<<endl<<endl;
-        cout<<"Zombie 5 : Health - "<<hp5_<<", Damage - "<<dmg5_<<", Range - "<<range5_<<endl<<endl;
+        cout<<"Zombie 1 : Health - "<<HP1<<", Damage - "<<DMG1<<", Range - "<<RNG1<<endl<<endl;
+        cout<<"Zombie 2 : Health - "<<HP2<<", Damage - "<<DMG2<<", Range - "<<RNG2<<endl<<endl;
+        cout<<"Zombie 3 : Health - "<<HP3<<", Damage - "<<DMG3<<", Range - "<<RNG3<<endl<<endl;
+        cout<<"Zombie 4 : Health - "<<HP4<<", Damage - "<<DMG4<<", Range - "<<RNG4<<endl<<endl;
+        cout<<"Zombie 5 : Health - "<<HP5<<", Damage - "<<DMG5<<", Range - "<<RNG5<<endl<<endl;
     }
 
-    else if (num_ == 6)
+    else if (Z == 6)
     {
-        cout<<"Zombie 1 : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
-        cout<<"Zombie 2 : Health - "<<hp2_<<", Damage - "<<dmg2_<<", Range - "<<range2_<<endl<<endl;
-        cout<<"Zombie 3 : Health - "<<hp3_<<", Damage - "<<dmg3_<<", Range - "<<range3_<<endl<<endl;
-        cout<<"Zombie 4 : Health - "<<hp4_<<", Damage - "<<dmg4_<<", Range - "<<range4_<<endl<<endl;
-        cout<<"Zombie 5 : Health - "<<hp5_<<", Damage - "<<dmg5_<<", Range - "<<range5_<<endl<<endl;
-        cout<<"Zombie 6 : Health - "<<hp6_<<", Damage - "<<dmg6_<<", Range - "<<range6_<<endl<<endl;
+        cout<<"Zombie 1 : Health - "<<HP1<<", Damage - "<<DMG1<<", Range - "<<RNG1<<endl<<endl;
+        cout<<"Zombie 2 : Health - "<<HP2<<", Damage - "<<DMG2<<", Range - "<<RNG2<<endl<<endl;
+        cout<<"Zombie 3 : Health - "<<HP3<<", Damage - "<<DMG3<<", Range - "<<RNG3<<endl<<endl;
+        cout<<"Zombie 4 : Health - "<<HP4<<", Damage - "<<DMG4<<", Range - "<<RNG4<<endl<<endl;
+        cout<<"Zombie 5 : Health - "<<HP5<<", Damage - "<<DMG5<<", Range - "<<RNG5<<endl<<endl;
+        cout<<"Zombie 6 : Health - "<<HP6<<", Damage - "<<DMG6<<", Range - "<<RNG6<<endl<<endl;
     }
 
-    else if (num_ == 7)
+    else if (Z == 7)
     {
-        cout<<"Zombie 1 : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
-        cout<<"Zombie 2 : Health - "<<hp2_<<", Damage - "<<dmg2_<<", Range - "<<range2_<<endl<<endl;
-        cout<<"Zombie 3 : Health - "<<hp3_<<", Damage - "<<dmg3_<<", Range - "<<range3_<<endl<<endl;
-        cout<<"Zombie 4 : Health - "<<hp4_<<", Damage - "<<dmg4_<<", Range - "<<range4_<<endl<<endl;
-        cout<<"Zombie 5 : Health - "<<hp5_<<", Damage - "<<dmg5_<<", Range - "<<range5_<<endl<<endl;
-        cout<<"Zombie 6 : Health - "<<hp6_<<", Damage - "<<dmg6_<<", Range - "<<range6_<<endl<<endl;
-        cout<<"Zombie 7 : Health - "<<hp7_<<", Damage - "<<dmg7_<<", Range - "<<range7_<<endl<<endl;
+        cout<<"Zombie 1 : Health - "<<HP1<<", Damage - "<<DMG1<<", Range - "<<RNG1<<endl<<endl;
+        cout<<"Zombie 2 : Health - "<<HP2<<", Damage - "<<DMG2<<", Range - "<<RNG2<<endl<<endl;
+        cout<<"Zombie 3 : Health - "<<HP3<<", Damage - "<<DMG3<<", Range - "<<RNG3<<endl<<endl;
+        cout<<"Zombie 4 : Health - "<<HP4<<", Damage - "<<DMG4<<", Range - "<<RNG4<<endl<<endl;
+        cout<<"Zombie 5 : Health - "<<HP5<<", Damage - "<<DMG5<<", Range - "<<RNG5<<endl<<endl;
+        cout<<"Zombie 6 : Health - "<<HP6<<", Damage - "<<DMG6<<", Range - "<<RNG6<<endl<<endl;
+        cout<<"Zombie 7 : Health - "<<HP7<<", Damage - "<<DMG7<<", Range - "<<RNG7<<endl<<endl;
     }
     
-    else if (num_ == 8)
+    else if (Z == 8)
     {
-        cout<<"Zombie 1 : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
-        cout<<"Zombie 2 : Health - "<<hp2_<<", Damage - "<<dmg2_<<", Range - "<<range2_<<endl<<endl;
-        cout<<"Zombie 3 : Health - "<<hp3_<<", Damage - "<<dmg3_<<", Range - "<<range3_<<endl<<endl;
-        cout<<"Zombie 4 : Health - "<<hp4_<<", Damage - "<<dmg4_<<", Range - "<<range4_<<endl<<endl;
-        cout<<"Zombie 5 : Health - "<<hp5_<<", Damage - "<<dmg5_<<", Range - "<<range5_<<endl<<endl;
-        cout<<"Zombie 6 : Health - "<<hp6_<<", Damage - "<<dmg6_<<", Range - "<<range6_<<endl<<endl;
-        cout<<"Zombie 7 : Health - "<<hp7_<<", Damage - "<<dmg7_<<", Range - "<<range7_<<endl<<endl;
-        cout<<"Zombie 8 : Health - "<<hp8_<<", Damage - "<<dmg8_<<", Range - "<<range8_<<endl<<endl;
+        cout<<"Zombie 1 : Health - "<<HP1<<", Damage - "<<DMG1<<", Range - "<<RNG1<<endl<<endl;
+        cout<<"Zombie 2 : Health - "<<HP2<<", Damage - "<<DMG2<<", Range - "<<RNG2<<endl<<endl;
+        cout<<"Zombie 3 : Health - "<<HP3<<", Damage - "<<DMG3<<", Range - "<<RNG3<<endl<<endl;
+        cout<<"Zombie 4 : Health - "<<HP4<<", Damage - "<<DMG4<<", Range - "<<RNG4<<endl<<endl;
+        cout<<"Zombie 5 : Health - "<<HP5<<", Damage - "<<DMG5<<", Range - "<<RNG5<<endl<<endl;
+        cout<<"Zombie 6 : Health - "<<HP6<<", Damage - "<<DMG6<<", Range - "<<RNG6<<endl<<endl;
+        cout<<"Zombie 7 : Health - "<<HP7<<", Damage - "<<DMG7<<", Range - "<<RNG7<<endl<<endl;
+        cout<<"Zombie 8 : Health - "<<HP8<<", Damage - "<<DMG8<<", Range - "<<RNG8<<endl<<endl;
     }
 
-    else if (num_ == 9)
+    else if (Z == 9)
     {
-        cout<<"Zombie 1 : Health - "<<hp1_<<", Damage - "<<dmg1_<<", Range - "<<range1_<<endl<<endl;
-        cout<<"Zombie 2 : Health - "<<hp2_<<", Damage - "<<dmg2_<<", Range - "<<range2_<<endl<<endl;
-        cout<<"Zombie 3 : Health - "<<hp3_<<", Damage - "<<dmg3_<<", Range - "<<range3_<<endl<<endl;
-        cout<<"Zombie 4 : Health - "<<hp4_<<", Damage - "<<dmg4_<<", Range - "<<range4_<<endl<<endl;
-        cout<<"Zombie 5 : Health - "<<hp5_<<", Damage - "<<dmg5_<<", Range - "<<range5_<<endl<<endl;
-        cout<<"Zombie 6 : Health - "<<hp6_<<", Damage - "<<dmg6_<<", Range - "<<range6_<<endl<<endl;
-        cout<<"Zombie 7 : Health - "<<hp7_<<", Damage - "<<dmg7_<<", Range - "<<range7_<<endl<<endl;
-        cout<<"Zombie 8 : Health - "<<hp8_<<", Damage - "<<dmg8_<<", Range - "<<range8_<<endl<<endl;
-        cout<<"Zombie 9 : Health - "<<hp9_<<", Damage - "<<dmg9_<<", Range - "<<range9_<<endl<<endl;
+        cout<<"Zombie 1 : Health - "<<HP1<<", Damage - "<<DMG1<<", Range - "<<RNG1<<endl<<endl;
+        cout<<"Zombie 2 : Health - "<<HP2<<", Damage - "<<DMG2<<", Range - "<<RNG2<<endl<<endl;
+        cout<<"Zombie 3 : Health - "<<HP3<<", Damage - "<<DMG3<<", Range - "<<RNG3<<endl<<endl;
+        cout<<"Zombie 4 : Health - "<<HP4<<", Damage - "<<DMG4<<", Range - "<<RNG4<<endl<<endl;
+        cout<<"Zombie 5 : Health - "<<HP5<<", Damage - "<<DMG5<<", Range - "<<RNG5<<endl<<endl;
+        cout<<"Zombie 6 : Health - "<<HP6<<", Damage - "<<DMG6<<", Range - "<<RNG6<<endl<<endl;
+        cout<<"Zombie 7 : Health - "<<HP7<<", Damage - "<<DMG7<<", Range - "<<RNG7<<endl<<endl;
+        cout<<"Zombie 8 : Health - "<<HP8<<", Damage - "<<DMG8<<", Range - "<<RNG8<<endl<<endl;
+        cout<<"Zombie 9 : Health - "<<HP9<<", Damage - "<<DMG9<<", Range - "<<RNG9<<endl<<endl;
     }
 }
 
@@ -1116,56 +1114,56 @@ void Zombie::up(int zombie)
     Board board;
     if (zombie == 1)
     {
-        board.setObject(x1_, y1_, ' ');
-        y1_++;
+        board.setObject(X1, Y1, ' ');
+        Y1++;
     }
 
     else if (zombie == 2)
     {
-        board.setObject(x2_, y2_, ' ');
-        y2_++;
+        board.setObject(X2, Y2, ' ');
+        Y2++;
     }
 
     else if (zombie == 3)
     {
-        board.setObject(x3_, y3_, ' ');
-        y3_++;
+        board.setObject(X3, Y3, ' ');
+        Y3++;
     }
 
     else if (zombie == 4)
     {
-        board.setObject(x4_, y4_, ' ');
-        y4_++;
+        board.setObject(X4, Y4, ' ');
+        Y4++;
     }
 
     else if (zombie == 5)
     {
-        board.setObject(x5_, y5_, ' ');
-        y5_++;
+        board.setObject(X5, Y5, ' ');
+        Y5++;
     }
 
     else if (zombie == 6)
     {
-        board.setObject(x6_, y6_, ' ');
-        y6_++;
+        board.setObject(X6, Y6, ' ');
+        Y6++;
     }
 
     else if (zombie == 7)
     {
-        board.setObject(x7_, y7_, ' ');
-        y7_++;
+        board.setObject(X7, Y7, ' ');
+        Y7++;
     }
     
     else if (zombie == 8)
     {
-        board.setObject(x8_, y8_, ' ');
-        y8_++;
+        board.setObject(X8, Y8, ' ');
+        Y8++;
     }
 
     else if (zombie == 9)
     {
-        board.setObject(x9_, y9_, ' ');
-        y9_++;
+        board.setObject(X9, Y9, ' ');
+        Y9++;
     }
 }
 
@@ -1174,56 +1172,56 @@ void Zombie::down(int zombie)
     Board board;
     if (zombie == 1)
     {
-        board.setObject(x1_, y1_, ' ');
-        y1_--;
+        board.setObject(X1, Y1, ' ');
+        Y1--;
     }
 
     else if (zombie == 2)
     {
-        board.setObject(x2_, y2_, ' ');
-        y2_--;
+        board.setObject(X2, Y2, ' ');
+        Y2--;
     }
 
     else if (zombie == 3)
     {
-        board.setObject(x3_, y3_, ' ');
-        y3_--;
+        board.setObject(X3, Y3, ' ');
+        Y3--;
     }
 
     else if (zombie == 4)
     {
-        board.setObject(x4_, y4_, ' ');
-        y4_--;
+        board.setObject(X4, Y4, ' ');
+        Y4--;
     }
 
     else if (zombie == 5)
     {
-        board.setObject(x5_, y5_, ' ');
-        y5_--;
+        board.setObject(X5, Y5, ' ');
+        Y5--;
     }
 
     else if (zombie == 6)
     {
-        board.setObject(x6_, y6_, ' ');
-        y6_--;
+        board.setObject(X6, Y6, ' ');
+        Y6--;
     }
 
     else if (zombie == 7)
     {
-        board.setObject(x7_, y7_, ' ');
-        y7_--;
+        board.setObject(X7, Y7, ' ');
+        Y7--;
     }
     
     else if (zombie == 8)
     {
-        board.setObject(x8_, y8_, ' ');
-        y8_--;
+        board.setObject(X8, Y8, ' ');
+        Y8--;
     }
 
     else if (zombie == 9)
     {
-        board.setObject(x9_, y9_, ' ');
-        y9_--;
+        board.setObject(X9, Y9, ' ');
+        Y9--;
     }
 }
 
@@ -1232,56 +1230,56 @@ void Zombie::left(int zombie)
     Board board;
     if (zombie == 1)
     {
-        board.setObject(x1_, y1_, ' ');
-        x1_--;
+        board.setObject(X1, Y1, ' ');
+        X1--;
     }
 
     else if (zombie == 2)
     {
-        board.setObject(x2_, y2_, ' ');
-        x2_--;
+        board.setObject(X2, Y2, ' ');
+        X2--;
     }
 
     else if (zombie == 3)
     {
-        board.setObject(x3_, y3_, ' ');
-        x3_--;
+        board.setObject(X3, Y3, ' ');
+        X3--;
     }
 
     else if (zombie == 4)
     {
-        board.setObject(x4_, y4_, ' ');
-        x4_--;
+        board.setObject(X4, Y4, ' ');
+        X4--;
     }
 
     else if (zombie == 5)
     {
-        board.setObject(x5_, y5_, ' ');
-        x5_--;
+        board.setObject(X5, Y5, ' ');
+        X5--;
     }
 
     else if (zombie == 6)
     {
-        board.setObject(x6_, y6_, ' ');
-        x6_--;
+        board.setObject(X6, Y6, ' ');
+        X6--;
     }
 
     else if (zombie == 7)
     {
-        board.setObject(x7_, y7_, ' ');
-        x7_--;
+        board.setObject(X7, Y7, ' ');
+        X7--;
     }
     
     else if (zombie == 8)
     {
-        board.setObject(x8_, y8_, ' ');
-        x8_--;
+        board.setObject(X8, Y8, ' ');
+        X8--;
     }
 
     else if (zombie == 9)
     {
-        board.setObject(x9_, y9_, ' ');
-        x9_--;
+        board.setObject(X9, Y9, ' ');
+        X9--;
     }
 }
 
@@ -1290,642 +1288,104 @@ void Zombie::right(int zombie)
     Board board;
     if (zombie == 1)
     {
-        board.setObject(x1_, y1_, ' ');
-        x1_++;
+        board.setObject(X1, Y1, ' ');
+        X1++;
     }
 
     else if (zombie == 2)
     {
-        board.setObject(x2_, y2_, ' ');
-        x2_++;
+        board.setObject(X2, Y2, ' ');
+        X2++;
     }
 
     else if (zombie == 3)
     {
-        board.setObject(x3_, y3_, ' ');
-        x3_++;
+        board.setObject(X3, Y3, ' ');
+        X3++;
     }
 
     else if (zombie == 4)
     {
-        board.setObject(x4_, y4_, ' ');
-        x4_++;
+        board.setObject(X4, Y4, ' ');
+        X4++;
     }
 
     else if (zombie == 5)
     {
-        board.setObject(x5_, y5_, ' ');
-        x5_++;
+        board.setObject(X5, Y5, ' ');
+        X5++;
     }
 
     else if (zombie == 6)
     {
-        board.setObject(x6_, y6_, ' ');
-        x6_++;
+        board.setObject(X6, Y6, ' ');
+        X6++;
     }
 
     else if (zombie == 7)
     {
-        board.setObject(x7_, y7_, ' ');
-        x7_++;
+        board.setObject(X7, Y7, ' ');
+        X7++;
     }
     
     else if (zombie == 8)
     {
-        board.setObject(x8_, y8_, ' ');
-        x8_++;
+        board.setObject(X8, Y8, ' ');
+        X8++;
     }
 
     else if (zombie == 9)
     {
-        board.setObject(x9_, y9_, ' ');
-        x9_++;
+        board.setObject(X9, Y9, ' ');
+        X9++;
     }
 }
 
-char Zombie::search(int zombie)
+void Zombie::damage(int zombie, int hp)
 {
-    Board board;
-    char searchU, searchD, searchL, searchR;
-
     if (zombie == 1)
     {
-        for (int i = 1; i<=range1_; ++i)
-        {
-            searchU  = board.getObject(x1_, y1_ + i);
-            searchD  = board.getObject(x1_, y1_ - i);
-            searchL  = board.getObject(x1_ - i, y1_);
-            searchR  = board.getObject(x1_ + i, y1_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
+        HP1 = HP1 - hp;
     }
 
     else if (zombie == 2)
     {
-        for (int i = 1; i<=range1_; ++i)
-        {
-            searchU  = board.getObject(x1_, y1_ + i);
-            searchD  = board.getObject(x1_, y1_ - i);
-            searchL  = board.getObject(x1_ - i, y1_);
-            searchR  = board.getObject(x1_ + i, y1_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range2_; ++i)
-        {
-            searchU  = board.getObject(x2_, y2_ + i);
-            searchD  = board.getObject(x2_, y2_ - i);
-            searchL  = board.getObject(x2_ - i, y2_);
-            searchR  = board.getObject(x2_ + i, y2_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
+        HP2 = HP2 - hp;
     }
 
     else if (zombie == 3)
     {
-        for (int i = 1; i<=range1_; ++i)
-        {
-            searchU  = board.getObject(x1_, y1_ + i);
-            searchD  = board.getObject(x1_, y1_ - i);
-            searchL  = board.getObject(x1_ - i, y1_);
-            searchR  = board.getObject(x1_ + i, y1_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range2_; ++i)
-        {
-            searchU  = board.getObject(x2_, y2_ + i);
-            searchD  = board.getObject(x2_, y2_ - i);
-            searchL  = board.getObject(x2_ - i, y2_);
-            searchR  = board.getObject(x2_ + i, y2_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range3_; ++i)
-        {
-            searchU  = board.getObject(x3_, y3_ + i);
-            searchD  = board.getObject(x3_, y3_ - i);
-            searchL  = board.getObject(x3_ - i, y3_);
-            searchR  = board.getObject(x3_ + i, y3_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
+        HP3 = HP3 - hp;
     }
 
     else if (zombie == 4)
     {
-        for (int i = 1; i<=range1_; ++i)
-        {
-            searchU  = board.getObject(x1_, y1_ + i);
-            searchD  = board.getObject(x1_, y1_ - i);
-            searchL  = board.getObject(x1_ - i, y1_);
-            searchR  = board.getObject(x1_ + i, y1_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range2_; ++i)
-        {
-            searchU  = board.getObject(x2_, y2_ + i);
-            searchD  = board.getObject(x2_, y2_ - i);
-            searchL  = board.getObject(x2_ - i, y2_);
-            searchR  = board.getObject(x2_ + i, y2_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range3_; ++i)
-        {
-            searchU  = board.getObject(x3_, y3_ + i);
-            searchD  = board.getObject(x3_, y3_ - i);
-            searchL  = board.getObject(x3_ - i, y3_);
-            searchR  = board.getObject(x3_ + i, y3_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range4_; ++i)
-        {
-            searchU  = board.getObject(x4_, y4_ + i);
-            searchD  = board.getObject(x4_, y4_ - i);
-            searchL  = board.getObject(x4_ - i, y4_);
-            searchR  = board.getObject(x4_ + i, y4_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
+        HP4 = HP4 - hp;
     }
 
     else if (zombie == 5)
     {
-        for (int i = 1; i<=range1_; ++i)
-        {
-            searchU  = board.getObject(x1_, y1_ + i);
-            searchD  = board.getObject(x1_, y1_ - i);
-            searchL  = board.getObject(x1_ - i, y1_);
-            searchR  = board.getObject(x1_ + i, y1_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range2_; ++i)
-        {
-            searchU  = board.getObject(x2_, y2_ + i);
-            searchD  = board.getObject(x2_, y2_ - i);
-            searchL  = board.getObject(x2_ - i, y2_);
-            searchR  = board.getObject(x2_ + i, y2_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range3_; ++i)
-        {
-            searchU  = board.getObject(x3_, y3_ + i);
-            searchD  = board.getObject(x3_, y3_ - i);
-            searchL  = board.getObject(x3_ - i, y3_);
-            searchR  = board.getObject(x3_ + i, y3_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range4_; ++i)
-        {
-            searchU  = board.getObject(x4_, y4_ + i);
-            searchD  = board.getObject(x4_, y4_ - i);
-            searchL  = board.getObject(x4_ - i, y4_);
-            searchR  = board.getObject(x4_ + i, y4_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range5_; ++i)
-        {
-            searchU  = board.getObject(x5_, y5_ + i);
-            searchD  = board.getObject(x5_, y5_ - i);
-            searchL  = board.getObject(x5_ - i, y5_);
-            searchR  = board.getObject(x5_ + i, y5_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
+        HP5 = HP5 - hp;
     }
 
     else if (zombie == 6)
     {
-        for (int i = 1; i<=range1_; ++i)
-        {
-            searchU  = board.getObject(x1_, y1_ + i);
-            searchD  = board.getObject(x1_, y1_ - i);
-            searchL  = board.getObject(x1_ - i, y1_);
-            searchR  = board.getObject(x1_ + i, y1_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range2_; ++i)
-        {
-            searchU  = board.getObject(x2_, y2_ + i);
-            searchD  = board.getObject(x2_, y2_ - i);
-            searchL  = board.getObject(x2_ - i, y2_);
-            searchR  = board.getObject(x2_ + i, y2_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range3_; ++i)
-        {
-            searchU  = board.getObject(x3_, y3_ + i);
-            searchD  = board.getObject(x3_, y3_ - i);
-            searchL  = board.getObject(x3_ - i, y3_);
-            searchR  = board.getObject(x3_ + i, y3_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range4_; ++i)
-        {
-            searchU  = board.getObject(x4_, y4_ + i);
-            searchD  = board.getObject(x4_, y4_ - i);
-            searchL  = board.getObject(x4_ - i, y4_);
-            searchR  = board.getObject(x4_ + i, y4_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range5_; ++i)
-        {
-            searchU  = board.getObject(x5_, y5_ + i);
-            searchD  = board.getObject(x5_, y5_ - i);
-            searchL  = board.getObject(x5_ - i, y5_);
-            searchR  = board.getObject(x5_ + i, y5_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range6_; ++i)
-        {
-            searchU  = board.getObject(x6_, y6_ + i);
-            searchD  = board.getObject(x6_, y6_ - i);
-            searchL  = board.getObject(x6_ - i, y6_);
-            searchR  = board.getObject(x6_ + i, y6_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
+        HP6 = HP6 - hp;
     }
 
     else if (zombie == 7)
     {
-        for (int i = 1; i<=range1_; ++i)
-        {
-            searchU  = board.getObject(x1_, y1_ + i);
-            searchD  = board.getObject(x1_, y1_ - i);
-            searchL  = board.getObject(x1_ - i, y1_);
-            searchR  = board.getObject(x1_ + i, y1_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range2_; ++i)
-        {
-            searchU  = board.getObject(x2_, y2_ + i);
-            searchD  = board.getObject(x2_, y2_ - i);
-            searchL  = board.getObject(x2_ - i, y2_);
-            searchR  = board.getObject(x2_ + i, y2_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range3_; ++i)
-        {
-            searchU  = board.getObject(x3_, y3_ + i);
-            searchD  = board.getObject(x3_, y3_ - i);
-            searchL  = board.getObject(x3_ - i, y3_);
-            searchR  = board.getObject(x3_ + i, y3_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range4_; ++i)
-        {
-            searchU  = board.getObject(x4_, y4_ + i);
-            searchD  = board.getObject(x4_, y4_ - i);
-            searchL  = board.getObject(x4_ - i, y4_);
-            searchR  = board.getObject(x4_ + i, y4_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range5_; ++i)
-        {
-            searchU  = board.getObject(x5_, y5_ + i);
-            searchD  = board.getObject(x5_, y5_ - i);
-            searchL  = board.getObject(x5_ - i, y5_);
-            searchR  = board.getObject(x5_ + i, y5_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range6_; ++i)
-        {
-            searchU  = board.getObject(x6_, y6_ + i);
-            searchD  = board.getObject(x6_, y6_ - i);
-            searchL  = board.getObject(x6_ - i, y6_);
-            searchR  = board.getObject(x6_ + i, y6_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range7_; ++i)
-        {
-            searchU  = board.getObject(x7_, y7_ + i);
-            searchD  = board.getObject(x7_, y7_ - i);
-            searchL  = board.getObject(x7_ - i, y7_);
-            searchR  = board.getObject(x7_ + i, y7_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-    }
-    
-    else if (zombie == 8)
-    {
-        for (int i = 1; i<=range1_; ++i)
-        {
-            searchU  = board.getObject(x1_, y1_ + i);
-            searchD  = board.getObject(x1_, y1_ - i);
-            searchL  = board.getObject(x1_ - i, y1_);
-            searchR  = board.getObject(x1_ + i, y1_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range2_; ++i)
-        {
-            searchU  = board.getObject(x2_, y2_ + i);
-            searchD  = board.getObject(x2_, y2_ - i);
-            searchL  = board.getObject(x2_ - i, y2_);
-            searchR  = board.getObject(x2_ + i, y2_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range3_; ++i)
-        {
-            searchU  = board.getObject(x3_, y3_ + i);
-            searchD  = board.getObject(x3_, y3_ - i);
-            searchL  = board.getObject(x3_ - i, y3_);
-            searchR  = board.getObject(x3_ + i, y3_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range4_; ++i)
-        {
-            searchU  = board.getObject(x4_, y4_ + i);
-            searchD  = board.getObject(x4_, y4_ - i);
-            searchL  = board.getObject(x4_ - i, y4_);
-            searchR  = board.getObject(x4_ + i, y4_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range5_; ++i)
-        {
-            searchU  = board.getObject(x5_, y5_ + i);
-            searchD  = board.getObject(x5_, y5_ - i);
-            searchL  = board.getObject(x5_ - i, y5_);
-            searchR  = board.getObject(x5_ + i, y5_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range6_; ++i)
-        {
-            searchU  = board.getObject(x6_, y6_ + i);
-            searchD  = board.getObject(x6_, y6_ - i);
-            searchL  = board.getObject(x6_ - i, y6_);
-            searchR  = board.getObject(x6_ + i, y6_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range7_; ++i)
-        {
-            searchU  = board.getObject(x7_, y7_ + i);
-            searchD  = board.getObject(x7_, y7_ - i);
-            searchL  = board.getObject(x7_ - i, y7_);
-            searchR  = board.getObject(x7_ + i, y7_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range8_; ++i)
-        {
-            searchU  = board.getObject(x8_, y8_ + i);
-            searchD  = board.getObject(x8_, y8_ - i);
-            searchL  = board.getObject(x8_ - i, y8_);
-            searchR  = board.getObject(x8_ + i, y8_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-    }
-
-    else if (zombie == 9)
-    {
-        for (int i = 1; i<=range1_; ++i)
-        {
-            searchU  = board.getObject(x1_, y1_ + i);
-            searchD  = board.getObject(x1_, y1_ - i);
-            searchL  = board.getObject(x1_ - i, y1_);
-            searchR  = board.getObject(x1_ + i, y1_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range2_; ++i)
-        {
-            searchU  = board.getObject(x2_, y2_ + i);
-            searchD  = board.getObject(x2_, y2_ - i);
-            searchL  = board.getObject(x2_ - i, y2_);
-            searchR  = board.getObject(x2_ + i, y2_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range3_; ++i)
-        {
-            searchU  = board.getObject(x3_, y3_ + i);
-            searchD  = board.getObject(x3_, y3_ - i);
-            searchL  = board.getObject(x3_ - i, y3_);
-            searchR  = board.getObject(x3_ + i, y3_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range4_; ++i)
-        {
-            searchU  = board.getObject(x4_, y4_ + i);
-            searchD  = board.getObject(x4_, y4_ - i);
-            searchL  = board.getObject(x4_ - i, y4_);
-            searchR  = board.getObject(x4_ + i, y4_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range5_; ++i)
-        {
-            searchU  = board.getObject(x5_, y5_ + i);
-            searchD  = board.getObject(x5_, y5_ - i);
-            searchL  = board.getObject(x5_ - i, y5_);
-            searchR  = board.getObject(x5_ + i, y5_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range6_; ++i)
-        {
-            searchU  = board.getObject(x6_, y6_ + i);
-            searchD  = board.getObject(x6_, y6_ - i);
-            searchL  = board.getObject(x6_ - i, y6_);
-            searchR  = board.getObject(x6_ + i, y6_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range7_; ++i)
-        {
-            searchU  = board.getObject(x7_, y7_ + i);
-            searchD  = board.getObject(x7_, y7_ - i);
-            searchL  = board.getObject(x7_ - i, y7_);
-            searchR  = board.getObject(x7_ + i, y7_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range8_; ++i)
-        {
-            searchU  = board.getObject(x8_, y8_ + i);
-            searchD  = board.getObject(x8_, y8_ - i);
-            searchL  = board.getObject(x8_ - i, y8_);
-            searchR  = board.getObject(x8_ + i, y8_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-        for (int i = 1; i<=range9_; ++i)
-        {
-            searchU  = board.getObject(x9_, y9_ + i);
-            searchD  = board.getObject(x9_, y9_ - i);
-            searchL  = board.getObject(x9_ - i, y9_);
-            searchR  = board.getObject(x9_ + i, y9_);
-            if (searchU == 'A' || searchD == 'A' || searchL == 'A' || searchR == 'A')
-            {
-                return 'A';
-            }
-        }
-    }
-    return 0;
-}
-
-void Zombie::damage(int zombie, int damage)
-{
-    if (zombie == 1)
-    {
-        hp1_ = hp1_ - damage;
-    }
-
-    else if (zombie == 2)
-    {
-        hp2_ = hp2_ - damage;
-    }
-
-    else if (zombie == 3)
-    {
-        hp3_ = hp3_ - damage;
-    }
-
-    else if (zombie == 4)
-    {
-        hp4_ = hp4_ - damage;
-    }
-
-    else if (zombie == 5)
-    {
-        hp5_ = hp5_ - damage;
-    }
-
-    else if (zombie == 6)
-    {
-        hp6_ = hp6_ - damage;
-    }
-
-    else if (zombie == 7)
-    {
-        hp7_ = hp7_ - damage;
+        HP7 = HP7 - hp;
     }
 
     else if (zombie == 8)
     {
-        hp8_ = hp8_ - damage;
+        HP8 = HP8 - hp;
     }
 
     else if (zombie == 9)
     {
-        hp9_ = hp9_ - damage;
+        HP9 = HP9 - hp;
     }
 }
 
@@ -2039,8 +1499,8 @@ void Alien::main()
     }
     else
     {
-        alien.land(board, aX, aY);
-        zombie.land(board);
+        alien.land(board);
+        zombie.land(board, Z);
     }
 
     board.display();
@@ -2116,7 +1576,7 @@ void Alien::main()
             if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
-                dmg_ = 0;
+                DMG = 0;
                 alien.reset();
                 break;
             }
@@ -2124,7 +1584,7 @@ void Alien::main()
             if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
             {
                 cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
-                dmg_ = 0;
+                DMG = 0;
                 alien.reset();
                 break;
             }
@@ -2144,7 +1604,7 @@ void Alien::main()
             if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
-                dmg_ = 0;
+                DMG = 0;
                 alien.reset();
                 break;
             }
@@ -2152,7 +1612,7 @@ void Alien::main()
             if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
             {
                 cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
-                dmg_ = 0;
+                DMG = 0;
                 alien.reset();
                 break;
             }
@@ -2172,7 +1632,7 @@ void Alien::main()
             if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
-                dmg_ = 0;
+                DMG = 0;
                 alien.reset();
                 break;
             }
@@ -2180,7 +1640,7 @@ void Alien::main()
             if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
             {
                 cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
-                dmg_ = 0;
+                DMG = 0;
                 alien.reset();
                 break;
             }
@@ -2200,7 +1660,7 @@ void Alien::main()
             if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
             {
                 cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
-                dmg_ = 0;
+                DMG = 0;
                 alien.reset();
                 break;
             }
@@ -2208,14 +1668,14 @@ void Alien::main()
             if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
             {
                 cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
-                dmg_ = 0;
+                DMG = 0;
                 alien.reset();
                 break;
             }
         }
     }
 
-    if(hp_ <= 0)
+    if(HP <= 0)
     {
         cout<<endl<<"Alien has no life left. Game Over."<<endl;
         cout<<"The game will terminate in 5 seconds."<<endl<<endl;
@@ -2231,11 +1691,9 @@ void Alien::main()
         usleep(1000000);
         abort();
     }
-    board.display();
-    alien.status();
-    zombie.status();
+
     x_ = alien.getX(); y_ = alien.getY();
-    aX = x_; aY = y_;
+    Xa = x_; Ya = y_;
     zombie.main();
 }
 
@@ -2245,40 +1703,20 @@ void Zombie::main()
     Alien alien;
     Zombie zombie;
     int hp, seed;
-    hp = hp1_ + hp2_ + hp3_ + hp4_ + hp5_ + hp6_ + hp7_ + hp8_ + hp9_;
+    hp = HP1 + HP2 + HP3 + HP4 + HP5 + HP6 + HP7 + HP8 + HP9;
 
-        cout<<x1_<<"  "<<y1_<<endl;
-        cout<<x2_<<"  "<<y2_<<endl;
-        cout<<x3_<<"  "<<y3_<<endl;
-        cout<<x4_<<"  "<<y4_<<endl;
-        cout<<x5_<<"  "<<y5_<<endl;
-        cout<<x6_<<"  "<<y6_<<endl;
-        cout<<x7_<<"  "<<y7_<<endl;
-        cout<<x8_<<"  "<<y8_<<endl;
-        cout<<x9_<<"  "<<y9_<<endl<<endl;
-
-        cout<<zombie.getX(1)<<"  "<<zombie.getY(1)<<endl<<endl;
-
-    alien.land(board, aX, aY);
-    zombie.land(board);
+    alien.land(board);
+    zombie.land(board, Z);
     board.display();
     alien.status();
     zombie.status();
-            cout<<x1_<<"  "<<y1_<<endl;
-        cout<<x2_<<"  "<<y2_<<endl;
-        cout<<x3_<<"  "<<y3_<<endl;
-        cout<<x4_<<"  "<<y4_<<endl;
-        cout<<x5_<<"  "<<y5_<<endl;
-        cout<<x6_<<"  "<<y6_<<endl;
-        cout<<x7_<<"  "<<y7_<<endl;
-        cout<<x8_<<"  "<<y8_<<endl;
-        cout<<x9_<<"  "<<y9_<<endl;
     confirm();
     //system("cls"); //undo before launch
 
-    if (num_ == 1)
+    if (Z == 1)
     {
-        for (int i = 1; i<=num_; ++i)
+        int diffX, diffY, range;
+        for (int i = 1; i<=Z; ++i)
         {
             cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
@@ -2307,72 +1745,139 @@ void Zombie::main()
             zombie.status();
             confirm();
 
-            if (zombie.search(i) == 'A')
+            for (int j = 1; j<=Z; ++j)
+            {
+                if(i == 1)
+                {
+                    diffX = Xa - X1;
+                    diffY = Ya - Y1;
+                    range = RNG1;
+                }
+
+                else if(i == 2)
+                {
+                    diffX = Xa - X2;
+                    diffY = Ya - Y2;
+                    range = RNG2;
+                }
+
+                else if(i == 3)
+                {
+                    diffX = Xa - X3;
+                    diffY = Ya - Y3;
+                    range = RNG3;
+                }
+
+                else if(i == 4)
+                {
+                    diffX = Xa - X4;
+                    diffY = Ya - Y4;
+                    range = RNG4;
+                }
+
+                else if(i == 5)
+                {
+                    diffX = Xa - X5;
+                    diffY = Ya - Y5;
+                    range = RNG5;
+                }
+
+                else if(i == 6)
+                {
+                    diffX = Xa - X6;
+                    diffY = Ya - Y6;
+                    range = RNG6;
+                }
+
+                else if(i == 7)
+                {
+                    diffX = Xa - X7;
+                    diffY = Ya - Y7;
+                    range = RNG7;
+                }
+
+                else if(i == 8)
+                {
+                    diffX = Xa - X8;
+                    diffY = Ya - Y8;
+                    range = RNG8;
+                }
+
+                else if(i == 9)
+                {
+                    diffX = Xa - X9;
+                    diffY = Ya - Y9;
+                    range = RNG9;
+                }
+            }
+
+            if (diffX <= range || diffX <= -range || diffY <= range || diffY <= -range)
             {
                 cout<<"Alien is in range of Zombie "<<i<<"."<<endl;
                 if (i == 1)
                 {
-                    cout<<"Alien takes "<<dmg1_<< " damage.";
-                    alien.damage(dmg1_);
+                    cout<<"Alien takes "<<DMG1<< " damage."<<endl<<endl;
+                    alien.damage(DMG1);
                 }
                 else if (i == 2)
                 {
-                    cout<<"Alien takes "<<dmg2_<< " damage.";
-                    alien.damage(dmg2_);
+                    cout<<"Alien takes "<<DMG2<< " damage."<<endl<<endl;
+                    alien.damage(DMG2);
                 }
                 else if (i == 3)
                 {
-                    cout<<"Alien takes "<<dmg3_<< " damage.";
-                    alien.damage(dmg3_);
+                    cout<<"Alien takes "<<DMG3<< " damage."<<endl<<endl;
+                    alien.damage(DMG3);
                 }
                 else if (i == 4)
                 {
-                    cout<<"Alien takes "<<dmg4_<< " damage.";
-                    alien.damage(dmg4_);
+                    cout<<"Alien takes "<<DMG4<< " damage."<<endl<<endl;
+                    alien.damage(DMG4);
                 }
                 else if (i == 5)
                 {
-                    cout<<"Alien takes "<<dmg5_<< " damage.";
-                    alien.damage(dmg5_);
+                    cout<<"Alien takes "<<DMG5<< " damage."<<endl<<endl;
+                    alien.damage(DMG5);
                 }
                 else if (i == 6)
                 {
-                    cout<<"Alien takes "<<dmg6_<< " damage.";
-                    alien.damage(dmg6_);
+                    cout<<"Alien takes "<<DMG6<< " damage."<<endl<<endl;
+                    alien.damage(DMG6);
                 }
                 else if (i == 7)
                 {
-                    cout<<"Alien takes "<<dmg7_<< " damage.";
-                    alien.damage(dmg7_);
+                    cout<<"Alien takes "<<DMG7<< " damage."<<endl<<endl;
+                    alien.damage(DMG7);
                 }
                 else if (i == 8)
                 {
-                    cout<<"Alien takes "<<dmg8_<< " damage.";
-                    alien.damage(dmg8_);
+                    cout<<"Alien takes "<<DMG8<< " damage."<<endl<<endl;
+                    alien.damage(DMG8);
                 }
                 else if (i == 9)
                 {
-                    cout<<"Alien takes "<<dmg9_<< " damage.";
-                    alien.damage(dmg9_);
+                    cout<<"Alien takes "<<DMG9<< " damage."<<endl<<endl;
+                    alien.damage(DMG9);
                 }
                 board.display();
                 alien.status();
                 zombie.status();
                 confirm();
             }
-            cout<<"Zombie "<<i<<" round is over.";
+            cout<<"Zombie "<<i<<" round is over."<<endl<<endl;
         }
-        if (hp1_ <= 0)
+        if (HP1 <= 0)
         {
-            cout<<"Zombie 1 has no life left.";
-            hp1_ = 0;
-            board.setObject(x1_ ,y1_, ' ');
+            cout<<"Zombie 1 has no life left."<<endl;
+            HP1 = 0;
+            board.setObject(X1 ,Y1, ' ');
         }
     }
 
-    else if (num_ == 2)
+    else if (Z == 2)
     {
-        for (int i = 1; i<=num_; ++i)
+        int diffX, diffY, range;
+        for (int i = 1; i<=Z; ++i)
         {
             cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
@@ -2401,79 +1906,146 @@ void Zombie::main()
             zombie.status();
             confirm();
 
-            if (zombie.search(i) == 'A')
+            for (int j = 1; j<=Z; ++j)
+            {
+                if(i == 1)
+                {
+                    diffX = Xa - X1;
+                    diffY = Ya - Y1;
+                    range = RNG1;
+                }
+
+                else if(i == 2)
+                {
+                    diffX = Xa - X2;
+                    diffY = Ya - Y2;
+                    range = RNG2;
+                }
+
+                else if(i == 3)
+                {
+                    diffX = Xa - X3;
+                    diffY = Ya - Y3;
+                    range = RNG3;
+                }
+
+                else if(i == 4)
+                {
+                    diffX = Xa - X4;
+                    diffY = Ya - Y4;
+                    range = RNG4;
+                }
+
+                else if(i == 5)
+                {
+                    diffX = Xa - X5;
+                    diffY = Ya - Y5;
+                    range = RNG5;
+                }
+
+                else if(i == 6)
+                {
+                    diffX = Xa - X6;
+                    diffY = Ya - Y6;
+                    range = RNG6;
+                }
+
+                else if(i == 7)
+                {
+                    diffX = Xa - X7;
+                    diffY = Ya - Y7;
+                    range = RNG7;
+                }
+
+                else if(i == 8)
+                {
+                    diffX = Xa - X8;
+                    diffY = Ya - Y8;
+                    range = RNG8;
+                }
+
+                else if(i == 9)
+                {
+                    diffX = Xa - X9;
+                    diffY = Ya - Y9;
+                    range = RNG9;
+                }
+            }
+
+            if (diffX <= range || diffX <= -range || diffY <= range || diffY <= -range)
             {
                 cout<<"Alien is in range of Zombie "<<i<<"."<<endl;
                 if (i == 1)
                 {
-                    cout<<"Alien takes "<<dmg1_<< " damage.";
-                    alien.damage(dmg1_);
+                    cout<<"Alien takes "<<DMG1<< " damage."<<endl<<endl;
+                    alien.damage(DMG1);
                 }
                 else if (i == 2)
                 {
-                    cout<<"Alien takes "<<dmg2_<< " damage.";
-                    alien.damage(dmg2_);
+                    cout<<"Alien takes "<<DMG2<< " damage."<<endl<<endl;
+                    alien.damage(DMG2);
                 }
                 else if (i == 3)
                 {
-                    cout<<"Alien takes "<<dmg3_<< " damage.";
-                    alien.damage(dmg3_);
+                    cout<<"Alien takes "<<DMG3<< " damage."<<endl<<endl;
+                    alien.damage(DMG3);
                 }
                 else if (i == 4)
                 {
-                    cout<<"Alien takes "<<dmg4_<< " damage.";
-                    alien.damage(dmg4_);
+                    cout<<"Alien takes "<<DMG4<< " damage."<<endl<<endl;
+                    alien.damage(DMG4);
                 }
                 else if (i == 5)
                 {
-                    cout<<"Alien takes "<<dmg5_<< " damage.";
-                    alien.damage(dmg5_);
+                    cout<<"Alien takes "<<DMG5<< " damage."<<endl<<endl;
+                    alien.damage(DMG5);
                 }
                 else if (i == 6)
                 {
-                    cout<<"Alien takes "<<dmg6_<< " damage.";
-                    alien.damage(dmg6_);
+                    cout<<"Alien takes "<<DMG6<< " damage."<<endl<<endl;
+                    alien.damage(DMG6);
                 }
                 else if (i == 7)
                 {
-                    cout<<"Alien takes "<<dmg7_<< " damage.";
-                    alien.damage(dmg7_);
+                    cout<<"Alien takes "<<DMG7<< " damage."<<endl<<endl;
+                    alien.damage(DMG7);
                 }
                 else if (i == 8)
                 {
-                    cout<<"Alien takes "<<dmg8_<< " damage.";
-                    alien.damage(dmg8_);
+                    cout<<"Alien takes "<<DMG8<< " damage."<<endl<<endl;
+                    alien.damage(DMG8);
                 }
                 else if (i == 9)
                 {
-                    cout<<"Alien takes "<<dmg9_<< " damage.";
-                    alien.damage(dmg9_);
+                    cout<<"Alien takes "<<DMG9<< " damage."<<endl<<endl;
+                    alien.damage(DMG9);
                 }
                 board.display();
                 alien.status();
                 zombie.status();
                 confirm();
             }
-            cout<<"Zombie "<<i<<" round is over.";
+            cout<<"Zombie "<<i<<" round is over."<<endl<<endl;
         }
 
-        if (hp1_ <= 0)
+        if (HP1 <= 0)
         {
-            cout<<"Zombie 1 has no life left.";
-            hp1_ = 0;
-            board.setObject(x1_ ,y1_, ' ');
+            cout<<"Zombie 1 has no life left."<<endl;
+            HP1 = 0;
+            board.setObject(X1 ,Y1, ' ');
         }
-        if (hp2_ <= 0)
+        if (HP2 <= 0)
         {
-            cout<<"Zombie 2 has no life left.";
-            hp2_ = 0;
-            board.setObject(x2_ ,y2_, ' ');
+            cout<<"Zombie 2 has no life left."<<endl;
+            HP2 = 0;
+            board.setObject(X2 ,Y2, ' ');
         }
     }
 
-    else if (num_ == 3)
+    else if (Z == 3)
     {
-        for (int i = 1; i<=num_; ++i)
+        int diffX, diffY, range;
+        for (int i = 1; i<=Z; ++i)
         {
             cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
@@ -2502,84 +2074,85 @@ void Zombie::main()
             zombie.status();
             confirm();
 
-            if (zombie.search(i) == 'A')
+            if (diffX <= range || diffX <= -range || diffY <= range || diffY <= -range)
             {
                 cout<<"Alien is in range of Zombie "<<i<<"."<<endl;
                 if (i == 1)
                 {
-                    cout<<"Alien takes "<<dmg1_<< " damage.";
-                    alien.damage(dmg1_);
+                    cout<<"Alien takes "<<DMG1<< " damage."<<endl<<endl;
+                    alien.damage(DMG1);
                 }
                 else if (i == 2)
                 {
-                    cout<<"Alien takes "<<dmg2_<< " damage.";
-                    alien.damage(dmg2_);
+                    cout<<"Alien takes "<<DMG2<< " damage."<<endl<<endl;
+                    alien.damage(DMG2);
                 }
                 else if (i == 3)
                 {
-                    cout<<"Alien takes "<<dmg3_<< " damage.";
-                    alien.damage(dmg3_);
+                    cout<<"Alien takes "<<DMG3<< " damage."<<endl<<endl;
+                    alien.damage(DMG3);
                 }
                 else if (i == 4)
                 {
-                    cout<<"Alien takes "<<dmg4_<< " damage.";
-                    alien.damage(dmg4_);
+                    cout<<"Alien takes "<<DMG4<< " damage."<<endl<<endl;
+                    alien.damage(DMG4);
                 }
                 else if (i == 5)
                 {
-                    cout<<"Alien takes "<<dmg5_<< " damage.";
-                    alien.damage(dmg5_);
+                    cout<<"Alien takes "<<DMG5<< " damage."<<endl<<endl;
+                    alien.damage(DMG5);
                 }
                 else if (i == 6)
                 {
-                    cout<<"Alien takes "<<dmg6_<< " damage.";
-                    alien.damage(dmg6_);
+                    cout<<"Alien takes "<<DMG6<< " damage."<<endl<<endl;
+                    alien.damage(DMG6);
                 }
                 else if (i == 7)
                 {
-                    cout<<"Alien takes "<<dmg7_<< " damage.";
-                    alien.damage(dmg7_);
+                    cout<<"Alien takes "<<DMG7<< " damage."<<endl<<endl;
+                    alien.damage(DMG7);
                 }
                 else if (i == 8)
                 {
-                    cout<<"Alien takes "<<dmg8_<< " damage.";
-                    alien.damage(dmg8_);
+                    cout<<"Alien takes "<<DMG8<< " damage."<<endl<<endl;
+                    alien.damage(DMG8);
                 }
                 else if (i == 9)
                 {
-                    cout<<"Alien takes "<<dmg9_<< " damage.";
-                    alien.damage(dmg9_);
+                    cout<<"Alien takes "<<DMG9<< " damage."<<endl<<endl;
+                    alien.damage(DMG9);
                 }
                 board.display();
                 alien.status();
                 zombie.status();
                 confirm();
             }
-            cout<<"Zombie "<<i<<" round is over.";
+            cout<<"Zombie "<<i<<" round is over."<<endl<<endl;
         }
-        if (hp1_ <= 0)
+        if (HP1 <= 0)
         {
-            cout<<"Zombie 1 has no life left.";
-            hp1_ = 0;
-            board.setObject(x1_ ,y1_, ' ');
+            cout<<"Zombie 1 has no life left."<<endl;
+            HP1 = 0;
+            board.setObject(X1 ,Y1, ' ');
         }
-        if (hp2_ <= 0)
+        if (HP2 <= 0)
         {
-            cout<<"Zombie 2 has no life left.";
-            hp2_ = 0;
-            board.setObject(x2_ ,y2_, ' ');
+            cout<<"Zombie 2 has no life left."<<endl;
+            HP2 = 0;
+            board.setObject(X2 ,Y2, ' ');
         }
-        if (hp3_ <= 0)
+        if (HP3 <= 0)
         {
-            cout<<"Zombie 3 has no life left.";
-            hp3_ = 0;
-            board.setObject(x3_ ,y3_, ' ');
+            cout<<"Zombie 3 has no life left."<<endl;
+            HP3 = 0;
+            board.setObject(X3 ,Y3, ' ');
         }
     }
 
-    else if (num_ == 4)
+    else if (Z == 4)
     {
-        for (int i = 1; i<=num_; ++i)
+        int diffX, diffY, range;
+        for (int i = 1; i<=Z; ++i)
         {
             cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
@@ -2608,91 +2181,158 @@ void Zombie::main()
             zombie.status();
             confirm();
 
-            if (zombie.search(i) == 'A')
+            for (int j = 1; j<=Z; ++j)
+            {
+                if(i == 1)
+                {
+                    diffX = Xa - X1;
+                    diffY = Ya - Y1;
+                    range = RNG1;
+                }
+
+                else if(i == 2)
+                {
+                    diffX = Xa - X2;
+                    diffY = Ya - Y2;
+                    range = RNG2;
+                }
+
+                else if(i == 3)
+                {
+                    diffX = Xa - X3;
+                    diffY = Ya - Y3;
+                    range = RNG3;
+                }
+
+                else if(i == 4)
+                {
+                    diffX = Xa - X4;
+                    diffY = Ya - Y4;
+                    range = RNG4;
+                }
+
+                else if(i == 5)
+                {
+                    diffX = Xa - X5;
+                    diffY = Ya - Y5;
+                    range = RNG5;
+                }
+
+                else if(i == 6)
+                {
+                    diffX = Xa - X6;
+                    diffY = Ya - Y6;
+                    range = RNG6;
+                }
+
+                else if(i == 7)
+                {
+                    diffX = Xa - X7;
+                    diffY = Ya - Y7;
+                    range = RNG7;
+                }
+
+                else if(i == 8)
+                {
+                    diffX = Xa - X8;
+                    diffY = Ya - Y8;
+                    range = RNG8;
+                }
+
+                else if(i == 9)
+                {
+                    diffX = Xa - X9;
+                    diffY = Ya - Y9;
+                    range = RNG9;
+                }
+            }
+
+            if (diffX <= range || diffX <= -range || diffY <= range || diffY <= -range)
             {
                 cout<<"Alien is in range of Zombie "<<i<<"."<<endl;
                 if (i == 1)
                 {
-                    cout<<"Alien takes "<<dmg1_<< " damage.";
-                    alien.damage(dmg1_);
+                    cout<<"Alien takes "<<DMG1<< " damage."<<endl<<endl;
+                    alien.damage(DMG1);
                 }
                 else if (i == 2)
                 {
-                    cout<<"Alien takes "<<dmg2_<< " damage.";
-                    alien.damage(dmg2_);
+                    cout<<"Alien takes "<<DMG2<< " damage."<<endl<<endl;
+                    alien.damage(DMG2);
                 }
                 else if (i == 3)
                 {
-                    cout<<"Alien takes "<<dmg3_<< " damage.";
-                    alien.damage(dmg3_);
+                    cout<<"Alien takes "<<DMG3<< " damage."<<endl<<endl;
+                    alien.damage(DMG3);
                 }
                 else if (i == 4)
                 {
-                    cout<<"Alien takes "<<dmg4_<< " damage.";
-                    alien.damage(dmg4_);
+                    cout<<"Alien takes "<<DMG4<< " damage."<<endl<<endl;
+                    alien.damage(DMG4);
                 }
                 else if (i == 5)
                 {
-                    cout<<"Alien takes "<<dmg5_<< " damage.";
-                    alien.damage(dmg5_);
+                    cout<<"Alien takes "<<DMG5<< " damage."<<endl<<endl;
+                    alien.damage(DMG5);
                 }
                 else if (i == 6)
                 {
-                    cout<<"Alien takes "<<dmg6_<< " damage.";
-                    alien.damage(dmg6_);
+                    cout<<"Alien takes "<<DMG6<< " damage."<<endl<<endl;
+                    alien.damage(DMG6);
                 }
                 else if (i == 7)
                 {
-                    cout<<"Alien takes "<<dmg7_<< " damage.";
-                    alien.damage(dmg7_);
+                    cout<<"Alien takes "<<DMG7<< " damage."<<endl<<endl;
+                    alien.damage(DMG7);
                 }
                 else if (i == 8)
                 {
-                    cout<<"Alien takes "<<dmg8_<< " damage.";
-                    alien.damage(dmg8_);
+                    cout<<"Alien takes "<<DMG8<< " damage."<<endl<<endl;
+                    alien.damage(DMG8);
                 }
                 else if (i == 9)
                 {
-                    cout<<"Alien takes "<<dmg9_<< " damage.";
-                    alien.damage(dmg9_);
+                    cout<<"Alien takes "<<DMG9<< " damage."<<endl<<endl;
+                    alien.damage(DMG9);
                 }
                 board.display();
                 alien.status();
                 zombie.status();
                 confirm();
             }
-            cout<<"Zombie "<<i<<" round is over.";
+            cout<<"Zombie "<<i<<" round is over."<<endl<<endl;
         }
 
-        if (hp1_ <= 0)
+        if (HP1 <= 0)
         {
-            cout<<"Zombie 1 has no life left.";
-            hp1_ = 0;
-            board.setObject(x1_ ,y1_, ' ');
+            cout<<"Zombie 1 has no life left."<<endl;
+            HP1 = 0;
+            board.setObject(X1 ,Y1, ' ');
         }
-        if (hp2_ <= 0)
+        if (HP2 <= 0)
         {
-            cout<<"Zombie 2 has no life left.";
-            hp2_ = 0;
-            board.setObject(x2_ ,y2_, ' ');
+            cout<<"Zombie 2 has no life left."<<endl;
+            HP2 = 0;
+            board.setObject(X2 ,Y2, ' ');
         }
-        if (hp3_ <= 0)
+        if (HP3 <= 0)
         {
-            cout<<"Zombie 3 has no life left.";
-            hp3_ = 0;
-            board.setObject(x3_ ,y3_, ' ');
+            cout<<"Zombie 3 has no life left."<<endl;
+            HP3 = 0;
+            board.setObject(X3 ,Y3, ' ');
         }
-        if (hp4_ <= 0)
+        if (HP4 <= 0)
         {
-            cout<<"Zombie 4 has no life left.";
-            hp4_ = 0;
-            board.setObject(x4_ ,y4_, ' ');
+            cout<<"Zombie 4 has no life left."<<endl;
+            HP4 = 0;
+            board.setObject(X4 ,Y4, ' ');
         }
     }
 
-    else if (num_ == 5)
+    else if (Z == 5)
     {
-        for (int i = 1; i<=num_; ++i)
+        int diffX, diffY, range;
+        for (int i = 1; i<=Z; ++i)
         {
             cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
@@ -2721,97 +2361,164 @@ void Zombie::main()
             zombie.status();
             confirm();
 
-            if (zombie.search(i) == 'A')
+            for (int j = 1; j<=Z; ++j)
+            {
+                if(i == 1)
+                {
+                    diffX = Xa - X1;
+                    diffY = Ya - Y1;
+                    range = RNG1;
+                }
+
+                else if(i == 2)
+                {
+                    diffX = Xa - X2;
+                    diffY = Ya - Y2;
+                    range = RNG2;
+                }
+
+                else if(i == 3)
+                {
+                    diffX = Xa - X3;
+                    diffY = Ya - Y3;
+                    range = RNG3;
+                }
+
+                else if(i == 4)
+                {
+                    diffX = Xa - X4;
+                    diffY = Ya - Y4;
+                    range = RNG4;
+                }
+
+                else if(i == 5)
+                {
+                    diffX = Xa - X5;
+                    diffY = Ya - Y5;
+                    range = RNG5;
+                }
+
+                else if(i == 6)
+                {
+                    diffX = Xa - X6;
+                    diffY = Ya - Y6;
+                    range = RNG6;
+                }
+
+                else if(i == 7)
+                {
+                    diffX = Xa - X7;
+                    diffY = Ya - Y7;
+                    range = RNG7;
+                }
+
+                else if(i == 8)
+                {
+                    diffX = Xa - X8;
+                    diffY = Ya - Y8;
+                    range = RNG8;
+                }
+
+                else if(i == 9)
+                {
+                    diffX = Xa - X9;
+                    diffY = Ya - Y9;
+                    range = RNG9;
+                }
+            }
+
+            if (diffX <= range || diffX <= -range || diffY <= range || diffY <= -range)
             {
                 cout<<"Alien is in range of Zombie "<<i<<"."<<endl;
                 if (i == 1)
                 {
-                    cout<<"Alien takes "<<dmg1_<< " damage.";
-                    alien.damage(dmg1_);
+                    cout<<"Alien takes "<<DMG1<< " damage."<<endl<<endl;
+                    alien.damage(DMG1);
                 }
                 else if (i == 2)
                 {
-                    cout<<"Alien takes "<<dmg2_<< " damage.";
-                    alien.damage(dmg2_);
+                    cout<<"Alien takes "<<DMG2<< " damage."<<endl<<endl;
+                    alien.damage(DMG2);
                 }
                 else if (i == 3)
                 {
-                    cout<<"Alien takes "<<dmg3_<< " damage.";
-                    alien.damage(dmg3_);
+                    cout<<"Alien takes "<<DMG3<< " damage."<<endl<<endl;
+                    alien.damage(DMG3);
                 }
                 else if (i == 4)
                 {
-                    cout<<"Alien takes "<<dmg4_<< " damage.";
-                    alien.damage(dmg4_);
+                    cout<<"Alien takes "<<DMG4<< " damage."<<endl<<endl;
+                    alien.damage(DMG4);
                 }
                 else if (i == 5)
                 {
-                    cout<<"Alien takes "<<dmg5_<< " damage.";
-                    alien.damage(dmg5_);
+                    cout<<"Alien takes "<<DMG5<< " damage."<<endl<<endl;
+                    alien.damage(DMG5);
                 }
                 else if (i == 6)
                 {
-                    cout<<"Alien takes "<<dmg6_<< " damage.";
-                    alien.damage(dmg6_);
+                    cout<<"Alien takes "<<DMG6<< " damage."<<endl<<endl;
+                    alien.damage(DMG6);
                 }
                 else if (i == 7)
                 {
-                    cout<<"Alien takes "<<dmg7_<< " damage.";
-                    alien.damage(dmg7_);
+                    cout<<"Alien takes "<<DMG7<< " damage."<<endl<<endl;
+                    alien.damage(DMG7);
                 }
                 else if (i == 8)
                 {
-                    cout<<"Alien takes "<<dmg8_<< " damage.";
-                    alien.damage(dmg8_);
+                    cout<<"Alien takes "<<DMG8<< " damage."<<endl<<endl;
+                    alien.damage(DMG8);
                 }
                 else if (i == 9)
                 {
-                    cout<<"Alien takes "<<dmg9_<< " damage.";
-                    alien.damage(dmg9_);
+                    cout<<"Alien takes "<<DMG9<< " damage."<<endl<<endl;
+                    alien.damage(DMG9);
                 }
                 board.display();
                 alien.status();
                 zombie.status();
                 confirm();
             }
-            cout<<"Zombie "<<i<<" round is over.";
+            cout<<"Zombie "<<i<<" round is over."<<endl<<endl;
         }
 
-        if (hp1_ <= 0)
+        if (HP1 <= 0)
         {
-            cout<<"Zombie 1 has no life left.";
-            hp1_ = 0;
-            board.setObject(x1_ ,y1_, ' ');
+            cout<<"Zombie 1 has no life left."<<endl;
+            HP1 = 0;
+            board.setObject(X1 ,Y1, ' ');
         }
-        if (hp2_ <= 0)
+        if (HP2 <= 0)
         {
-            cout<<"Zombie 2 has no life left.";
-            hp2_ = 0;
-            board.setObject(x2_ ,y2_, ' ');
+            cout<<"Zombie 2 has no life left."<<endl;
+            HP2 = 0;
+            board.setObject(X2 ,Y2, ' ');
         }
-        if (hp3_ <= 0)
+        if (HP3 <= 0)
         {
-            cout<<"Zombie 3 has no life left.";
-            hp3_ = 0;
-            board.setObject(x3_ ,y3_, ' ');
+            cout<<"Zombie 3 has no life left."<<endl;
+            HP3 = 0;
+            board.setObject(X3 ,Y3, ' ');
         }
-        if (hp4_ <= 0)
+        if (HP4 <= 0)
         {
-            cout<<"Zombie 4 has no life left.";
-            hp4_ = 0;
-            board.setObject(x4_ ,y4_, ' ');
+            cout<<"Zombie 4 has no life left."<<endl;
+            HP4 = 0;
+            board.setObject(X4 ,Y4, ' ');
         }
-        if (hp5_ <= 0)
+        if (HP5 <= 0)
         {
-            cout<<"Zombie 5 has no life left.";
-            hp5_ = 0;
-            board.setObject(x5_ ,y5_, ' ');
+            cout<<"Zombie 5 has no life left."<<endl;
+            HP5 = 0;
+            board.setObject(X5 ,Y5, ' ');
         }
     }
 
-    else if (num_ == 6)
+    else if (Z == 6)
     {
-        for (int i = 1; i<=num_; ++i)
+        int diffX, diffY, range;
+        for (int i = 1; i<=Z; ++i)
         {
             cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
@@ -2840,103 +2547,170 @@ void Zombie::main()
             zombie.status();
             confirm();
 
-            if (zombie.search(i) == 'A')
+            for (int j = 1; j<=Z; ++j)
+            {
+                if(i == 1)
+                {
+                    diffX = Xa - X1;
+                    diffY = Ya - Y1;
+                    range = RNG1;
+                }
+
+                else if(i == 2)
+                {
+                    diffX = Xa - X2;
+                    diffY = Ya - Y2;
+                    range = RNG2;
+                }
+
+                else if(i == 3)
+                {
+                    diffX = Xa - X3;
+                    diffY = Ya - Y3;
+                    range = RNG3;
+                }
+
+                else if(i == 4)
+                {
+                    diffX = Xa - X4;
+                    diffY = Ya - Y4;
+                    range = RNG4;
+                }
+
+                else if(i == 5)
+                {
+                    diffX = Xa - X5;
+                    diffY = Ya - Y5;
+                    range = RNG5;
+                }
+
+                else if(i == 6)
+                {
+                    diffX = Xa - X6;
+                    diffY = Ya - Y6;
+                    range = RNG6;
+                }
+
+                else if(i == 7)
+                {
+                    diffX = Xa - X7;
+                    diffY = Ya - Y7;
+                    range = RNG7;
+                }
+
+                else if(i == 8)
+                {
+                    diffX = Xa - X8;
+                    diffY = Ya - Y8;
+                    range = RNG8;
+                }
+
+                else if(i == 9)
+                {
+                    diffX = Xa - X9;
+                    diffY = Ya - Y9;
+                    range = RNG9;
+                }
+            }
+
+            if (diffX <= range || diffX <= -range || diffY <= range || diffY <= -range)
             {
                 cout<<"Alien is in range of Zombie "<<i<<"."<<endl;
                 if (i == 1)
                 {
-                    cout<<"Alien takes "<<dmg1_<< " damage.";
-                    alien.damage(dmg1_);
+                    cout<<"Alien takes "<<DMG1<< " damage."<<endl<<endl;
+                    alien.damage(DMG1);
                 }
                 else if (i == 2)
                 {
-                    cout<<"Alien takes "<<dmg2_<< " damage.";
-                    alien.damage(dmg2_);
+                    cout<<"Alien takes "<<DMG2<< " damage."<<endl<<endl;
+                    alien.damage(DMG2);
                 }
                 else if (i == 3)
                 {
-                    cout<<"Alien takes "<<dmg3_<< " damage.";
-                    alien.damage(dmg3_);
+                    cout<<"Alien takes "<<DMG3<< " damage."<<endl<<endl;
+                    alien.damage(DMG3);
                 }
                 else if (i == 4)
                 {
-                    cout<<"Alien takes "<<dmg4_<< " damage.";
-                    alien.damage(dmg4_);
+                    cout<<"Alien takes "<<DMG4<< " damage."<<endl<<endl;
+                    alien.damage(DMG4);
                 }
                 else if (i == 5)
                 {
-                    cout<<"Alien takes "<<dmg5_<< " damage.";
-                    alien.damage(dmg5_);
+                    cout<<"Alien takes "<<DMG5<< " damage."<<endl<<endl;
+                    alien.damage(DMG5);
                 }
                 else if (i == 6)
                 {
-                    cout<<"Alien takes "<<dmg6_<< " damage.";
-                    alien.damage(dmg6_);
+                    cout<<"Alien takes "<<DMG6<< " damage."<<endl<<endl;
+                    alien.damage(DMG6);
                 }
                 else if (i == 7)
                 {
-                    cout<<"Alien takes "<<dmg7_<< " damage.";
-                    alien.damage(dmg7_);
+                    cout<<"Alien takes "<<DMG7<< " damage."<<endl<<endl;
+                    alien.damage(DMG7);
                 }
                 else if (i == 8)
                 {
-                    cout<<"Alien takes "<<dmg8_<< " damage.";
-                    alien.damage(dmg8_);
+                    cout<<"Alien takes "<<DMG8<< " damage."<<endl<<endl;
+                    alien.damage(DMG8);
                 }
                 else if (i == 9)
                 {
-                    cout<<"Alien takes "<<dmg9_<< " damage.";
-                    alien.damage(dmg9_);
+                    cout<<"Alien takes "<<DMG9<< " damage."<<endl<<endl;
+                    alien.damage(DMG9);
                 }
                 board.display();
                 alien.status();
                 zombie.status();
                 confirm();
             }
-            cout<<"Zombie "<<i<<" round is over.";
+            cout<<"Zombie "<<i<<" round is over."<<endl<<endl;
         }
 
-        if (hp1_ <= 0)
+        if (HP1 <= 0)
         {
-            cout<<"Zombie 1 has no life left.";
-            hp1_ = 0;
-            board.setObject(x1_ ,y1_, ' ');
+            cout<<"Zombie 1 has no life left."<<endl;
+            HP1 = 0;
+            board.setObject(X1 ,Y1, ' ');
         }
-        if (hp2_ <= 0)
+        if (HP2 <= 0)
         {
-            cout<<"Zombie 2 has no life left.";
-            hp2_ = 0;
-            board.setObject(x2_ ,y2_, ' ');
+            cout<<"Zombie 2 has no life left."<<endl;
+            HP2 = 0;
+            board.setObject(X2 ,Y2, ' ');
         }
-        if (hp3_ <= 0)
+        if (HP3 <= 0)
         {
-            cout<<"Zombie 3 has no life left.";
-            hp3_ = 0;
-            board.setObject(x3_ ,y3_, ' ');
+            cout<<"Zombie 3 has no life left."<<endl;
+            HP3 = 0;
+            board.setObject(X3 ,Y3, ' ');
         }
-        if (hp4_ <= 0)
+        if (HP4 <= 0)
         {
-            cout<<"Zombie 4 has no life left.";
-            hp4_ = 0;
-            board.setObject(x4_ ,y4_, ' ');
+            cout<<"Zombie 4 has no life left."<<endl;
+            HP4 = 0;
+            board.setObject(X4 ,Y4, ' ');
         }
-        if (hp5_ <= 0)
+        if (HP5 <= 0)
         {
-            cout<<"Zombie 5 has no life left.";
-            hp5_ = 0;
-            board.setObject(x5_ ,y5_, ' ');
+            cout<<"Zombie 5 has no life left."<<endl;
+            HP5 = 0;
+            board.setObject(X5 ,Y5, ' ');
         }
-        if (hp6_ <= 0)
+        if (HP6 <= 0)
         {
-            cout<<"Zombie 6 has no life left.";
-            hp6_ = 0;
-            board.setObject(x6_ ,y6_, ' ');
+            cout<<"Zombie 6 has no life left."<<endl;
+            HP6 = 0;
+            board.setObject(X6 ,Y6, ' ');
         }
     }
 
-    else if (num_ == 7)
+    else if (Z == 7)
     {
-        for (int i = 1; i<=num_; ++i)
+        int diffX, diffY, range;
+        for (int i = 1; i<=Z; ++i)
         {
             cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
@@ -2965,109 +2739,176 @@ void Zombie::main()
             zombie.status();
             confirm();
 
-            if (zombie.search(i) == 'A')
+            for (int j = 1; j<=Z; ++j)
+            {
+                if(i == 1)
+                {
+                    diffX = Xa - X1;
+                    diffY = Ya - Y1;
+                    range = RNG1;
+                }
+
+                else if(i == 2)
+                {
+                    diffX = Xa - X2;
+                    diffY = Ya - Y2;
+                    range = RNG2;
+                }
+
+                else if(i == 3)
+                {
+                    diffX = Xa - X3;
+                    diffY = Ya - Y3;
+                    range = RNG3;
+                }
+
+                else if(i == 4)
+                {
+                    diffX = Xa - X4;
+                    diffY = Ya - Y4;
+                    range = RNG4;
+                }
+
+                else if(i == 5)
+                {
+                    diffX = Xa - X5;
+                    diffY = Ya - Y5;
+                    range = RNG5;
+                }
+
+                else if(i == 6)
+                {
+                    diffX = Xa - X6;
+                    diffY = Ya - Y6;
+                    range = RNG6;
+                }
+
+                else if(i == 7)
+                {
+                    diffX = Xa - X7;
+                    diffY = Ya - Y7;
+                    range = RNG7;
+                }
+
+                else if(i == 8)
+                {
+                    diffX = Xa - X8;
+                    diffY = Ya - Y8;
+                    range = RNG8;
+                }
+
+                else if(i == 9)
+                {
+                    diffX = Xa - X9;
+                    diffY = Ya - Y9;
+                    range = RNG9;
+                }
+            }
+
+            if (diffX <= range || diffX <= -range || diffY <= range || diffY <= -range)
             {
                 cout<<"Alien is in range of Zombie "<<i<<"."<<endl;
                 if (i == 1)
                 {
-                    cout<<"Alien takes "<<dmg1_<< " damage.";
-                    alien.damage(dmg1_);
+                    cout<<"Alien takes "<<DMG1<< " damage."<<endl<<endl;
+                    alien.damage(DMG1);
                 }
                 else if (i == 2)
                 {
-                    cout<<"Alien takes "<<dmg2_<< " damage.";
-                    alien.damage(dmg2_);
+                    cout<<"Alien takes "<<DMG2<< " damage."<<endl<<endl;
+                    alien.damage(DMG2);
                 }
                 else if (i == 3)
                 {
-                    cout<<"Alien takes "<<dmg3_<< " damage.";
-                    alien.damage(dmg3_);
+                    cout<<"Alien takes "<<DMG3<< " damage."<<endl<<endl;
+                    alien.damage(DMG3);
                 }
                 else if (i == 4)
                 {
-                    cout<<"Alien takes "<<dmg4_<< " damage.";
-                    alien.damage(dmg4_);
+                    cout<<"Alien takes "<<DMG4<< " damage."<<endl<<endl;
+                    alien.damage(DMG4);
                 }
                 else if (i == 5)
                 {
-                    cout<<"Alien takes "<<dmg5_<< " damage.";
-                    alien.damage(dmg5_);
+                    cout<<"Alien takes "<<DMG5<< " damage."<<endl<<endl;
+                    alien.damage(DMG5);
                 }
                 else if (i == 6)
                 {
-                    cout<<"Alien takes "<<dmg6_<< " damage.";
-                    alien.damage(dmg6_);
+                    cout<<"Alien takes "<<DMG6<< " damage."<<endl<<endl;
+                    alien.damage(DMG6);
                 }
                 else if (i == 7)
                 {
-                    cout<<"Alien takes "<<dmg7_<< " damage.";
-                    alien.damage(dmg7_);
+                    cout<<"Alien takes "<<DMG7<< " damage."<<endl<<endl;
+                    alien.damage(DMG7);
                 }
                 else if (i == 8)
                 {
-                    cout<<"Alien takes "<<dmg8_<< " damage.";
-                    alien.damage(dmg8_);
+                    cout<<"Alien takes "<<DMG8<< " damage."<<endl<<endl;
+                    alien.damage(DMG8);
                 }
                 else if (i == 9)
                 {
-                    cout<<"Alien takes "<<dmg9_<< " damage.";
-                    alien.damage(dmg9_);
+                    cout<<"Alien takes "<<DMG9<< " damage."<<endl<<endl;
+                    alien.damage(DMG9);
                 }
                 board.display();
                 alien.status();
                 zombie.status();
                 confirm();
             }
-            cout<<"Zombie "<<i<<" round is over.";
+            cout<<"Zombie "<<i<<" round is over."<<endl<<endl;
         }
 
-        if (hp1_ <= 0)
+        if (HP1 <= 0)
         {
-            cout<<"Zombie 1 has no life left.";
-            hp1_ = 0;
-            board.setObject(x1_ ,y1_, ' ');
+            cout<<"Zombie 1 has no life left."<<endl;
+            HP1 = 0;
+            board.setObject(X1 ,Y1, ' ');
         }
-        if (hp2_ <= 0)
+        if (HP2 <= 0)
         {
-            cout<<"Zombie 2 has no life left.";
-            hp2_ = 0;
-            board.setObject(x2_ ,y2_, ' ');
+            cout<<"Zombie 2 has no life left."<<endl;
+            HP2 = 0;
+            board.setObject(X2 ,Y2, ' ');
         }
-        if (hp3_ <= 0)
+        if (HP3 <= 0)
         {
-            cout<<"Zombie 3 has no life left.";
-            hp3_ = 0;
-            board.setObject(x3_ ,y3_, ' ');
+            cout<<"Zombie 3 has no life left."<<endl;
+            HP3 = 0;
+            board.setObject(X3 ,Y3, ' ');
         }
-        if (hp4_ <= 0)
+        if (HP4 <= 0)
         {
-            cout<<"Zombie 4 has no life left.";
-            hp4_ = 0;
-            board.setObject(x4_ ,y4_, ' ');
+            cout<<"Zombie 4 has no life left."<<endl;
+            HP4 = 0;
+            board.setObject(X4 ,Y4, ' ');
         }
-        if (hp5_ <= 0)
+        if (HP5 <= 0)
         {
-            cout<<"Zombie 5 has no life left.";
-            hp5_ = 0;
-            board.setObject(x5_ ,y5_, ' ');
+            cout<<"Zombie 5 has no life left."<<endl;
+            HP5 = 0;
+            board.setObject(X5 ,Y5, ' ');
         }
-        if (hp6_ <= 0)
+        if (HP6 <= 0)
         {
-            cout<<"Zombie 6 has no life left.";
-            hp6_ = 0;
-            board.setObject(x6_ ,y6_, ' ');
+            cout<<"Zombie 6 has no life left."<<endl;
+            HP6 = 0;
+            board.setObject(X6 ,Y6, ' ');
         }
-        if (hp7_ <= 0)
+        if (HP7 <= 0)
         {
-            cout<<"Zombie 7 has no life left.";
-            hp7_ = 0;
-            board.setObject(x7_ ,y7_, ' ');
+            cout<<"Zombie 7 has no life left."<<endl;
+            HP7 = 0;
+            board.setObject(X7 ,Y7, ' ');
         }
     }
     
-    else if (num_ == 8)
+    else if (Z == 8)
     {
-        for (int i = 1; i<=num_; ++i)
+        int diffX, diffY, range;
+        for (int i = 1; i<=Z; ++i)
         {
             cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
@@ -3096,115 +2937,182 @@ void Zombie::main()
             zombie.status();
             confirm();
 
-            if (zombie.search(i) == 'A')
+            for (int j = 1; j<=Z; ++j)
+            {
+                if(i == 1)
+                {
+                    diffX = Xa - X1;
+                    diffY = Ya - Y1;
+                    range = RNG1;
+                }
+
+                else if(i == 2)
+                {
+                    diffX = Xa - X2;
+                    diffY = Ya - Y2;
+                    range = RNG2;
+                }
+
+                else if(i == 3)
+                {
+                    diffX = Xa - X3;
+                    diffY = Ya - Y3;
+                    range = RNG3;
+                }
+
+                else if(i == 4)
+                {
+                    diffX = Xa - X4;
+                    diffY = Ya - Y4;
+                    range = RNG4;
+                }
+
+                else if(i == 5)
+                {
+                    diffX = Xa - X5;
+                    diffY = Ya - Y5;
+                    range = RNG5;
+                }
+
+                else if(i == 6)
+                {
+                    diffX = Xa - X6;
+                    diffY = Ya - Y6;
+                    range = RNG6;
+                }
+
+                else if(i == 7)
+                {
+                    diffX = Xa - X7;
+                    diffY = Ya - Y7;
+                    range = RNG7;
+                }
+
+                else if(i == 8)
+                {
+                    diffX = Xa - X8;
+                    diffY = Ya - Y8;
+                    range = RNG8;
+                }
+
+                else if(i == 9)
+                {
+                    diffX = Xa - X9;
+                    diffY = Ya - Y9;
+                    range = RNG9;
+                }
+            }
+
+            if (diffX <= range || diffX <= -range || diffY <= range || diffY <= -range)
             {
                 cout<<"Alien is in range of Zombie "<<i<<"."<<endl;
                 if (i == 1)
                 {
-                    cout<<"Alien takes "<<dmg1_<< " damage.";
-                    alien.damage(dmg1_);
+                    cout<<"Alien takes "<<DMG1<< " damage."<<endl<<endl;
+                    alien.damage(DMG1);
                 }
                 else if (i == 2)
                 {
-                    cout<<"Alien takes "<<dmg2_<< " damage.";
-                    alien.damage(dmg2_);
+                    cout<<"Alien takes "<<DMG2<< " damage."<<endl<<endl;
+                    alien.damage(DMG2);
                 }
                 else if (i == 3)
                 {
-                    cout<<"Alien takes "<<dmg3_<< " damage.";
-                    alien.damage(dmg3_);
+                    cout<<"Alien takes "<<DMG3<< " damage."<<endl<<endl;
+                    alien.damage(DMG3);
                 }
                 else if (i == 4)
                 {
-                    cout<<"Alien takes "<<dmg4_<< " damage.";
-                    alien.damage(dmg4_);
+                    cout<<"Alien takes "<<DMG4<< " damage."<<endl<<endl;
+                    alien.damage(DMG4);
                 }
                 else if (i == 5)
                 {
-                    cout<<"Alien takes "<<dmg5_<< " damage.";
-                    alien.damage(dmg5_);
+                    cout<<"Alien takes "<<DMG5<< " damage."<<endl<<endl;
+                    alien.damage(DMG5);
                 }
                 else if (i == 6)
                 {
-                    cout<<"Alien takes "<<dmg6_<< " damage.";
-                    alien.damage(dmg6_);
+                    cout<<"Alien takes "<<DMG6<< " damage."<<endl<<endl;
+                    alien.damage(DMG6);
                 }
                 else if (i == 7)
                 {
-                    cout<<"Alien takes "<<dmg7_<< " damage.";
-                    alien.damage(dmg7_);
+                    cout<<"Alien takes "<<DMG7<< " damage."<<endl<<endl;
+                    alien.damage(DMG7);
                 }
                 else if (i == 8)
                 {
-                    cout<<"Alien takes "<<dmg8_<< " damage.";
-                    alien.damage(dmg8_);
+                    cout<<"Alien takes "<<DMG8<< " damage."<<endl<<endl;
+                    alien.damage(DMG8);
                 }
                 else if (i == 9)
                 {
-                    cout<<"Alien takes "<<dmg9_<< " damage.";
-                    alien.damage(dmg9_);
+                    cout<<"Alien takes "<<DMG9<< " damage."<<endl<<endl;
+                    alien.damage(DMG9);
                 }
                 board.display();
                 alien.status();
                 zombie.status();
                 confirm();
             }
-            cout<<"Zombie "<<i<<" round is over.";
+            cout<<"Zombie "<<i<<" round is over."<<endl<<endl;
         }
 
-        if (hp1_ <= 0)
+        if (HP1 <= 0)
         {
-            cout<<"Zombie 1 has no life left.";
-            hp1_ = 0;
-            board.setObject(x1_ ,y1_, ' ');
+            cout<<"Zombie 1 has no life left."<<endl;
+            HP1 = 0;
+            board.setObject(X1 ,Y1, ' ');
         }
-        if (hp2_ <= 0)
+        if (HP2 <= 0)
         {
-            cout<<"Zombie 2 has no life left.";
-            hp2_ = 0;
-            board.setObject(x2_ ,y2_, ' ');
+            cout<<"Zombie 2 has no life left."<<endl;
+            HP2 = 0;
+            board.setObject(X2 ,Y2, ' ');
         }
-        if (hp3_ <= 0)
+        if (HP3 <= 0)
         {
-            cout<<"Zombie 3 has no life left.";
-            hp3_ = 0;
-            board.setObject(x3_ ,y3_, ' ');
+            cout<<"Zombie 3 has no life left."<<endl;
+            HP3 = 0;
+            board.setObject(X3 ,Y3, ' ');
         }
-        if (hp4_ <= 0)
+        if (HP4 <= 0)
         {
-            cout<<"Zombie 4 has no life left.";
-            hp4_ = 0;
-            board.setObject(x4_ ,y4_, ' ');
+            cout<<"Zombie 4 has no life left."<<endl;
+            HP4 = 0;
+            board.setObject(X4 ,Y4, ' ');
         }
-        if (hp5_ <= 0)
+        if (HP5 <= 0)
         {
-            cout<<"Zombie 5 has no life left.";
-            hp5_ = 0;
-            board.setObject(x5_ ,y5_, ' ');
+            cout<<"Zombie 5 has no life left."<<endl;
+            HP5 = 0;
+            board.setObject(X5 ,Y5, ' ');
         }
-        if (hp6_ <= 0)
+        if (HP6 <= 0)
         {
-            cout<<"Zombie 6 has no life left.";
-            hp6_ = 0;
-            board.setObject(x6_ ,y6_, ' ');
+            cout<<"Zombie 6 has no life left."<<endl;
+            HP6 = 0;
+            board.setObject(X6 ,Y6, ' ');
         }
-        if (hp7_ <= 0)
+        if (HP7 <= 0)
         {
-            cout<<"Zombie 7 has no life left.";
-            hp7_ = 0;
-            board.setObject(x7_ ,y7_, ' ');
+            cout<<"Zombie 7 has no life left."<<endl;
+            HP7 = 0;
+            board.setObject(X7 ,Y7, ' ');
         }
-        if (hp8_ <= 0)
+        if (HP8 <= 0)
         {
-            cout<<"Zombie 8 has no life left.";
-            hp8_ = 0;
-            board.setObject(x8_ ,y8_, ' ');
+            cout<<"Zombie 8 has no life left."<<endl;
+            HP8 = 0;
+            board.setObject(X8 ,Y8, ' ');
         }
     }
 
-    else if (num_ == 9)
+    else if (Z == 9)
     {
-        for (int i = 1; i<=num_; ++i)
+        int diffX, diffY, range;
+        for (int i = 1; i<=Z; ++i)
         {
             cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
@@ -3233,115 +3141,181 @@ void Zombie::main()
             zombie.status();
             confirm();
 
-            if (zombie.search(i) == 'A')
+            for (int j = 1; j<=Z; ++j)
+            {
+                if(i == 1)
+                {
+                    diffX = Xa - X1;
+                    diffY = Ya - Y1;
+                    range = RNG1;
+                }
+
+                else if(i == 2)
+                {
+                    diffX = Xa - X2;
+                    diffY = Ya - Y2;
+                    range = RNG2;
+                }
+
+                else if(i == 3)
+                {
+                    diffX = Xa - X3;
+                    diffY = Ya - Y3;
+                    range = RNG3;
+                }
+
+                else if(i == 4)
+                {
+                    diffX = Xa - X4;
+                    diffY = Ya - Y4;
+                    range = RNG4;
+                }
+
+                else if(i == 5)
+                {
+                    diffX = Xa - X5;
+                    diffY = Ya - Y5;
+                    range = RNG5;
+                }
+
+                else if(i == 6)
+                {
+                    diffX = Xa - X6;
+                    diffY = Ya - Y6;
+                    range = RNG6;
+                }
+
+                else if(i == 7)
+                {
+                    diffX = Xa - X7;
+                    diffY = Ya - Y7;
+                    range = RNG7;
+                }
+
+                else if(i == 8)
+                {
+                    diffX = Xa - X8;
+                    diffY = Ya - Y8;
+                    range = RNG8;
+                }
+
+                else if(i == 9)
+                {
+                    diffX = Xa - X9;
+                    diffY = Ya - Y9;
+                    range = RNG9;
+                }
+            }
+
+            if (diffX <= range || diffX <= -range || diffY <= range || diffY <= -range)
             {
                 cout<<"Alien is in range of Zombie "<<i<<"."<<endl;
                 if (i == 1)
                 {
-                    cout<<"Alien takes "<<dmg1_<< " damage.";
-                    alien.damage(dmg1_);
+                    cout<<"Alien takes "<<DMG1<< " damage."<<endl<<endl;
+                    alien.damage(DMG1);
                 }
                 else if (i == 2)
                 {
-                    cout<<"Alien takes "<<dmg2_<< " damage.";
-                    alien.damage(dmg2_);
+                    cout<<"Alien takes "<<DMG2<< " damage."<<endl<<endl;
+                    alien.damage(DMG2);
                 }
                 else if (i == 3)
                 {
-                    cout<<"Alien takes "<<dmg3_<< " damage.";
-                    alien.damage(dmg3_);
+                    cout<<"Alien takes "<<DMG3<< " damage."<<endl<<endl;
+                    alien.damage(DMG3);
                 }
                 else if (i == 4)
                 {
-                    cout<<"Alien takes "<<dmg4_<< " damage.";
-                    alien.damage(dmg4_);
+                    cout<<"Alien takes "<<DMG4<< " damage."<<endl<<endl;
+                    alien.damage(DMG4);
                 }
                 else if (i == 5)
                 {
-                    cout<<"Alien takes "<<dmg5_<< " damage.";
-                    alien.damage(dmg5_);
+                    cout<<"Alien takes "<<DMG5<< " damage."<<endl<<endl;
+                    alien.damage(DMG5);
                 }
                 else if (i == 6)
                 {
-                    cout<<"Alien takes "<<dmg6_<< " damage.";
-                    alien.damage(dmg6_);
+                    cout<<"Alien takes "<<DMG6<< " damage."<<endl<<endl;
+                    alien.damage(DMG6);
                 }
                 else if (i == 7)
                 {
-                    cout<<"Alien takes "<<dmg7_<< " damage.";
-                    alien.damage(dmg7_);
+                    cout<<"Alien takes "<<DMG7<< " damage."<<endl<<endl;
+                    alien.damage(DMG7);
                 }
                 else if (i == 8)
                 {
-                    cout<<"Alien takes "<<dmg8_<< " damage.";
-                    alien.damage(dmg8_);
+                    cout<<"Alien takes "<<DMG8<< " damage."<<endl<<endl;
+                    alien.damage(DMG8);
                 }
                 else if (i == 9)
                 {
-                    cout<<"Alien takes "<<dmg9_<< " damage.";
-                    alien.damage(dmg9_);
+                    cout<<"Alien takes "<<DMG9<< " damage."<<endl<<endl;
+                    alien.damage(DMG9);
                 }
                 board.display();
                 alien.status();
                 zombie.status();
                 confirm();
             }
-            cout<<"Zombie "<<i<<" round is over.";
+            cout<<"Zombie "<<i<<" round is over."<<endl<<endl;
         }
 
-        if (hp1_ <= 0)
+        if (HP1 <= 0)
         {
-            cout<<"Zombie 1 has no life left.";
-            hp1_ = 0;
-            board.setObject(x1_ ,y1_, ' ');
+            cout<<"Zombie 1 has no life left."<<endl;
+            HP1 = 0;
+            board.setObject(X1 ,Y1, ' ');
         }
-        if (hp2_ <= 0)
+        if (HP2 <= 0)
         {
-            cout<<"Zombie 2 has no life left.";
-            hp2_ = 0;
-            board.setObject(x2_ ,y2_, ' ');
+            cout<<"Zombie 2 has no life left."<<endl;
+            HP2 = 0;
+            board.setObject(X2 ,Y2, ' ');
         }
-        if (hp3_ <= 0)
+        if (HP3 <= 0)
         {
-            cout<<"Zombie 3 has no life left.";
-            hp3_ = 0;
-            board.setObject(x3_ ,y3_, ' ');
+            cout<<"Zombie 3 has no life left."<<endl;
+            HP3 = 0;
+            board.setObject(X3 ,Y3, ' ');
         }
-        if (hp4_ <= 0)
+        if (HP4 <= 0)
         {
-            cout<<"Zombie 4 has no life left.";
-            hp4_ = 0;
-            board.setObject(x4_ ,y4_, ' ');
+            cout<<"Zombie 4 has no life left."<<endl;
+            HP4 = 0;
+            board.setObject(X4 ,Y4, ' ');
         }
-        if (hp5_ <= 0)
+        if (HP5 <= 0)
         {
-            cout<<"Zombie 5 has no life left.";
-            hp5_ = 0;
-            board.setObject(x5_ ,y5_, ' ');
+            cout<<"Zombie 5 has no life left."<<endl;
+            HP5 = 0;
+            board.setObject(X5 ,Y5, ' ');
         }
-        if (hp6_ <= 0)
+        if (HP6 <= 0)
         {
-            cout<<"Zombie 6 has no life left.";
-            hp6_ = 0;
-            board.setObject(x6_ ,y6_, ' ');
+            cout<<"Zombie 6 has no life left."<<endl;
+            HP6 = 0;
+            board.setObject(X6 ,Y6, ' ');
         }
-        if (hp7_ <= 0)
+        if (HP7 <= 0)
         {
-            cout<<"Zombie 7 has no life left.";
-            hp7_ = 0;
-            board.setObject(x7_ ,y7_, ' ');
+            cout<<"Zombie 7 has no life left."<<endl;
+            HP7 = 0;
+            board.setObject(X7 ,Y7, ' ');
         }
-        if (hp8_ <= 0)
+        if (HP8 <= 0)
         {
-            cout<<"Zombie 8 has no life left.";
-            hp8_ = 0;
-            board.setObject(x8_ ,y8_, ' ');
+            cout<<"Zombie 8 has no life left."<<endl;
+            HP8 = 0;
+            board.setObject(X8 ,Y8, ' ');
         }
-        if (hp9_ <= 0)
+        if (HP9 <= 0)
         {
-            cout<<"Zombie 9 has no life left.";
-            hp9_ = 0;
-            board.setObject(x9_ ,y9_, ' ');
+            cout<<"Zombie 9 has no life left."<<endl;
+            HP9 = 0;
+            board.setObject(X9 ,Y9, ' ');
         }
     }
 
@@ -3381,9 +3355,9 @@ int main()
 // *2. User attack system
 //!2.1 pod (untested) (infinite loop)
 //!2.2 close range (untested)
-// !3. Damage system (untested)
-// 4. Zombie positioning
-// 5. User positioning
+// *3. Damage system
+// *4. Zombie positioning
+// *5. User positioning
 // !6. Zombie attack system (untested)
 // *9. Quitting game
 // *10. Help option
