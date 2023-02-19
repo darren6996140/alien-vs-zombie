@@ -1408,10 +1408,10 @@ void Alien::main()
         alien.status();
         zombie.status();
 
-        command = board.command();
 
         while(true)
         {
+            command = board.command();
             if (command == 'u' || command == 'd' || command == 'l' || command == 'r')
             {
                 if (command == 'u')
@@ -1439,13 +1439,12 @@ void Alien::main()
             if (command == 'a')
             {
                 board.arrow();
+                break;
             }
 
             if (command == 'h')
             {
-                system("cls");
                 board.help();
-                alien.main();
             }
 
             if (command == 'q')
@@ -1588,10 +1587,9 @@ void Alien::main()
         alien.status();
         zombie.status();
 
-        command = board.command();
-
         while(true)
         {
+            command = board.command();
             if (command == 'u' || command == 'd' || command == 'l' || command == 'r')
             {
                 if (command == 'u')
@@ -1619,13 +1617,12 @@ void Alien::main()
             if (command == 'a')
             {
                 board.arrow();
+                break;
             }
 
             if (command == 'h')
             {
-                system("cls");
                 board.help();
-                alien.main();
             }
 
             if (command == 'q')
