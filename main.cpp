@@ -34,7 +34,6 @@ int X9, Y9, HP9 = (rand() % 3 + 1) * 100, DMG9 = (rand() % 5 + 1) * 5, RNG9 = ra
 void settings()
 {
     char selection;
-
     while(true)
     {
         cout << "Default game settings: " << endl;
@@ -162,6 +161,10 @@ class Alien
         void down(Board &board);
         void left(Board &board);
         void right(Board &board);
+        void up2(Board &board);
+        void down2(Board &board);
+        void left2(Board &board);
+        void right2(Board &board);
         char getItem(Board &board);
         char checkItem(char item);
         void damage(int hp);
@@ -451,6 +454,42 @@ void Alien::left(Board &board)
 
 void Alien::right(Board &board)
 {
+    board.setObject(x_, y_, '.');
+        x_++;
+    heading_ = '>';
+    board.setObject(x_, y_, alien_);
+}
+
+void Alien::up2(Board &board)
+{
+    x_ = Xa; y_ = Ya;
+    board.setObject(x_, y_, '.');
+        y_++;
+    heading_ = '^';
+    board.setObject(x_, y_, alien_);
+}
+
+void Alien::down2(Board &board)
+{
+    x_ = Xa; y_ = Ya;
+    board.setObject(x_, y_, '.');
+        y_--;
+    heading_ = 'v';
+    board.setObject(x_, y_, alien_);
+}
+
+void Alien::left2(Board &board)
+{
+    x_ = Xa; y_ = Ya;
+    board.setObject(x_, y_, '.');
+        x_--;
+    heading_ = '<';
+    board.setObject(x_, y_, alien_);
+}
+
+void Alien::right2(Board &board)
+{
+    x_ = Xa; y_ = Ya;
     board.setObject(x_, y_, '.');
         x_++;
     heading_ = '>';
@@ -1385,181 +1424,355 @@ void Alien::main()
         alien.landinit(board);
         zombie.landinit(board);
         init = 1;
+        board.display();
+        alien.status();
+        zombie.status();
+
+        command = board.command();
+
+        while(true)
+        {
+            if (command == 'u' || command == 'd' || command == 'l' || command == 'r')
+            {
+                if (command == 'u')
+                {
+                    heading_ = '^';
+                }
+
+                else if(command == 'd')
+                {
+                    heading_ = 'v';
+                }
+
+                else if(command == 'l')
+                {
+                    heading_ = '<';
+                }
+
+                else if(command == 'r')
+                {
+                    heading_= '>';
+                }
+                break;
+            }
+
+            if (command == 'a')
+            {
+                board.arrow();
+            }
+
+            if (command == 'h')
+            {
+                //system("cls"); //undo before launch
+                board.help();
+                alien.main();
+            }
+
+            if (command == 'q')
+            {
+                abort();
+            }
+        }
+
+        //system("cls"); //undo before launch
+        board.display();
+        alien.status();
+        zombie.status();
+        confirm();
+        //system("cls"); //undo before launch
+
+        while (true)
+        {
+            if (heading_ == '^')
+            {
+                alien.up(board);
+                board.display();
+                alien.status();
+                zombie.status();
+                item = alien.checkItem(alien.getItem(board));
+                heading_ = alien.getHeading();
+                confirm();
+                //system("cls"); //undo before launch
+
+                if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
+                {
+                    cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
+                    DMG = 0;
+                    alien.reset();
+                    break;
+                }
+
+                if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+                {
+                    cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
+                    DMG = 0;
+                    alien.reset();
+                    break;
+                }
+            }
+
+            else if (heading_ == 'v')
+            {
+                alien.down(board);
+                board.display();
+                alien.status();
+                zombie.status();
+                item = alien.checkItem(alien.getItem(board));
+                heading_ = alien.getHeading();
+                confirm();
+                //system("cls"); //undo before launch
+
+                if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
+                {
+                    cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
+                    DMG = 0;
+                    alien.reset();
+                    break;
+                }
+
+                if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+                {
+                    cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
+                    DMG = 0;
+                    alien.reset();
+                    break;
+                }
+            }
+
+            else if (heading_ == '<')
+            {
+                alien.left(board);
+                board.display();
+                alien.status();
+                zombie.status();
+                item = alien.checkItem(alien.getItem(board));
+                heading_ = alien.getHeading();
+                confirm();
+                //system("cls"); //undo before launch
+
+                if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
+                {
+                    cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
+                    DMG = 0;
+                    alien.reset();
+                    break;
+                }
+
+                if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+                {
+                    cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
+                    DMG = 0;
+                    alien.reset();
+                    break;
+                }
+            }
+
+            else if (heading_ == '>')
+            {
+                alien.right(board);
+                board.display();
+                alien.status();
+                zombie.status();
+                item = alien.checkItem(alien.getItem(board));
+                heading_ = alien.getHeading();
+                confirm();
+                //system("cls"); //undo before launch
+
+                if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
+                {
+                    cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
+                    DMG = 0;
+                    alien.reset();
+                    break;
+                }
+
+                if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+                {
+                    cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
+                    DMG = 0;
+                    alien.reset();
+                    break;
+                }
+            }
+        }
+        init = 1;   
     }
+   
     else
     {
         alien.land(board);
         zombie.land(board, Z);
-    }
+        x_ = Xa;
+        y_ = Ya;
+        board.display();
+        alien.status();
+        zombie.status();
 
-    board.display();
-    alien.status();
-    zombie.status();
+        command = board.command();
 
-    command = board.command();
-
-    while(true)
-    {
-        if (command == 'u' || command == 'd' || command == 'l' || command == 'r')
+        while(true)
         {
-            if (command == 'u')
+            if (command == 'u' || command == 'd' || command == 'l' || command == 'r')
             {
-                heading_ = '^';
-            }
+                if (command == 'u')
+                {
+                    heading_ = '^';
+                }
 
-            else if(command == 'd')
-            {
-                heading_ = 'v';
-            }
+                else if(command == 'd')
+                {
+                    heading_ = 'v';
+                }
 
-            else if(command == 'l')
-            {
-                heading_ = '<';
-            }
+                else if(command == 'l')
+                {
+                    heading_ = '<';
+                }
 
-            else if(command == 'r')
-            {
-                heading_= '>';
-            }
-            break;
-        }
-
-        if (command == 'a')
-        {
-            board.arrow();
-        }
-
-        if (command == 'h')
-        {
-            //system("cls"); //undo before launch
-            board.help();
-            alien.main();
-        }
-
-        if (command == 'q')
-        {
-            abort();
-        }
-    }
-
-    //system("cls"); //undo before launch
-    board.display();
-    alien.status();
-    zombie.status();
-    confirm();
-    //system("cls"); //undo before launch
-
-    while (true)
-    {
-        if (heading_ == '^')
-        {
-            alien.up(board);
-            board.display();
-            alien.status();
-            zombie.status();
-            item = alien.checkItem(alien.getItem(board));
-            heading_ = alien.getHeading();
-            confirm();
-            //system("cls"); //undo before launch
-
-            if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
-            {
-                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
-                DMG = 0;
-                alien.reset();
+                else if(command == 'r')
+                {
+                    heading_= '>';
+                }
                 break;
             }
 
-            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+            if (command == 'a')
             {
-                cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
-                DMG = 0;
-                alien.reset();
-                break;
+                board.arrow();
+            }
+
+            if (command == 'h')
+            {
+                //system("cls"); //undo before launch
+                board.help();
+                alien.main();
+            }
+
+            if (command == 'q')
+            {
+                abort();
             }
         }
 
-        else if (heading_ == 'v')
+        //system("cls"); //undo before launch
+        board.display();
+        alien.status();
+        zombie.status();
+        confirm();
+        //system("cls"); //undo before launch
+
+        while (true)
         {
-            alien.down(board);
-            board.display();
-            alien.status();
-            zombie.status();
-            item = alien.checkItem(alien.getItem(board));
-            heading_ = alien.getHeading();
-            confirm();
-            //system("cls"); //undo before launch
-
-            if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
+            if (heading_ == '^')
             {
-                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
-                DMG = 0;
-                alien.reset();
-                break;
+                alien.up2(board);
+                board.display();
+                alien.status();
+                zombie.status();
+                item = alien.checkItem(alien.getItem(board));
+                heading_ = alien.getHeading();
+                confirm();
+                //system("cls"); //undo before launch
+
+                if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
+                {
+                    cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
+                    DMG = 0;
+                    alien.reset();
+                    break;
+                }
+
+                if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+                {
+                    cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
+                    DMG = 0;
+                    alien.reset();
+                    break;
+                }
             }
 
-            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+            else if (heading_ == 'v')
             {
-                cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
-                DMG = 0;
-                alien.reset();
-                break;
-            }
-        }
+                alien.down2(board);
+                board.display();
+                alien.status();
+                zombie.status();
+                item = alien.checkItem(alien.getItem(board));
+                heading_ = alien.getHeading();
+                confirm();
+                //system("cls"); //undo before launch
 
-        else if (heading_ == '<')
-        {
-            alien.left(board);
-            board.display();
-            alien.status();
-            zombie.status();
-            item = alien.checkItem(alien.getItem(board));
-            heading_ = alien.getHeading();
-            confirm();
-            //system("cls"); //undo before launch
+                if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
+                {
+                    cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
+                    DMG = 0;
+                    alien.reset();
+                    break;
+                }
 
-            if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
-            {
-                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
-                DMG = 0;
-                alien.reset();
-                break;
-            }
-
-            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
-            {
-                cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
-                DMG = 0;
-                alien.reset();
-                break;
-            }
-        }
-
-        else if (heading_ == '>')
-        {
-            alien.right(board);
-            board.display();
-            alien.status();
-            zombie.status();
-            item = alien.checkItem(alien.getItem(board));
-            heading_ = alien.getHeading();
-            confirm();
-            //system("cls"); //undo before launch
-
-            if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
-            {
-                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
-                DMG = 0;
-                alien.reset();
-                break;
+                if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+                {
+                    cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
+                    DMG = 0;
+                    alien.reset();
+                    break;
+                }
             }
 
-            if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+            else if (heading_ == '<')
             {
-                cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
-                DMG = 0;
-                alien.reset();
-                break;
+                alien.left2(board);
+                board.display();
+                alien.status();
+                zombie.status();
+                item = alien.checkItem(alien.getItem(board));
+                heading_ = alien.getHeading();
+                confirm();
+                //system("cls"); //undo before launch
+
+                if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
+                {
+                    cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
+                    DMG = 0;
+                    alien.reset();
+                    break;
+                }
+
+                if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+                {
+                    cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
+                    DMG = 0;
+                    alien.reset();
+                    break;
+                }
+            }
+
+            else if (heading_ == '>')
+            {
+                alien.right2(board);
+                board.display();
+                alien.status();
+                zombie.status();
+                item = alien.checkItem(alien.getItem(board));
+                heading_ = alien.getHeading();
+                confirm();
+                //system("cls"); //undo before launch
+
+                if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
+                {
+                    cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
+                    DMG = 0;
+                    alien.reset();
+                    break;
+                }
+
+                if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
+                {
+                    cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
+                    DMG = 0;
+                    alien.reset();
+                    break;
+                }
             }
         }
     }
@@ -3365,6 +3578,7 @@ void Zombie::main()
         usleep(1000000);
         abort();
     }
+    
     alien.main();
 }
 
@@ -3383,8 +3597,8 @@ int main()
 //!DONE
 // *1. User health system
 // *2. User attack system
-//!2.1 pod (untested) (infinite loop)
-//!2.2 close range (untested)
+// !2.1 pod (untested) (infinite loop)
+// *2.2 close range
 // *3. Damage system
 // *4. Zombie positioning
 // *5. User positioning
