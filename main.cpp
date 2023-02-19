@@ -15,11 +15,12 @@
 #include <cstdlib> // for system()
 #include <ctime>   // for time() in srand( time(NULL) );
 #include <iomanip> // for setw()
-#include <algorithm>
-#include <unistd.h>
+#include <algorithm> //for string to lower / to upper
+#include <unistd.h> //for system sleep
 using namespace std;
 
-int X = 15, Y = 5, Z = 1;
+int X = 15, Y = 5, Z = 1, init = 0;
+int aX, aY;
 
 void settings()
 {
@@ -31,7 +32,7 @@ void settings()
         cout << "Board Rows: " <<  X <<" (Minimum of 1 row and maximum of 50 rows.)"<<endl;
         cout << "Board Columns:  " << Y <<" (Minimum of 1 columns and maximum of 50 columns.)" <<endl;
         cout << "Number of Zombies: "<< Z <<" (Minimum of 1 zombies and maximum of 9 zombies.)"<< endl;
-        cout <<"Would You like to change the settings? (y/n)"<<endl;
+        cout <<"Would you like to change the settings? (y/n)"<<endl;
         cin >> selection;
         cout <<endl;
         
@@ -134,35 +135,6 @@ class Board
         char command();
 };
 
-class Zombie
-{
-    private:
-        int num_ = Z;
-        int x1_, y1_, hp1_ = (rand() % 3 + 1) * 100, dmg1_ = (rand() % 3 + 1) * 5, range1_ = rand() % 4 + 1;
-        int x2_, y2_, hp2_ = (rand() % 3 + 1) * 100, dmg2_ = (rand() % 3 + 1) * 5, range2_ = rand() % 4 + 1;
-        int x3_, y3_, hp3_ = (rand() % 3 + 1) * 100, dmg3_ = (rand() % 3 + 1) * 5, range3_ = rand() % 4 + 1;
-        int x4_, y4_, hp4_ = (rand() % 3 + 1) * 100, dmg4_ = (rand() % 3 + 1) * 5, range4_ = rand() % 4 + 1;
-        int x5_, y5_, hp5_ = (rand() % 3 + 1) * 100, dmg5_ = (rand() % 3 + 1) * 5, range5_ = rand() % 4 + 1;
-        int x6_, y6_, hp6_ = (rand() % 3 + 1) * 100, dmg6_ = (rand() % 3 + 1) * 5, range6_ = rand() % 4 + 1;
-        int x7_, y7_, hp7_ = (rand() % 3 + 1) * 100, dmg7_ = (rand() % 3 + 1) * 5, range7_ = rand() % 4 + 1;
-        int x8_, y8_, hp8_ = (rand() % 3 + 1) * 100, dmg8_ = (rand() % 3 + 1) * 5, range8_ = rand() % 4 + 1;
-        int x9_, y9_, hp9_ = (rand() % 3 + 1) * 100, dmg9_ = (rand() % 3 + 1) * 5, range9_ = rand() % 4 + 1;
-
-    public:
-        Zombie();
-        void land(Board &board);
-        int getX(int num);
-        int getY(int num);
-        void status();
-        void up(int zombie);
-        void down(int zombie);
-        void left(int zombie);
-        void right(int zombie);
-        char search(int zombie);
-        void damage(int zombie, int damage);
-        void main();
-};
-
 class Alien
 {
     private:
@@ -171,7 +143,8 @@ class Alien
         
     public:
         Alien();
-        void land(Board &board);
+        void landinit(Board &board);
+        void land(Board &board, int x, int y);
         int getX() const;
         int getY() const;
         char getHeading();
@@ -187,6 +160,36 @@ class Alien
         void main();
 };
 
+class Zombie
+{
+    private:
+        int num_ = Z;
+        int x1_, y1_, hp1_, dmg1_, range1_;
+        int x2_, y2_, hp2_, dmg2_, range2_;
+        int x3_, y3_, hp3_, dmg3_, range3_;
+        int x4_, y4_, hp4_, dmg4_, range4_;
+        int x5_, y5_, hp5_, dmg5_, range5_;
+        int x6_, y6_, hp6_, dmg6_, range6_;
+        int x7_, y7_, hp7_, dmg7_, range7_;
+        int x8_, y8_, hp8_, dmg8_, range8_;
+        int x9_, y9_, hp9_, dmg9_, range9_;
+
+    public:
+        Zombie();
+        void landinit(Board &board);
+        void land(Board &board);
+        int getX(int num);
+        int getY(int num);
+        void status();
+        void up(int zombie);
+        void down(int zombie);
+        void left(int zombie);
+        void right(int zombie);
+        char search(int zombie);
+        void damage(int zombie, int damage);
+        void main();
+};
+
 Board::Board(int boardX, int boardY)
 {
     init(boardX, boardY);
@@ -197,7 +200,7 @@ void Board::init(int boardX,int boardY)
     boardX_ = boardX;
     boardY_ = boardY;
 
-    char objects[] = {' ', ' ', 'v', '^', '<', '>', 'h', 'p', 'r', ' '};
+    char objects[] = {' ', ' ', 'v', '^', '<', '>', 'h', ' ', 'r', ' '}; //todo add pod
     int noOfObjects = 10; // number of objects in the objects array
     // create dynamic 2D array using vector
 
@@ -390,13 +393,19 @@ Alien::Alien()
     dmg_ = 0;
 }
 
-void Alien::land(Board &board)
+void Alien::landinit(Board &board)
 {
     x_ = board.getBoardX() / 2;
     y_ = board.getBoardY() / 2 + 1;
     heading_ = '^';
     alien_ = 'A';
     board.setObject(x_, y_, alien_);
+}
+
+void Alien::land(Board &board , int x, int y)
+{
+    Alien alien;
+    board.setObject(aX, aY, alien_);
 }
 
 int Alien::getX() const
@@ -552,7 +561,7 @@ char Alien::checkItem(char item)
 
     else if (item == 'h')
     {
-        cout<<"Alien finds health, Alien's health is increased by 10."<<endl;
+        cout<<"Alien finds health, Alien's health is increased by 20."<<endl;
         hp_ = hp_ + 20;
     }
 
@@ -686,7 +695,8 @@ void Alien::reset()
     {
         for (int j = 1; j <= Y; ++j)
         {
-            trail = board.getObject(i,j);
+            //trail = board.getObject(i,j);
+            //cout<<trail<<endl;
             if (trail == '.')
             {
                 seed = rand() % 9 + 1;
@@ -729,89 +739,193 @@ void Alien::reset()
 
 Zombie::Zombie()
 {
+    hp1_ = (rand() % 3 + 1) * 100, dmg1_ = (rand() % 5 + 1) * 5, range1_ = rand() % 4 + 1;
+    hp2_ = (rand() % 3 + 1) * 100, dmg2_ = (rand() % 5 + 1) * 5, range2_ = rand() % 4 + 1;
+    hp3_ = (rand() % 3 + 1) * 100, dmg3_ = (rand() % 5 + 1) * 5, range3_ = rand() % 4 + 1;
+    hp4_ = (rand() % 3 + 1) * 100, dmg4_ = (rand() % 5 + 1) * 5, range4_ = rand() % 4 + 1;
+    hp5_ = (rand() % 3 + 1) * 100, dmg5_ = (rand() % 5 + 1) * 5, range5_ = rand() % 4 + 1;
+    hp6_ = (rand() % 3 + 1) * 100, dmg6_ = (rand() % 5 + 1) * 5, range6_ = rand() % 4 + 1;
+    hp7_ = (rand() % 3 + 1) * 100, dmg7_ = (rand() % 5 + 1) * 5, range7_ = rand() % 4 + 1;
+    hp8_ = (rand() % 3 + 1) * 100, dmg8_ = (rand() % 5 + 1) * 5, range8_ = rand() % 4 + 1;
+    hp9_ = (rand() % 3 + 1) * 100, dmg9_ = (rand() % 5 + 1) * 5, range9_ = rand() % 4 + 1;
 }
 
-void Zombie::land(Board &board)
+void Zombie::landinit(Board &board)
 {
+    x1_ = rand() % X + 1; y1_ = rand() % Y + 1;
+    x2_ = rand() % X + 1; y2_ = rand() % Y + 1;
+    x3_ = rand() % X + 1; y3_ = rand() % Y + 1;
+    x4_ = rand() % X + 1; y4_ = rand() % Y + 1;
+    x5_ = rand() % X + 1; y5_ = rand() % Y + 1;
+    x6_ = rand() % X + 1; y6_ = rand() % Y + 1;
+    x7_ = rand() % X + 1; y7_ = rand() % Y + 1;
+    x8_ = rand() % X + 1; y8_ = rand() % Y + 1;
+    x9_ = rand() % X + 1; y9_ = rand() % Y + 1;
+
     if (num_ == 1)
     {
-        board.setObject(rand() % X + 1 +1, rand() % Y + 1 +1, '1');
+        board.setObject(x1_, y1_, '1');
     }
 
     else if (num_ == 2)
     {
-        board.setObject(rand() % X + 1, rand() % Y + 1, '1');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '2');
+        board.setObject(x1_, y1_, '1');
+        board.setObject(x2_, y2_, '2');
     }
 
     else if (num_ == 3)
     {
-        board.setObject(rand() % X + 1, rand() % Y + 1, '1');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '2');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '3');
+        board.setObject(x1_, y1_, '1');
+        board.setObject(x2_, y2_, '2');
+        board.setObject(x3_, y3_, '3');
     }
 
     else if (num_ == 4)
     {
-        board.setObject(rand() % X + 1, rand() % Y + 1, '1');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '2');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '3');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '4');
+        board.setObject(x1_, y1_, '1');
+        board.setObject(x2_, y2_, '2');
+        board.setObject(x3_, y3_, '3');
+        board.setObject(x4_, y4_, '4');
     }
 
     else if (num_ == 5)
     {
-        board.setObject(rand() % X + 1, rand() % Y + 1, '1');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '2');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '3');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '4');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '5');
+        board.setObject(x1_, y1_, '1');
+        board.setObject(x2_, y2_, '2');
+        board.setObject(x3_, y3_, '3');
+        board.setObject(x4_, y4_, '4');
+        board.setObject(x5_, y5_, '5');
     }
 
     else if (num_ == 6)
     {
-        board.setObject(rand() % X + 1, rand() % Y + 1, '1');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '2');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '3');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '4');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '5');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '6');
+        board.setObject(x1_, y1_, '1');
+        board.setObject(x2_, y2_, '2');
+        board.setObject(x3_, y3_, '3');
+        board.setObject(x4_, y4_, '4');
+        board.setObject(x5_, y5_, '5');
+        board.setObject(x6_, y6_, '6');
     }
 
     else if (num_ == 7)
     {
-        board.setObject(rand() % X + 1, rand() % Y + 1, '1');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '2');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '3');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '4');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '5');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '6');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '7');
+        board.setObject(x1_, y1_, '1');
+        board.setObject(x2_, y2_, '2');
+        board.setObject(x3_, y3_, '3');
+        board.setObject(x4_, y4_, '4');
+        board.setObject(x5_, y5_, '5');
+        board.setObject(x6_, y6_, '6');
+        board.setObject(x7_, y7_, '7');
     }
     
     else if (num_ == 8)
     {
-        board.setObject(rand() % X + 1, rand() % Y + 1, '1');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '2');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '3');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '4');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '5');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '6');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '7');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '8');
+        board.setObject(x1_, y1_, '1');
+        board.setObject(x2_, y2_, '2');
+        board.setObject(x3_, y3_, '3');
+        board.setObject(x4_, y4_, '4');
+        board.setObject(x5_, y5_, '5');
+        board.setObject(x6_, y6_, '6');
+        board.setObject(x7_, y7_, '7');
+        board.setObject(x8_, y8_, '8');
     }
 
     else if (num_ == 9)
     {
-        board.setObject(rand() % X + 1, rand() % Y + 1, '1');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '2');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '3');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '4');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '5');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '6');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '7');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '8');
-        board.setObject(rand() % X + 1, rand() % Y + 1, '9');
+        board.setObject(x1_, y1_, '1');
+        board.setObject(x2_, y2_, '2');
+        board.setObject(x3_, y3_, '3');
+        board.setObject(x4_, y4_, '4');
+        board.setObject(x5_, y5_, '5');
+        board.setObject(x6_, y6_, '6');
+        board.setObject(x7_, y7_, '7');
+        board.setObject(x8_, y8_, '8');
+        board.setObject(x9_, y9_, '9');
+    }
+}
+
+void Zombie::land(Board &board)
+{
+    cout<<x1_<<"  "<<y1_<<endl<<endl;
+    if (num_ == 1)
+    {
+        board.setObject(x1_, y1_, '1');
+    }
+
+    else if (num_ == 2)
+    {
+        board.setObject(x1_, y1_, '1');
+        board.setObject(x2_, y2_, '2');
+    }
+
+    else if (num_ == 3)
+    {
+        board.setObject(x1_, y1_, '1');
+        board.setObject(x2_, y2_, '2');
+        board.setObject(x3_, y3_, '3');
+    }
+
+    else if (num_ == 4)
+    {
+        board.setObject(x1_, y1_, '1');
+        board.setObject(x2_, y2_, '2');
+        board.setObject(x3_, y3_, '3');
+        board.setObject(x4_, y4_, '4');
+    }
+
+    else if (num_ == 5)
+    {
+        board.setObject(x1_, y1_, '1');
+        board.setObject(x2_, y2_, '2');
+        board.setObject(x3_, y3_, '3');
+        board.setObject(x4_, y4_, '4');
+        board.setObject(x5_, y5_, '5');
+    }
+
+    else if (num_ == 6)
+    {
+        board.setObject(x1_, y1_, '1');
+        board.setObject(x2_, y2_, '2');
+        board.setObject(x3_, y3_, '3');
+        board.setObject(x4_, y4_, '4');
+        board.setObject(x5_, y5_, '5');
+        board.setObject(x6_, y6_, '6');
+    }
+
+    else if (num_ == 7)
+    {
+        board.setObject(x1_, y1_, '1');
+        board.setObject(x2_, y2_, '2');
+        board.setObject(x3_, y3_, '3');
+        board.setObject(x4_, y4_, '4');
+        board.setObject(x5_, y5_, '5');
+        board.setObject(x6_, y6_, '6');
+        board.setObject(x7_, y7_, '7');
+    }
+    
+    else if (num_ == 8)
+    {
+        board.setObject(x1_, y1_, '1');
+        board.setObject(x2_, y2_, '2');
+        board.setObject(x3_, y3_, '3');
+        board.setObject(x4_, y4_, '4');
+        board.setObject(x5_, y5_, '5');
+        board.setObject(x6_, y6_, '6');
+        board.setObject(x7_, y7_, '7');
+        board.setObject(x8_, y8_, '8');
+    }
+
+    else if (num_ == 9)
+    {
+        board.setObject(x1_, y1_, '1');
+        board.setObject(x2_, y2_, '2');
+        board.setObject(x3_, y3_, '3');
+        board.setObject(x4_, y4_, '4');
+        board.setObject(x5_, y5_, '5');
+        board.setObject(x6_, y6_, '6');
+        board.setObject(x7_, y7_, '7');
+        board.setObject(x8_, y8_, '8');
+        board.setObject(x9_, y9_, '9');
     }
 }
 
@@ -1929,7 +2043,7 @@ void test2_1()
 {
     Board board;
     Alien alien;
-    alien.land(board);
+    //alien.land(board);
     board.display();
     cout << "Status of the alien:" << endl
     << " Location: (" << alien.getX() << ", " << alien.getY() << ")"
@@ -1944,7 +2058,7 @@ void test2_2()
     Board board;
     Alien alien;
 
-    alien.land(board);
+    //alien.land(board);
     board.display();
     cin.get(); //system("pause");
 
@@ -2070,8 +2184,18 @@ void Alien::main()
     char command;
     char item;
 
-    alien.land(board);
-    zombie.land(board);
+    if (init == false)
+    {
+        alien.landinit(board);
+        zombie.landinit(board);
+        init = 1;
+    }
+    else
+    {
+        alien.land(board, aX, aY);
+        zombie.land(board);
+    }
+
     board.display();
     alien.status();
     zombie.status();
@@ -2144,7 +2268,7 @@ void Alien::main()
 
             if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
             {
-                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
+                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
                 dmg_ = 0;
                 alien.reset();
                 break;
@@ -2152,7 +2276,7 @@ void Alien::main()
 
             if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
             {
-                cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted.";
+                cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
                 dmg_ = 0;
                 alien.reset();
                 break;
@@ -2172,7 +2296,7 @@ void Alien::main()
 
             if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
             {
-                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
+                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
                 dmg_ = 0;
                 alien.reset();
                 break;
@@ -2180,7 +2304,7 @@ void Alien::main()
 
             if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
             {
-                cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted.";
+                cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
                 dmg_ = 0;
                 alien.reset();
                 break;
@@ -2200,7 +2324,7 @@ void Alien::main()
 
             if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
             {
-                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
+                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
                 dmg_ = 0;
                 alien.reset();
                 break;
@@ -2208,7 +2332,7 @@ void Alien::main()
 
             if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
             {
-                cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted.";
+                cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
                 dmg_ = 0;
                 alien.reset();
                 break;
@@ -2228,7 +2352,7 @@ void Alien::main()
 
             if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
             {
-                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl;
+                cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
                 dmg_ = 0;
                 alien.reset();
                 break;
@@ -2236,7 +2360,7 @@ void Alien::main()
 
             if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
             {
-                cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted.";
+                cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
                 dmg_ = 0;
                 alien.reset();
                 break;
@@ -2260,6 +2384,11 @@ void Alien::main()
         usleep(1000000);
         abort();
     }
+    board.display();
+    alien.status();
+    zombie.status();
+    x_ = alien.getX(); y_ = alien.getY();
+    aX = x_; aY = y_;
     zombie.main();
 }
 
@@ -2271,9 +2400,32 @@ void Zombie::main()
     int hp, seed;
     hp = hp1_ + hp2_ + hp3_ + hp4_ + hp5_ + hp6_ + hp7_ + hp8_ + hp9_;
 
+        cout<<x1_<<"  "<<y1_<<endl;
+        cout<<x2_<<"  "<<y2_<<endl;
+        cout<<x3_<<"  "<<y3_<<endl;
+        cout<<x4_<<"  "<<y4_<<endl;
+        cout<<x5_<<"  "<<y5_<<endl;
+        cout<<x6_<<"  "<<y6_<<endl;
+        cout<<x7_<<"  "<<y7_<<endl;
+        cout<<x8_<<"  "<<y8_<<endl;
+        cout<<x9_<<"  "<<y9_<<endl<<endl;
+
+        cout<<zombie.getX(1)<<"  "<<zombie.getY(1)<<endl<<endl;
+
+    alien.land(board, aX, aY);
+    zombie.land(board);
     board.display();
     alien.status();
     zombie.status();
+            cout<<x1_<<"  "<<y1_<<endl;
+        cout<<x2_<<"  "<<y2_<<endl;
+        cout<<x3_<<"  "<<y3_<<endl;
+        cout<<x4_<<"  "<<y4_<<endl;
+        cout<<x5_<<"  "<<y5_<<endl;
+        cout<<x6_<<"  "<<y6_<<endl;
+        cout<<x7_<<"  "<<y7_<<endl;
+        cout<<x8_<<"  "<<y8_<<endl;
+        cout<<x9_<<"  "<<y9_<<endl;
     confirm();
     //system("cls"); //undo before launch
 
@@ -2281,27 +2433,27 @@ void Zombie::main()
     {
         for (int i = 1; i<=num_; ++i)
         {
-            cout<<"Zombie "<<i<<" turn starts.";
+            cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
             if (seed == 1)
             {
                 zombie.up(i);
-                cout<<"Zombie "<<i<<" has moved up.";
+                cout<<"Zombie "<<i<<" has moved up."<<endl<<endl;
             }
             else if (seed == 2)
             {
                 zombie.down(i);
-                cout<<"Zombie "<<i<<" has moved down.";
+                cout<<"Zombie "<<i<<" has moved down."<<endl<<endl;
             }
             else if (seed == 3)
             {
                 zombie.left(i);
-                cout<<"Zombie "<<i<<" has moved left.";
+                cout<<"Zombie "<<i<<" has moved left."<<endl<<endl;
             }
             else
             {
                 zombie.right(i);
-                cout<<"Zombie "<<i<<" has moved right.";
+                cout<<"Zombie "<<i<<" has moved right."<<endl<<endl;
             }
             board.display();
             alien.status();
@@ -2375,27 +2527,27 @@ void Zombie::main()
     {
         for (int i = 1; i<=num_; ++i)
         {
-            cout<<"Zombie "<<i<<" turn starts.";
+            cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
             if (seed == 1)
             {
                 zombie.up(i);
-                cout<<"Zombie "<<i<<" has moved up.";
+                cout<<"Zombie "<<i<<" has moved up."<<endl<<endl;
             }
             else if (seed == 2)
             {
                 zombie.down(i);
-                cout<<"Zombie "<<i<<" has moved down.";
+                cout<<"Zombie "<<i<<" has moved down."<<endl<<endl;
             }
             else if (seed == 3)
             {
                 zombie.left(i);
-                cout<<"Zombie "<<i<<" has moved left.";
+                cout<<"Zombie "<<i<<" has moved left."<<endl<<endl;
             }
             else
             {
                 zombie.right(i);
-                cout<<"Zombie "<<i<<" has moved right.";
+                cout<<"Zombie "<<i<<" has moved right."<<endl<<endl;
             }
             board.display();
             alien.status();
@@ -2476,27 +2628,27 @@ void Zombie::main()
     {
         for (int i = 1; i<=num_; ++i)
         {
-            cout<<"Zombie "<<i<<" turn starts.";
+            cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
             if (seed == 1)
             {
                 zombie.up(i);
-                cout<<"Zombie "<<i<<" has moved up.";
+                cout<<"Zombie "<<i<<" has moved up."<<endl<<endl;
             }
             else if (seed == 2)
             {
                 zombie.down(i);
-                cout<<"Zombie "<<i<<" has moved down.";
+                cout<<"Zombie "<<i<<" has moved down."<<endl<<endl;
             }
             else if (seed == 3)
             {
                 zombie.left(i);
-                cout<<"Zombie "<<i<<" has moved left.";
+                cout<<"Zombie "<<i<<" has moved left."<<endl<<endl;
             }
             else
             {
                 zombie.right(i);
-                cout<<"Zombie "<<i<<" has moved right.";
+                cout<<"Zombie "<<i<<" has moved right."<<endl<<endl;
             }
             board.display();
             alien.status();
@@ -2582,27 +2734,27 @@ void Zombie::main()
     {
         for (int i = 1; i<=num_; ++i)
         {
-            cout<<"Zombie "<<i<<" turn starts.";
+            cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
             if (seed == 1)
             {
                 zombie.up(i);
-                cout<<"Zombie "<<i<<" has moved up.";
+                cout<<"Zombie "<<i<<" has moved up."<<endl<<endl;
             }
             else if (seed == 2)
             {
                 zombie.down(i);
-                cout<<"Zombie "<<i<<" has moved down.";
+                cout<<"Zombie "<<i<<" has moved down."<<endl<<endl;
             }
             else if (seed == 3)
             {
                 zombie.left(i);
-                cout<<"Zombie "<<i<<" has moved left.";
+                cout<<"Zombie "<<i<<" has moved left."<<endl<<endl;
             }
             else
             {
                 zombie.right(i);
-                cout<<"Zombie "<<i<<" has moved right.";
+                cout<<"Zombie "<<i<<" has moved right."<<endl<<endl;
             }
             board.display();
             alien.status();
@@ -2695,27 +2847,27 @@ void Zombie::main()
     {
         for (int i = 1; i<=num_; ++i)
         {
-            cout<<"Zombie "<<i<<" turn starts.";
+            cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
             if (seed == 1)
             {
                 zombie.up(i);
-                cout<<"Zombie "<<i<<" has moved up.";
+                cout<<"Zombie "<<i<<" has moved up."<<endl<<endl;
             }
             else if (seed == 2)
             {
                 zombie.down(i);
-                cout<<"Zombie "<<i<<" has moved down.";
+                cout<<"Zombie "<<i<<" has moved down."<<endl<<endl;
             }
             else if (seed == 3)
             {
                 zombie.left(i);
-                cout<<"Zombie "<<i<<" has moved left.";
+                cout<<"Zombie "<<i<<" has moved left."<<endl<<endl;
             }
             else
             {
                 zombie.right(i);
-                cout<<"Zombie "<<i<<" has moved right.";
+                cout<<"Zombie "<<i<<" has moved right."<<endl<<endl;
             }
             board.display();
             alien.status();
@@ -2814,27 +2966,27 @@ void Zombie::main()
     {
         for (int i = 1; i<=num_; ++i)
         {
-            cout<<"Zombie "<<i<<" turn starts.";
+            cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
             if (seed == 1)
             {
                 zombie.up(i);
-                cout<<"Zombie "<<i<<" has moved up.";
+                cout<<"Zombie "<<i<<" has moved up."<<endl<<endl;
             }
             else if (seed == 2)
             {
                 zombie.down(i);
-                cout<<"Zombie "<<i<<" has moved down.";
+                cout<<"Zombie "<<i<<" has moved down."<<endl<<endl;
             }
             else if (seed == 3)
             {
                 zombie.left(i);
-                cout<<"Zombie "<<i<<" has moved left.";
+                cout<<"Zombie "<<i<<" has moved left."<<endl<<endl;
             }
             else
             {
                 zombie.right(i);
-                cout<<"Zombie "<<i<<" has moved right.";
+                cout<<"Zombie "<<i<<" has moved right."<<endl<<endl;
             }
             board.display();
             alien.status();
@@ -2939,27 +3091,27 @@ void Zombie::main()
     {
         for (int i = 1; i<=num_; ++i)
         {
-            cout<<"Zombie "<<i<<" turn starts.";
+            cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
             if (seed == 1)
             {
                 zombie.up(i);
-                cout<<"Zombie "<<i<<" has moved up.";
+                cout<<"Zombie "<<i<<" has moved up."<<endl<<endl;
             }
             else if (seed == 2)
             {
                 zombie.down(i);
-                cout<<"Zombie "<<i<<" has moved down.";
+                cout<<"Zombie "<<i<<" has moved down."<<endl<<endl;
             }
             else if (seed == 3)
             {
                 zombie.left(i);
-                cout<<"Zombie "<<i<<" has moved left.";
+                cout<<"Zombie "<<i<<" has moved left."<<endl<<endl;
             }
             else
             {
                 zombie.right(i);
-                cout<<"Zombie "<<i<<" has moved right.";
+                cout<<"Zombie "<<i<<" has moved right."<<endl<<endl;
             }
             board.display();
             alien.status();
@@ -3070,27 +3222,27 @@ void Zombie::main()
     {
         for (int i = 1; i<=num_; ++i)
         {
-            cout<<"Zombie "<<i<<" turn starts.";
+            cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
             if (seed == 1)
             {
                 zombie.up(i);
-                cout<<"Zombie "<<i<<" has moved up.";
+                cout<<"Zombie "<<i<<" has moved up."<<endl<<endl;
             }
             else if (seed == 2)
             {
                 zombie.down(i);
-                cout<<"Zombie "<<i<<" has moved down.";
+                cout<<"Zombie "<<i<<" has moved down."<<endl<<endl;
             }
             else if (seed == 3)
             {
                 zombie.left(i);
-                cout<<"Zombie "<<i<<" has moved left.";
+                cout<<"Zombie "<<i<<" has moved left."<<endl<<endl;
             }
             else
             {
                 zombie.right(i);
-                cout<<"Zombie "<<i<<" has moved right.";
+                cout<<"Zombie "<<i<<" has moved right."<<endl<<endl;
             }
             board.display();
             alien.status();
@@ -3207,27 +3359,27 @@ void Zombie::main()
     {
         for (int i = 1; i<=num_; ++i)
         {
-            cout<<"Zombie "<<i<<" turn starts.";
+            cout<<"Zombie "<<i<<" turn starts."<<endl;
             seed = (rand()%5) - 1;
             if (seed == 1)
             {
                 zombie.up(i);
-                cout<<"Zombie "<<i<<" has moved up.";
+                cout<<"Zombie "<<i<<" has moved up."<<endl<<endl;
             }
             else if (seed == 2)
             {
                 zombie.down(i);
-                cout<<"Zombie "<<i<<" has moved down.";
+                cout<<"Zombie "<<i<<" has moved down."<<endl<<endl;
             }
             else if (seed == 3)
             {
                 zombie.left(i);
-                cout<<"Zombie "<<i<<" has moved left.";
+                cout<<"Zombie "<<i<<" has moved left."<<endl<<endl;
             }
             else
             {
                 zombie.right(i);
-                cout<<"Zombie "<<i<<" has moved right.";
+                cout<<"Zombie "<<i<<" has moved right."<<endl<<endl;
             }
             board.display();
             alien.status();
@@ -3370,23 +3522,24 @@ int main()
     Board board;
     Alien alien;
     string command;
-    srand(2); // use this for fixed board during testing
+    srand(4); // use this for fixed board during testing
     // srand(time(NULL)); // this for random board
     settings();
+    //system("cls"); //undo before launch
     alien.main();
 }
 
 //!DONE
-// 1. User health system
-// 2. User attack system
-//!2.1 pod (untested)
+// *1. User health system
+// *2. User attack system
+//!2.1 pod (untested) (infinite loop)
 //!2.2 close range (untested)
 // !3. Damage system (untested)
 // 4. Zombie positioning
 // 5. User positioning
 // !6. Zombie attack system (untested)
-// 9. Quitting game
-// 10. Help option
+// *9. Quitting game
+// *10. Help option
 
 //TODO
 // 7. Game saving
