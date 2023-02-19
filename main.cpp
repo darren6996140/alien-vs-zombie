@@ -19,10 +19,8 @@
 #include <unistd.h> //for system sleep
 using namespace std;
 
-//global variable declaration
-int X = 15, Y = 5, Z = 1, init = 0; //X, Y = default map size / Z = default zombies
-int Xa, Ya, HP = 100, DMG = 0; // alien attributes
-//zombie attributes
+int X = 15, Y = 5, Z = 1, init = 0;
+int Xa, Ya, HP = 100, DMG = 0;
 int X1, Y1, HP1 = (rand() % 3 + 1) * 100, DMG1 = (rand() % 5 + 1) * 5, RNG1 = rand() % 4 + 1;
 int X2, Y2, HP2 = (rand() % 3 + 1) * 100, DMG2 = (rand() % 5 + 1) * 5, RNG2 = rand() % 4 + 1;
 int X3, Y3, HP3 = (rand() % 3 + 1) * 100, DMG3 = (rand() % 5 + 1) * 5, RNG3 = rand() % 4 + 1;
@@ -36,7 +34,7 @@ int X9, Y9, HP9 = (rand() % 3 + 1) * 100, DMG9 = (rand() % 5 + 1) * 5, RNG9 = ra
 void settings()
 {
     char selection;
-    while(true) //error checking
+    while(true)
     {
         cout << "Default game settings: " << endl;
         cout << "Board Rows: " <<  X <<" (Minimum of 1 row and maximum of 50 rows.)"<<endl;
@@ -50,7 +48,7 @@ void settings()
         {
             cout << "New Board Rows (Odd Numbers Only): " ;
             cin >> X;
-            while (true) //error checking for values within range and odd values
+            while (true)
             {
                 if(cin.fail() || X > 50 || X <1 || X % 2 == 0)
                 {
@@ -70,7 +68,7 @@ void settings()
             cin >> Y;
             while (true)
             {
-                if(cin.fail() || Y >50 || Y <1 || Y % 2 == 0) //error checking for values within range and odd values
+                if(cin.fail() || Y >50 || Y <1 || Y % 2 == 0)
                 {
                     cin.clear();
                     cin.ignore();
@@ -88,7 +86,7 @@ void settings()
             cin >> Z;
             while (true)
             {
-                if(cin.fail() || Z>9 || Z<1) //error checking for odd values
+                if(cin.fail() || Z>9 || Z<1)
                 {
                     cin.clear();
                     cin.ignore();
@@ -119,7 +117,6 @@ void settings()
 
 void confirm()
     {
-        //to let user manually control the flow of the game
         cout << "Press enter to continue . . . " << endl;
         cin.get();
         cin.ignore();
@@ -202,7 +199,7 @@ void Board::init(int boardX,int boardY)
     boardX_ = boardX;
     boardY_ = boardY;
 
-    char objects[] = {' ', ' ', 'v', '^', '<', '>', 'h', 'p', 'r', ' '}; //array of characters to be put in game board
+    char objects[] = {' ', ' ', 'v', '^', '<', '>', 'h', 'p', 'r', ' '};
     int noOfObjects = 10; // number of objects in the objects array
     // create dynamic 2D array using vector
 
@@ -235,11 +232,9 @@ void Board::display() const
         {
             cout << "+-";
         }
-
         cout << "+" << endl;
         // display row number
         cout << setw(2) << (boardY_ - i);
-
         // display cell content and border of each column
         for (int j = 0; j < boardX_; ++j)
         {
@@ -247,14 +242,12 @@ void Board::display() const
         }
         cout << "|" << endl;
     }
-
     // display lower border of the last row
     cout << " ";
     for (int j = 0; j < boardX_; ++j)
     {
         cout << "+-";
     }
-
     cout << "+" << endl;
     // display column number
     cout << " ";
@@ -267,14 +260,15 @@ void Board::display() const
         else
             cout << digit;
     }
-
     cout << endl;
     cout << " ";
     for (int j = 0; j < boardX_; ++j) // j== 0..14
     {
         cout << " " << (j + 1) % 10;
     }
-    cout <<endl<<endl;
+    cout << endl
+         << endl;
+
 }
 
 int Board::getBoardX() const
@@ -289,17 +283,16 @@ int Board::getBoardY() const
 
 char Board::getObject(int x, int y) const
 {
-    return board_[boardY_-y][x-1]; //returns a board object when given coordinates
+    return board_[boardY_-y][x-1];
 }
 
 void Board::setObject(int x, int y, int ch)
 {
-    board_[boardY_-y][x-1] = ch; //set objects on game board
+    board_[boardY_-y][x-1] = ch;
 }
 
 void Board::help()
 {
-    // help menu
     cout << endl;
     cout << "Commands" << endl;
     cout << "1. up       - Move up" << endl;
@@ -315,7 +308,6 @@ void Board::help()
 
 void Board::arrow()
 {
-    //to manipulate arrows on game board
     Board board;
     int x,y;
     char obj;
@@ -323,13 +315,12 @@ void Board::arrow()
 
     while (true)
     {
-        //user enter coordinates
         cout<<endl<<"Enter column: "<<endl;
         cin>>x;
         cout<<"Enter row: "<<endl;
         cin>>y;
 
-        if (board.getObject(x, y) != '^' && board.getObject(x, y) != 'v' && board.getObject(x, y) != '<' && board.getObject(x, y) != '>') //to check if arrow exists on game board
+        if (board.getObject(x, y) != '^' && board.getObject(x, y) != 'v' && board.getObject(x, y) != '<' && board.getObject(x, y) != '>')
         {
             cout<< "The item selected is not found, please try again.";
         }
@@ -340,9 +331,9 @@ void Board::arrow()
         }
     }
 
+    cout<<obj;
     while (true)
-    {
-        //to let user to determine new arrow direction
+    {   
         cout<<endl<<"Enter direction (up/down/left/right): "<<endl;
         cin>>direction;
 
@@ -356,7 +347,6 @@ void Board::arrow()
         }
     }
 
-    //setting arrows on game board
     if (direction == "up")
     {
         board.setObject(x,y,'^');
@@ -384,18 +374,15 @@ Alien::Alien()
 
 void Alien::landinit(Board &board)
 {
-    //initial landing of the alien
-    //to set alien at the middle of the board
     x_ = board.getBoardX() / 2 + 1;
     y_ = board.getBoardY() / 2 + 1;
-    heading_ = '^'; //set default heading as up
-    alien_ = 'A'; //character 'A' denotes alien
-    board.setObject(x_, y_, alien_); //set alien on game board
+    heading_ = '^';
+    alien_ = 'A';
+    board.setObject(x_, y_, alien_);
 }
 
 void Alien::land(Board &board)
 {
-    //landing of the alien at later stages
     Alien alien;
     alien_ = 'A';
     board.setObject(Xa, Ya, alien_);
@@ -403,57 +390,52 @@ void Alien::land(Board &board)
 
 int Alien::getX() const
 {
-    return x_; //to get x coordinate of alien
+    return x_;
 }
 
 int Alien::getY() const
 {
-    return y_; //to get y coordinate of alien
+    return y_;
 }
 
 char Alien::getHeading()
 {
-    return heading_; //to get heading of alien
+    return heading_;
 }
 
 void Alien::status()
 {
-    cout<<"Alien : Health - "<<HP<<", Damage - "<<DMG<<endl<<endl; //displays status of alien
+    cout<<"Alien : Health - "<<HP<<", Damage - "<<DMG<<endl<<endl;
 }
 
 void Alien::up(Board &board)
 {
-    //makes alien move up
-    //adds a trail that is visited by the alien, denoted by '.'
     board.setObject(x_, y_, '.');
-    y_++;
+        y_++;
     heading_ = '^';
-    board.setObject(x_, y_, alien_); //set new alien position
+    board.setObject(x_, y_, alien_);
 }
 
 void Alien::down(Board &board)
 {
-    //makes alien move down
     board.setObject(x_, y_, '.');
-    y_--;
+        y_--;
     heading_ = 'v';
     board.setObject(x_, y_, alien_);
 }
 
 void Alien::left(Board &board)
 {
-    //makes alien move left
     board.setObject(x_, y_, '.');
-    x_--;
+        x_--;
     heading_ = '<';
     board.setObject(x_, y_, alien_);
 }
 
 void Alien::right(Board &board)
 {
-    //makes alien move right
     board.setObject(x_, y_, '.');
-    x_++;
+        x_++;
     heading_ = '>';
     board.setObject(x_, y_, alien_);
 }
@@ -462,7 +444,7 @@ void Alien::up2(Board &board)
 {
     x_ = Xa; y_ = Ya;
     board.setObject(x_, y_, '.');
-    y_++;
+        y_++;
     heading_ = '^';
     board.setObject(x_, y_, alien_);
 }
@@ -471,7 +453,7 @@ void Alien::down2(Board &board)
 {
     x_ = Xa; y_ = Ya;
     board.setObject(x_, y_, '.');
-    y_--;
+        y_--;
     heading_ = 'v';
     board.setObject(x_, y_, alien_);
 }
@@ -480,7 +462,7 @@ void Alien::left2(Board &board)
 {
     x_ = Xa; y_ = Ya;
     board.setObject(x_, y_, '.');
-    x_--;
+        x_--;
     heading_ = '<';
     board.setObject(x_, y_, alien_);
 }
@@ -489,14 +471,13 @@ void Alien::right2(Board &board)
 {
     x_ = Xa; y_ = Ya;
     board.setObject(x_, y_, '.');
-    x_++;
+        x_++;
     heading_ = '>';
     board.setObject(x_, y_, alien_);
 }
 
 char Alien::getItem(Board &board)
 {
-    //function to get item in front of alien
     Alien alien;
     char item;
 
@@ -504,101 +485,98 @@ char Alien::getItem(Board &board)
     {
         return item;
     }
-
     else
     {
         if(heading_ == '<')
         {
-            item  = board.getObject(x_ - 1, y_); //get item to the left of alien
+            item  = board.getObject(x_ - 1, y_);
         }
 
         else if(heading_ == '>')
         {
-            item  = board.getObject(x_ + 1, y_); //get item to the right of alien
+            item  = board.getObject(x_ + 1, y_);
         }
 
         else if(heading_ == '^')
         {
-            item  = board.getObject(x_, y_ + 1); //get item above alien
+            item  = board.getObject(x_, y_ + 1);
         }
 
         else
         {
-            item  = board.getObject(x_, y_ - 1); //get item below alien
+            item  = board.getObject(x_, y_ - 1);
         }
     }
-    return item; //returns the item
+    return item;
 }
 
 char Alien::checkItem(char item)
 {
-    //function to check the item obtained
     Alien alien;
     Board board;
     Zombie zombie;
 
-    if (item == 'r') //when the item is a rock
+    if (item == 'r')
     {
         int num;
         cout<<"A rock is blocking the alien's way."<<endl;
-        num = rand() % 2; //random number generator to uncover objects below the rock
+        num = rand() % 2;
 
-        if (num == true) //sets a pod
+        if (num == true)
         {
             cout<<"The alien finds a pod beneath the rock."<<endl<<endl;
 
             if (heading_ == '<')
             {
-                board.setObject(x_ - 1, y_, 'p'); //sets a pod to the left of alien
+                board.setObject(x_ - 1, y_, 'p');
             }
 
             else if (heading_ == '>')
             {
-                board.setObject(x_ + 1, y_, 'p'); //sets a pod to the right of alien
+                board.setObject(x_ + 1, y_, 'p');
             }
 
             else if (heading_ == '^')
             {
-                board.setObject(x_, y_ + 1, 'p'); //sets a pod above alien
+                board.setObject(x_, y_ + 1, 'p');
             }
 
             else
             {
-                board.setObject(x_, y_ - 1, 'p'); //sets a pod below alien
+                board.setObject(x_, y_ - 1, 'p');
             }
         }
 
-        else //alien finds health
+        else
         {
             cout<<"The alien finds health beneath the rock."<<endl;
-            cout<<"The alien gains 20 health,"<<endl<<endl; //adds health to the alien
+            cout<<"The alien gains 20 health,"<<endl<<endl;
             HP = HP + 20;
 
             if (heading_ == '<')
             {
-                board.setObject(x_ - 1, y_, 'h'); //sets a pod to the left of alien
+                board.setObject(x_ - 1, y_, 'h');
             }
 
             else if (heading_ == '>')
             {
-                board.setObject(x_ + 1, y_, 'h'); //sets a pod to the right of alien
+                board.setObject(x_ + 1, y_, 'h');
             }
 
             else if (heading_ == '^')
             {
-                board.setObject(x_, y_ + 1, 'h'); //sets a pod above alien
+                board.setObject(x_, y_ + 1, 'h');
             }
 
             else
             {
-                board.setObject(x_, y_ - 1, 'h'); //sets a pod below alien
+                board.setObject(x_, y_ - 1, 'h');
             }
         }
     }
 
     else if (item == 'h')
     {
-        //when alien finds health
         cout<<"Alien finds health, Alien's health is increased by 20."<<endl;
         HP = HP + 20;
     }
@@ -608,16 +586,14 @@ char Alien::checkItem(char item)
         cout<<"Alien finds a pod."<<endl;
         while (true)
         {
-            int zomX [9] = {X1, X2, X3, X4, X5, X6, X7, X8, X9};
-
-            int zomY[9] = {Y1, Y2, Y3, Y4, Y5, Y6, Y7, X8, Y9};
-
+            //todo int zomX [9] = {zombie.getX(1), zombie.getX(2), zombie.getX(3), zombie.getX(4), zombie.getX(5), zombie.getX(6), zombie.getX(7), zombie.getX(8), zombie.getX(9)};
+            //todo int zomY[9] = {zombie.getY(1), zombie.getY(2), zombie.getY(3), zombie.getY(4), zombie.getY(5), zombie.getY(6), zombie.getY(7), zombie.getY(8), zombie.getY(9)};
             int distance[9];
             int closest[2] = {100, 0};
 
             for (int i = 0; i < Z; ++i)
             {
-                distance[i] = zomX[i] + zomY[i];
+                //distance[i] = zomX[i] + zomY[i];
             }       
 
             for (int j = 0; j <= sizeof(distance); ++j)
@@ -640,7 +616,6 @@ char Alien::checkItem(char item)
 
     else if (item == '^')
     {
-        //when alien finds a up arrow, giving alien more damage and changing alien direction
         cout<< "Alien finds a up arrow, alien will move up."<<endl<<"Alien's damage will increase by 20."<<endl;
         DMG = DMG + 20;
         heading_ = '^';
@@ -648,7 +623,6 @@ char Alien::checkItem(char item)
 
     else if (item == 'v')
     {
-        //when alien finds a down arrow, giving alien more damage and changing alien direction
         cout<< "Alien finds a down arrow, alien will move down."<<endl<<"Alien's damage will increase by 20."<<endl;
         DMG = DMG + 20;
         heading_ = 'v';
@@ -656,7 +630,6 @@ char Alien::checkItem(char item)
 
     else if (item == '>')
     {
-        //when alien finds a right arrow, giving alien more damage and changing alien direction
         cout<< "Alien finds a right arrow, alien will move right."<<endl<<"Alien's damage will increase by 20."<<endl;
         DMG = DMG + 20;
         heading_ = '>';
@@ -664,7 +637,6 @@ char Alien::checkItem(char item)
 
     else if (item == '<')
     {
-        //when alien finds a left arrow, giving alien more damage and changing alien direction
         cout<< "Alien finds a left arrow, alien will move left."<<endl<<"Alien's damage will increase by 20."<<endl;
         DMG = DMG + 20;
         heading_ = '<';
@@ -672,62 +644,52 @@ char Alien::checkItem(char item)
 
     else if(item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
     {
-        //when alien hits a zombie, alien attacks zombie with accumulated damage
         if (item == '1')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
             zombie.damage(1, DMG);
         }
-
         else if (item == '2')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
             zombie.damage(2, DMG);
         }
-
         else if (item == '3')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
             zombie.damage(3, DMG);
         }
-
         else if (item == '4')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
             zombie.damage(4, DMG);
         }
-
         else if (item == '5')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
             zombie.damage(5, DMG);
         }
-
         else if (item == '6')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
             zombie.damage(6, DMG);
         }
-
         else if (item == '7')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
             zombie.damage(7, DMG);
         }
-
         else if (item == '8')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
             zombie.damage(8, DMG);
         }
-
         else if (item == '9')
         {
             cout<< "Alien attacks Zombie "<<item<<" ."<<endl;
             zombie.damage(9, DMG);
         }
     }
-
     else
     {
     }
@@ -736,12 +698,11 @@ char Alien::checkItem(char item)
 
 void Alien::damage(int hp)
 {
-    HP = HP - hp; // when alien recieves damage
+    HP = HP - hp;
 }
 
 void Alien::reset()
 {
-    //function to reset trail left by alien, denoted by '.'
     Board board;
     char trail;
     int seed;
@@ -796,8 +757,6 @@ Zombie::Zombie()
 
 void Zombie::landinit(Board &board)
 {
-    //initial landing of zombie
-    //random number generator to put zombies at random locations
     X1 = rand() % X + 1; Y1 = rand() % Y + 1;
     X2 = rand() % X + 1; Y2 = rand() % Y + 1;
     X3 = rand() % X + 1; Y3 = rand() % Y + 1;
@@ -808,7 +767,6 @@ void Zombie::landinit(Board &board)
     X8 = rand() % X + 1; Y8 = rand() % Y + 1;
     X9 = rand() % X + 1; Y9 = rand() % Y + 1;
 
-    //setting zombies on game board
     if (Z == 1)
     {
         board.setObject(X1, Y1, '1');
@@ -893,7 +851,6 @@ void Zombie::landinit(Board &board)
 
 void Zombie::land(Board &board, int zombie)
 {
-    //landing of the zombies after initial landing
     if (zombie == 1)
     {
         board.setObject(X1, Y1, '1');
@@ -978,7 +935,6 @@ void Zombie::land(Board &board, int zombie)
 
 void Zombie::status()
 {
-    //displaying zombie status
     if (Z == 1)
     {
         cout<<"Zombie 1 : Health - "<<HP1<<", Damage - "<<DMG1<<", Range - "<<RNG1<<endl<<endl;
@@ -1063,9 +1019,7 @@ void Zombie::status()
 
 void Zombie::up(int zombie)
 {
-    //function to move zombie up
     Board board;
-
     if (zombie == 1)
     {
         board.setObject(X1, Y1, ' ');
@@ -1123,9 +1077,7 @@ void Zombie::up(int zombie)
 
 void Zombie::down(int zombie)
 {
-    //function to move zombie down
     Board board;
-
     if (zombie == 1)
     {
         board.setObject(X1, Y1, ' ');
@@ -1183,9 +1135,7 @@ void Zombie::down(int zombie)
 
 void Zombie::left(int zombie)
 {
-    //function to move zombie down
     Board board;
-
     if (zombie == 1)
     {
         board.setObject(X1, Y1, ' ');
@@ -1243,9 +1193,7 @@ void Zombie::left(int zombie)
 
 void Zombie::right(int zombie)
 {
-    //function to move zombie right
     Board board;
-    
     if (zombie == 1)
     {
         board.setObject(X1, Y1, ' ');
@@ -1303,7 +1251,6 @@ void Zombie::right(int zombie)
 
 void Zombie::damage(int zombie, int hp)
 {
-    //function when zombie takes damage
     if (zombie == 1)
     {
         HP1 = HP1 - hp;
@@ -1352,7 +1299,6 @@ void Zombie::damage(int zombie, int hp)
 
 char Board::command()
 {
-    //function to recieve user commands
     Board board;
     Alien alien;
     string command;
@@ -1447,14 +1393,13 @@ char Board::command()
 
 void Alien::main()
 {
-    //main function for alien
     Board board;
     Alien alien;
     Zombie zombie;
     char command;
     char item;
 
-    if (init == false) //initial state of the game
+    if (init == false)
     {
         alien.landinit(board);
         zombie.landinit(board);
@@ -1465,7 +1410,7 @@ void Alien::main()
 
         command = board.command();
 
-        while(true) //to check user commands
+        while(true)
         {
             if (command == 'u' || command == 'd' || command == 'l' || command == 'r')
             {
@@ -1510,7 +1455,6 @@ void Alien::main()
         }
 
         system("cls");
-        //displaying map and status of alien and zombies
         board.display();
         alien.status();
         zombie.status();
@@ -1519,7 +1463,7 @@ void Alien::main()
 
         while (true)
         {
-            if (heading_ == '^') //if user moves alien up
+            if (heading_ == '^')
             {
                 alien.up(board);
                 board.display();
@@ -1530,7 +1474,7 @@ void Alien::main()
                 confirm();
                 system("cls");
 
-                if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9') //if alien hits a zombie, it ends alien's turn
+                if (item == 'r' || item == '1' || item == '2' || item == '3' || item == '4' || item == '5' || item == '6' || item == '7' || item == '8' || item == '9')
                 {
                     cout<<"Alien has ended their turn."<<endl<< "Trail has been resetted."<<endl<<endl;
                     DMG = 0;
@@ -1538,7 +1482,7 @@ void Alien::main()
                     break;
                 }
 
-                if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y) //if alien reaches the border, it ends alien's turn
+                if (alien.getX() == 1 || alien.getY() == 1 ||alien.getX() == X || alien.getY() == Y)
                 {
                     cout<< "Alien has reached the edge, it's turn will stop now."<<endl<<"Trail has been resetted."<<endl<<endl;
                     DMG = 0;
@@ -1547,7 +1491,7 @@ void Alien::main()
                 }
             }
 
-            else if (heading_ == 'v') //when user moves alien down
+            else if (heading_ == 'v')
             {
                 alien.down(board);
                 board.display();
@@ -1575,7 +1519,7 @@ void Alien::main()
                 }
             }
 
-            else if (heading_ == '<') //when user moves alien left
+            else if (heading_ == '<')
             {
                 alien.left(board);
                 board.display();
@@ -1603,7 +1547,7 @@ void Alien::main()
                 }
             }
 
-            else if (heading_ == '>') //when user moves alien right
+            else if (heading_ == '>')
             {
                 alien.right(board);
                 board.display();
@@ -1634,7 +1578,7 @@ void Alien::main()
         init = 1;   
     }
    
-    else //after initial landing
+    else
     {
         alien.land(board);
         zombie.land(board, Z);
@@ -1813,7 +1757,7 @@ void Alien::main()
         }
     }
 
-    if(HP <= 0) //when alien has no life left
+    if(HP <= 0)
     {
         cout<<endl<<"Alien has no life left. Game Over."<<endl;
         cout<<"The game will terminate in 5 seconds."<<endl<<endl;
@@ -1830,7 +1774,7 @@ void Alien::main()
         abort();
     }
 
-    else if(Z == 0) //when zombies has no life left
+    else if(Z == 0)
     {
         cout<<endl<<"The zombies has no life left. Game Over."<<endl;
         cout<<"The game will terminate in 5 seconds."<<endl<<endl;
@@ -1854,7 +1798,6 @@ void Alien::main()
 
 void Zombie::main()
 {
-    //main function for zombies
     Board board;
     Alien alien;
     Zombie zombie;
@@ -1870,8 +1813,8 @@ void Zombie::main()
 
     if (Z == 1)
     {
-        int diffX, diffY, range; //to check range of zombies for alien attack
-        for (int i = 1; i<=Z; ++i) //loop to iterate through all zombies
+        int diffX, diffY, range;
+        for (int i = 1; i<=Z; ++i)
         {
             cout<<"Zombie "<<i<<" turn starts."<<endl;
             while (true)
@@ -1907,7 +1850,7 @@ void Zombie::main()
             zombie.status();
             confirm();
 
-            for (int j = 1; j<=Z; ++j) //loop to check range between zombie and alien
+            for (int j = 1; j<=Z; ++j)
             {
                 if(i == 1)
                 {
@@ -1973,7 +1916,7 @@ void Zombie::main()
                 }
             }
 
-            if (diffX <= range || diffX <= -range || diffY <= range || diffY <= -range) //when zombie is in range of alien
+            if (diffX <= range || diffX <= -range || diffY <= range || diffY <= -range)
             {
                 cout<<"Alien is in range of Zombie "<<i<<"."<<endl;
                 if (i == 1)
@@ -2028,7 +1971,7 @@ void Zombie::main()
             }
             cout<<"Zombie "<<i<<"'s round is over."<<endl<<endl;
         }
-        if (HP1 <= 0) //when zombie has no life left
+        if (HP1 <= 0)
         {
             cout<<"Zombie 1 has no life left."<<endl;
             Z = Z - 1;
